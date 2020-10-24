@@ -21,6 +21,9 @@ android {
                 storePassword System.env.RELEASE_SIGN_PASSWORD
                 keyAlias System.env.RELEASE_SIGN_KEY_ALIAS
                 keyPassword System.env.RELEASE_SIGN_KEY_PASSWORD
+
+                v1SigningEnabled true
+                v2SigningEnabled true
             }
         }
     }
@@ -29,6 +32,7 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
 
         debug {
