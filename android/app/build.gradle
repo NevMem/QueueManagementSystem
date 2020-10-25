@@ -61,6 +61,7 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$versions.navigationFragmentKtx"
     implementation "androidx.navigation:navigation-ui-ktx:$versions.navigationUIKtx"
     implementation "com.yandex.android:mobmetricalib:$versions.metrica"
+    implementation "org.koin:koin-android:$versions.koin"
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
     testImplementation 'junit:junit:4.12'
 }
