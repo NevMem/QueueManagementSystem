@@ -39,6 +39,15 @@ android {
             minifyEnabled false
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
@@ -46,6 +55,7 @@ dependencies {
     implementation "androidx.core:core-ktx:$versions.coreKtx"
     implementation "androidx.appcompat:appcompat:$versions.appcompat"
     implementation "androidx.constraintlayout:constraintlayout:$versions.constraintLayout"
+    implementation "com.google.android.material:material:$versions.material"
     implementation "androidx.navigation:navigation-fragment:$versions.navigationFragment"
     implementation "androidx.navigation:navigation-ui:$versions.navigationUI"
     implementation "androidx.navigation:navigation-fragment-ktx:$versions.navigationFragmentKtx"
