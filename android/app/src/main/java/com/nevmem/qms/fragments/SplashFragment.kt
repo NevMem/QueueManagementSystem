@@ -38,7 +38,12 @@ class SplashFragment : Fragment() {
                             findNavController().navigate(action)
                         }
                     }
-                    is AuthenticationStatus.Unauthorized -> {}
+                    is AuthenticationStatus.Unauthorized -> {
+                        val action = SplashFragmentDirections.actionUnAuthorized()
+                        launch(Dispatchers.Main) {
+                            findNavController().navigate(action)
+                        }
+                    }
                     else -> {}
                 }
             }

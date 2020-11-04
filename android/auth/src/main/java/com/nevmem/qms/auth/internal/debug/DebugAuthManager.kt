@@ -15,7 +15,8 @@ internal class DebugAuthManager : AuthManager {
                 GlobalScope.launch {
                     channel.send(AuthenticationStatus.Pending)
                     delay(750)
-                    channel.send(AuthenticationStatus.LoggedIn)
+                    channel.send(AuthenticationStatus.Unauthorized)
+                    channel.close()
                 }
             }
 

@@ -2,4 +2,9 @@
 <resources>
     <dimen name="splashTextSize">40sp</dimen>
     <dimen name="navBarMargin">8dp</dimen>
+    <dimen name="loginFormWidth">300dp</dimen>
+
+    <dimen name="indent">8dp</dimen>
+
+    <dimen name="formHeaderTextSize">32sp</dimen>
 </resources>

@@ -3,4 +3,8 @@
 
     <string name="title_home">Home</string>
     <string name="title_scan">Scan</string>
+
+    <string name="login_string">Login</string>
+    <string name="password_string">Password</string>
+    <string name="sign_in_string">Sign in</string>
 </resources>

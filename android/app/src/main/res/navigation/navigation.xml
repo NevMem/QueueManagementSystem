@@ -12,6 +12,15 @@
         <action
             android:id="@+id/actionOnLoggedIn"
             app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/actionUnAuthorized"
+            app:destination="@id/navigation_login" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_login"
+        android:name="com.nevmem.qms.fragments.LoginFragment"
+        tools:layout="@layout/fragment_login">
     </fragment>
 
     <fragment
