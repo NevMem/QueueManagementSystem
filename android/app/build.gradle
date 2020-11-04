@@ -63,5 +63,8 @@ dependencies {
     implementation "com.yandex.android:mobmetricalib:$versions.metrica"
     implementation "org.koin:koin-android:$versions.koin"
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
+
+    implementation project(':auth')
+
     testImplementation 'junit:junit:4.12'
 }

@@ -1,2 +1,4 @@
+include ':auth'
 include ':app'
+
 rootProject.name = "QMS"
