@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
             R.id.navigation_home))
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            bottomBarHidingUsecase.onDestinationChanged(destination)
             YandexMetrica.reportEvent("navigation.destination-change", mapOf(
                 "destination-label" to destination.label
             ))

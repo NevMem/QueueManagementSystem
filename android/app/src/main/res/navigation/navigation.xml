@@ -8,7 +8,11 @@
     <fragment
         android:id="@+id/navigation_splash"
         android:name="com.nevmem.qms.fragments.SplashFragment"
-        tools:layout="@layout/fragment_splash" />
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/actionOnLoggedIn"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_home"

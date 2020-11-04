@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="splashTextSize">40sp</dimen>
+    <dimen name="navBarMargin">8dp</dimen>
 </resources>
