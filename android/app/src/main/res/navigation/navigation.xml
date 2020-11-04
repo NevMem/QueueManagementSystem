@@ -3,7 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation.xml"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_splash">
+
+    <fragment
+        android:id="@+id/navigation_splash"
+        android:name="com.nevmem.qms.fragments.SplashFragment"
+        tools:layout="@layout/fragment_splash" />
 
     <fragment
         android:id="@+id/navigation_home"
