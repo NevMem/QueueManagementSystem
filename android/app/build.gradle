@@ -63,6 +63,8 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$versions.navigationUIKtx"
     implementation "com.yandex.android:mobmetricalib:$versions.metrica"
     implementation "org.koin:koin-android:$versions.koin"
+    implementation "org.koin:koin-android-scope:$versions.koin"
+    implementation "org.koin:koin-android-viewmodel:$versions.koin"
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
 
     implementation project(':auth')

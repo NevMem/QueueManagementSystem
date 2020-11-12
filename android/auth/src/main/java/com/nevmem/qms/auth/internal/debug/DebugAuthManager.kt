@@ -5,6 +5,8 @@ import com.nevmem.qms.auth.data.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 internal class DebugAuthManager : AuthManager {
@@ -20,17 +22,13 @@ internal class DebugAuthManager : AuthManager {
                 }
             }
 
-    override fun login(credentials: LoginCredentials): Channel<LoginState> =
-        Channel<LoginState>(Channel.UNLIMITED).also { channel ->
-            GlobalScope.launch {
-                channel.send(LoginState.Processing)
-                delay(3000)
-                if (credentials.login == credentials.password) {
-                    channel.send(LoginState.Success)
-                } else {
-                    channel.send(LoginState.Error("Login or password is incorrect"))
-                }
-                channel.close()
+    override fun login(credentials: LoginCredentials): Flow<LoginState> = flow {
+            emit(LoginState.Processing)
+            delay(1000)
+            if (credentials.login == credentials.password) {
+                emit(LoginState.Success)
+            } else {
+                emit(LoginState.Error("Login or password is incorrect"))
             }
         }
 

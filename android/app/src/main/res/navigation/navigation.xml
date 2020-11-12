@@ -19,8 +19,11 @@
 
     <fragment
         android:id="@+id/navigation_login"
-        android:name="com.nevmem.qms.fragments.LoginFragment"
+        android:name="com.nevmem.qms.fragments.login.LoginFragment"
         tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/moveToHomeAfterLogin"
+            app:destination="@id/navigation_home" />
     </fragment>
 
     <fragment
