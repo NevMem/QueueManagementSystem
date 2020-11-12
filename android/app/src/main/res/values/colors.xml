@@ -6,4 +6,6 @@
 
     <color name="backgroundColor">#000000</color>
     <color name="bottomBarColor">#131313</color>
+
+    <color name="errorColor">#F45151</color>
 </resources>

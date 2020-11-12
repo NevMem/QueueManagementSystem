@@ -8,16 +8,21 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.nevmem.qms.R
 import com.nevmem.qms.auth.data.LoginState
+import com.nevmem.qms.model.toast.ShowToastManager
+import com.nevmem.qms.model.toast.Type
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class LoginFragment : Fragment() {
 
     private val model: LoginPageViewModel by viewModel()
+
+    private val showToastManager: ShowToastManager by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,7 +56,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleError(error: String) {
-
+        showToastManager.showToast(error, Type.Error)
     }
 
     private fun setButtonEnabled(enabled: Boolean) {

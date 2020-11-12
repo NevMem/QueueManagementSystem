@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/indent_double"
+    android:paddingStart="@dimen/indent_double"
+    android:paddingEnd="@dimen/indent_double"
+    tools:background="@drawable/toast_error">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/toastMessage"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="@dimen/toastTextSize"
+        tools:text="Some toast text" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

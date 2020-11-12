@@ -24,8 +24,8 @@ internal class DebugAuthManager : AuthManager {
 
     override fun login(credentials: LoginCredentials): Flow<LoginState> = flow {
             emit(LoginState.Processing)
-            delay(1000)
-            if (credentials.login == credentials.password) {
+            delay(500)
+            if (credentials.login == credentials.password && credentials.login.isNotEmpty()) {
                 emit(LoginState.Success)
             } else {
                 emit(LoginState.Error("Login or password is incorrect"))
