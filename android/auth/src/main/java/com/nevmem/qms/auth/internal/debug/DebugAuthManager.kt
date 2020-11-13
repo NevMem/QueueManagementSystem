@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 
 internal class DebugAuthManager : AuthManager {
     override var token: String = ""
+    private var attempt = 0
 
     override val authenticationStatus: Channel<AuthenticationStatus>
         get() = Channel<AuthenticationStatus>(Channel.UNLIMITED).also { channel ->
@@ -28,7 +29,8 @@ internal class DebugAuthManager : AuthManager {
             if (credentials.login == credentials.password && credentials.login.isNotEmpty()) {
                 emit(LoginState.Success)
             } else {
-                emit(LoginState.Error("Login or password is incorrect"))
+                emit(LoginState.Error("Login or password is incorrect ${attempt + 1}"))
+                attempt += 1
             }
         }
 

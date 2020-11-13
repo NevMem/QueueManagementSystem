@@ -1,8 +1,14 @@
 package com.nevmem.qms.toast.manager
 
-import com.nevmem.qms.toast.manager.ToastData
-import kotlinx.coroutines.flow.Flow
-
 interface ToastProvider {
-    val toastFlow: Flow<ToastData>
+    interface Listener {
+        fun onHasToastsChanged()
+    }
+
+    val hasToast: Boolean
+
+    fun consumeOneToast(): ToastData
+
+    fun addListener(listener: Listener)
+    fun removeListener(listener: Listener)
 }

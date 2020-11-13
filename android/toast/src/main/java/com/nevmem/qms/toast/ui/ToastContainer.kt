@@ -19,30 +19,51 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class ToastContainer : LinearLayoutCompat {
+class ToastContainer : LinearLayoutCompat, ToastProvider.Listener {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private lateinit var toastProvider: ToastProvider
 
+    private var toastShowing = false
+
     fun setToastProvider(provider: ToastProvider) {
         check(!::toastProvider.isInitialized) { "Cannot reinitialize toast provider" }
         toastProvider = provider
 
-        GlobalScope.launch(Dispatchers.Main) {
-            toastProvider.toastFlow.collect {
-                val view = showToast(it)
-                delay(3000)
-                removeToast(view)
-            }
-        }
+        toastProvider.addListener(this)
+        onHasToastsChanged()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        toastProvider.removeListener(this)
+    }
+
+    override fun onHasToastsChanged() {
+        showToastIfNeeded()
     }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
 
         orientation = VERTICAL
+    }
+
+    private fun showToastIfNeeded() {
+        if (toastShowing || !toastProvider.hasToast) {
+            return
+        }
+        toastShowing = true
+        val toast = toastProvider.consumeOneToast()
+        GlobalScope.launch(Dispatchers.Main) {
+            val view = showToast(toast)
+            delay(3000)
+            removeToast(view)
+            toastShowing = false
+            showToastIfNeeded()
+        }
     }
 
     private fun showToast(data: ToastData): View {
