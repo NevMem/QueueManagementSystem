@@ -8,4 +8,5 @@
     <string name="login_string">Login</string>
     <string name="password_string">Password</string>
     <string name="sign_in_string">Sign in</string>
+    <string name="show_scheme">Show scheme</string>
 </resources>

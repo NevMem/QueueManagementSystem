@@ -28,7 +28,8 @@ class MainActivity : AppCompatActivity() {
 
         bottomBarHidingUsecase = BottomBarHidingUsecase(this, navView, listOf(
             R.id.navigation_scan,
-            R.id.navigation_home))
+            R.id.navigation_home,
+            R.id.navigation_status))
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             bottomBarHidingUsecase.onDestinationChanged(destination)

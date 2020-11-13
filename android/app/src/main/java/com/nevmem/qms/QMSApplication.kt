@@ -3,6 +3,9 @@ package com.nevmem.qms
 import android.app.Application
 import com.nevmem.qms.auth.createDebugAuthManager
 import com.nevmem.qms.fragments.login.LoginPageViewModel
+import com.nevmem.qms.status.QueueStatus
+import com.nevmem.qms.status.StatusProvider
+import com.nevmem.qms.status.createDebugStatusProvider
 import com.nevmem.qms.toast.manager.ShowToastManager
 import com.nevmem.qms.toast.manager.ToastManager
 import com.nevmem.qms.toast.manager.ToastProvider
@@ -22,6 +25,7 @@ class QMSApplication : Application() {
         single<ToastManager> { createToastManager() }
         single<ShowToastManager> { get<ToastManager>() }
         single<ToastProvider> { get<ToastManager>() }
+        single<StatusProvider> { createDebugStatusProvider() }
         viewModel { LoginPageViewModel(get()) }
     }
 

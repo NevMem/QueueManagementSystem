@@ -69,6 +69,7 @@ dependencies {
 
     implementation project(':auth')
     implementation project(':common-ui')
+    implementation project(':status')
     implementation project(':toast')
 
     testImplementation 'junit:junit:4.12'

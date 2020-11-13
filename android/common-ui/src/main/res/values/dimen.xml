@@ -2,4 +2,6 @@
 <resources>
     <dimen name="indent">8dp</dimen>
     <dimen name="indent_double">16dp</dimen>
+    <dimen name="indent_triple">24dp</dimen>
+    <dimen name="indent_quadruple">32dp</dimen>
 </resources>
