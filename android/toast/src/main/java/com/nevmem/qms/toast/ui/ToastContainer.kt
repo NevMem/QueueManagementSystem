@@ -10,6 +10,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import com.nevmem.qms.toast.R
 import com.nevmem.qms.toast.manager.ToastData
 import com.nevmem.qms.toast.manager.ToastProvider
+import com.nevmem.qms.toast.manager.Type
 import kotlinx.android.synthetic.main.layout_toast.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -68,7 +69,13 @@ class ToastContainer : LinearLayoutCompat, ToastProvider.Listener {
 
     private fun showToast(data: ToastData): View {
         return LayoutInflater.from(context).inflate(R.layout.layout_toast, this, true).apply {
-            setBackgroundResource(R.drawable.toast_error)
+            val resource = when (data.type) {
+                Type.Error -> R.drawable.toast_background_error
+                Type.Success -> R.drawable.toast_background_success
+                Type.Default -> R.drawable.toast_background_default
+            }
+            setBackgroundResource(resource)
+
             toastMessage.text = data.message
 
             alpha = 0f
