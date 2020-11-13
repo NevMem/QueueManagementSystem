@@ -47,6 +47,12 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/navigation_status"
+        android:name="com.nevmem.qms.fragments.status.StatusFragment"
+        android:label="@string/title_status"
+        tools:layout="@layout/fragment_queue_status" />
+
+    <fragment
         android:id="@+id/navigation_scan"
         android:name="com.nevmem.qms.fragments.ScanFragment"
         android:label="@string/title_scan"

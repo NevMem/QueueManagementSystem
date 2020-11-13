@@ -4,5 +4,10 @@
     <dimen name="navBarMargin">8dp</dimen>
     <dimen name="loginFormWidth">300dp</dimen>
 
+    <dimen name="statusPanelMargin">32dp</dimen>
+
     <dimen name="formHeaderTextSize">32sp</dimen>
+    <dimen name="numberInLine">24sp</dimen>
+    <dimen name="ticketNumberSize">36sp</dimen>
+    <dimen name="etaTextSize">32sp</dimen>
 </resources>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/numberInLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/light"
+            android:textSize="@dimen/numberInLine"
+            android:textAlignment="center"
+            tools:text="Вы 10ый в очереди"/>
+
+        <TextView
+            android:id="@+id/ticketNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/medium"
+            android:textSize="@dimen/ticketNumberSize"
+            android:layout_marginTop="@dimen/statusPanelMargin"
+            tools:text="T79" />
+
+        <!-- ETA - estimated time of appointment -->
+        <TextView
+            android:id="@+id/eta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/statusPanelMargin"
+            android:textSize="@dimen/etaTextSize"
+            android:fontFamily="@font/light"
+            tools:text="~23 min"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/showScheme"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:fontFamily="@font/medium"
+            tools:text="Показать схему" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
