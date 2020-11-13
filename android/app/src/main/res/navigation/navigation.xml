@@ -11,10 +11,15 @@
         tools:layout="@layout/fragment_splash" >
         <action
             android:id="@+id/actionOnLoggedIn"
-            app:destination="@id/navigation_home" />
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation.xml"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/actionUnAuthorized"
-            app:destination="@id/navigation_login" />
+            app:destination="@id/navigation_login"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation.xml"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
