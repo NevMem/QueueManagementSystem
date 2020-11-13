@@ -11,6 +11,7 @@ import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.auth.data.AuthenticationStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
@@ -30,6 +31,7 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         GlobalScope.launch {
+            delay(250)
             for (elem in authManager.authenticationStatus) {
                 when (elem) {
                     is AuthenticationStatus.LoggedIn -> {
