@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.nevmem.qms.R
 import com.nevmem.qms.auth.data.LoginState
-import com.nevmem.qms.model.toast.ShowToastManager
-import com.nevmem.qms.model.toast.Type
+import com.nevmem.qms.toast.manager.ShowToastManager
+import com.nevmem.qms.toast.manager.Type
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

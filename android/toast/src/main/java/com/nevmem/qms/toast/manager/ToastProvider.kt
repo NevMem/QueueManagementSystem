@@ -1,5 +1,6 @@
-package com.nevmem.qms.model.toast
+package com.nevmem.qms.toast.manager
 
+import com.nevmem.qms.toast.manager.ToastData
 import kotlinx.coroutines.flow.Flow
 
 interface ToastProvider {

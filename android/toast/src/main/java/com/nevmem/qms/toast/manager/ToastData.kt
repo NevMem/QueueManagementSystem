@@ -1,4 +1,4 @@
-package com.nevmem.qms.model.toast
+package com.nevmem.qms.toast.manager
 
 enum class Type {
     Success, Default, Error

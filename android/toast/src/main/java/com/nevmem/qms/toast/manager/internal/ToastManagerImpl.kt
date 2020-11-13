@@ -1,8 +1,8 @@
-package com.nevmem.qms.model.toast.internal
+package com.nevmem.qms.toast.manager.internal
 
-import com.nevmem.qms.model.toast.ToastData
-import com.nevmem.qms.model.toast.ToastManager
-import com.nevmem.qms.model.toast.Type
+import com.nevmem.qms.toast.manager.ToastData
+import com.nevmem.qms.toast.manager.ToastManager
+import com.nevmem.qms.toast.manager.Type
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel

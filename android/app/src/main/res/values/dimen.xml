@@ -4,10 +4,5 @@
     <dimen name="navBarMargin">8dp</dimen>
     <dimen name="loginFormWidth">300dp</dimen>
 
-    <dimen name="indent">8dp</dimen>
-    <dimen name="indent_double">16dp</dimen>
-
     <dimen name="formHeaderTextSize">32sp</dimen>
-
-    <dimen name="toastTextSize">16sp</dimen>
 </resources>

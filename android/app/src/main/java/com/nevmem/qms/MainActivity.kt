@@ -4,13 +4,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.nevmem.qms.toast.manager.ToastProvider
+import com.nevmem.qms.toast.ui.ToastContainer
 import com.nevmem.qms.usecase.BottomBarHidingUsecase
 import com.yandex.metrica.YandexMetrica
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomBarHidingUsecase: BottomBarHidingUsecase
+
+    private val toastProvider: ToastProvider by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,5 +36,7 @@ class MainActivity : AppCompatActivity() {
                 "destination-label" to destination.label
             ))
         }
+
+        findViewById<ToastContainer>(R.id.toastContainer).setToastProvider(toastProvider)
     }
 }

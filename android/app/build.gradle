@@ -68,6 +68,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
 
     implementation project(':auth')
+    implementation project(':common-ui')
+    implementation project(':toast')
 
     testImplementation 'junit:junit:4.12'
 }
