@@ -12,12 +12,21 @@
         <action
             android:id="@+id/actionOnLoggedIn"
             app:destination="@id/navigation_home"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
             app:popUpTo="@id/navigation.xml"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/actionUnAuthorized"
             app:destination="@id/navigation_login"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
             app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
             app:popUpTo="@id/navigation.xml"
             app:popUpToInclusive="true" />
     </fragment>
