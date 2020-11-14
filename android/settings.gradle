@@ -1,2 +1,7 @@
+include ':status'
+include ':common-ui'
+include ':toast'
+include ':auth'
 include ':app'
+
 rootProject.name = "QMS"

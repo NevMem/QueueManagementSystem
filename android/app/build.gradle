@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
     compileSdkVersion 29
@@ -62,6 +63,14 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$versions.navigationUIKtx"
     implementation "com.yandex.android:mobmetricalib:$versions.metrica"
     implementation "org.koin:koin-android:$versions.koin"
+    implementation "org.koin:koin-android-scope:$versions.koin"
+    implementation "org.koin:koin-android-viewmodel:$versions.koin"
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
+
+    implementation project(':auth')
+    implementation project(':common-ui')
+    implementation project(':status')
+    implementation project(':toast')
+
     testImplementation 'junit:junit:4.12'
 }

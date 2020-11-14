@@ -1,13 +1,34 @@
 package com.nevmem.qms
 
 import android.app.Application
+import com.nevmem.qms.auth.createDebugAuthManager
+import com.nevmem.qms.fragments.login.LoginPageViewModel
+import com.nevmem.qms.status.QueueStatus
+import com.nevmem.qms.status.StatusProvider
+import com.nevmem.qms.status.createDebugStatusProvider
+import com.nevmem.qms.toast.manager.ShowToastManager
+import com.nevmem.qms.toast.manager.ToastManager
+import com.nevmem.qms.toast.manager.ToastProvider
+import com.nevmem.qms.toast.manager.createToastManager
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
 class QMSApplication : Application() {
+
+    private val appModule = module {
+        single { createDebugAuthManager() }
+        single<ToastManager> { createToastManager() }
+        single<ShowToastManager> { get<ToastManager>() }
+        single<ToastProvider> { get<ToastManager>() }
+        single<StatusProvider> { createDebugStatusProvider() }
+        viewModel { LoginPageViewModel(get()) }
+    }
+
     override fun onCreate() {
         super.onCreate()
         val config = YandexMetricaConfig
@@ -20,6 +41,7 @@ class QMSApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(applicationContext)
+            modules(appModule)
         }
     }
 }

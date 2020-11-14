@@ -3,13 +3,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation.xml"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_splash">
+
+    <fragment
+        android:id="@+id/navigation_splash"
+        android:name="com.nevmem.qms.fragments.SplashFragment"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/actionOnLoggedIn"
+            app:destination="@id/navigation_home"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
+            app:popUpTo="@id/navigation.xml"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/actionUnAuthorized"
+            app:destination="@id/navigation_login"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
+            app:popUpTo="@id/navigation.xml"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_login"
+        android:name="com.nevmem.qms.fragments.login.LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/moveToHomeAfterLogin"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.nevmem.qms.fragments.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_status"
+        android:name="com.nevmem.qms.fragments.status.StatusFragment"
+        android:label="@string/title_status"
+        tools:layout="@layout/fragment_queue_status" />
 
     <fragment
         android:id="@+id/navigation_scan"
