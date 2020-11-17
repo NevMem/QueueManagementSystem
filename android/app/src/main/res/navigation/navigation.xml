@@ -53,9 +53,9 @@
         tools:layout="@layout/fragment_queue_status" />
 
     <fragment
-        android:id="@+id/navigation_scan"
-        android:name="com.nevmem.qms.fragments.ScanFragment"
-        android:label="@string/title_scan"
-        tools:layout="@layout/fragment_scan" />
+        android:id="@+id/navigation_join"
+        android:name="com.nevmem.qms.fragments.join.JoinFragment"
+        android:label="@string/title_join"
+        tools:layout="@layout/fragment_join" />
 
 </navigation>

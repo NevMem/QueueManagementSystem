@@ -2,11 +2,13 @@
     <string name="app_name">QMS</string>
 
     <string name="title_home">Home</string>
-    <string name="title_scan">Scan</string>
+    <string name="title_join">Join</string>
     <string name="title_status">Status</string>
 
     <string name="login_string">Login</string>
     <string name="password_string">Password</string>
     <string name="sign_in_string">Sign in</string>
     <string name="show_scheme">Show scheme</string>
+    <string name="invite_code">Invite code</string>
+    <string name="join_string">Join</string>
 </resources>

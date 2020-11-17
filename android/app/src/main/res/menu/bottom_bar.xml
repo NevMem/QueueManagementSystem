@@ -7,9 +7,9 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_scan"
+        android:id="@+id/navigation_join"
         android:icon="@drawable/ic_launcher_background"
-        android:title="@string/title_scan" />
+        android:title="@string/title_join" />
 
     <item
         android:id="@+id/navigation_status"

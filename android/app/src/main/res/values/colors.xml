@@ -4,6 +4,6 @@
     <color name="colorPrimaryDark">#FFEB3B</color>
     <color name="colorAccent">#03DAC5</color>
 
-    <color name="backgroundColor">#000000</color>
-    <color name="bottomBarColor">#131313</color>
+    <color name="backgroundColor">#101010</color>
+    <color name="bottomBarColor">#191919</color>
 </resources>
