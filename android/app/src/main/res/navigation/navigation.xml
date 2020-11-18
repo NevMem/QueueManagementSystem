@@ -8,6 +8,7 @@
     <fragment
         android:id="@+id/navigation_splash"
         android:name="com.nevmem.qms.fragments.SplashFragment"
+        android:label="@string/splash_string"
         tools:layout="@layout/fragment_splash" >
         <action
             android:id="@+id/actionOnLoggedIn"
@@ -34,6 +35,7 @@
     <fragment
         android:id="@+id/navigation_login"
         android:name="com.nevmem.qms.fragments.login.LoginFragment"
+        android:label="@string/login_string"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/moveToHomeAfterLogin"

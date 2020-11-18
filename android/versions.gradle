@@ -1,5 +1,5 @@
 ext.kotlinVersion = '1.3.72'
-ext.gradlePluginVersion = '3.5.3'
+ext.gradlePluginVersion = '4.1.0'
 
 ext.globalMinSdkVersion = 23
 ext.globalTargetSdkVersion = 28
@@ -25,6 +25,7 @@ ext.versions = [
     'navigationFragment': '2.3.0',
     'navigationUIKtx': '2.3.0',
     'navigationUI': '2.3.0',
+    'protobuf': '3.0.0',
     'recyclerView': '1.1.0',
     'retrofit': '2.5.0',
     'room': '2.2.5',

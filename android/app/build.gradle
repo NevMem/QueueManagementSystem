@@ -41,6 +41,12 @@ android {
         }
     }
 
+//    sourceSets {
+//        main.java {
+//            srcDirs += "../protos/build/generated/source/proto/main/javalite"
+//        }
+//    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -66,9 +72,11 @@ dependencies {
     implementation "org.koin:koin-android-scope:$versions.koin"
     implementation "org.koin:koin-android-viewmodel:$versions.koin"
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
+    implementation "com.google.protobuf:protobuf-lite:$versions.protobuf"
 
     implementation project(':auth')
     implementation project(':common-ui')
+    implementation project(':protos')
     implementation project(':status')
     implementation project(':toast')
 

@@ -1,16 +1,28 @@
 package com.nevmem.qms.status.internal
 
+import com.nevmem.qms.QueueDescriptionProto
+import com.nevmem.qms.status.FetchStatus
+import com.nevmem.qms.status.JoinStatus
 import com.nevmem.qms.status.QueueStatus
 import com.nevmem.qms.status.StatusProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.abs
 
 internal class DebugStatusProvider : StatusProvider {
     override var queueStatus: QueueStatus? = null
+        set(value) {
+            if (field == value) {
+                return
+            }
+            field = value
+            notifyChanged()
+        }
 
     private val listeners = mutableSetOf<StatusProvider.Listener>()
 
@@ -20,8 +32,6 @@ internal class DebugStatusProvider : StatusProvider {
                 queueStatus = null
                 notifyChanged()
 
-                delay(500)
-
                 val ticketNumber = Random().nextInt() % 100
                 val ticket = "T$ticketNumber"
 
@@ -30,16 +40,27 @@ internal class DebugStatusProvider : StatusProvider {
                 var numberInLine = (abs(Random().nextInt()) % 10) + 5
 
                 queueStatus = QueueStatus(numberInLine, ticket, numberInLine * avgTime, "")
-                notifyChanged()
 
                 repeat(numberInLine) {
                     delay(1000)
                     numberInLine -= 1
                     queueStatus = QueueStatus(numberInLine, ticket, numberInLine * avgTime, "")
-                    notifyChanged()
                 }
             }
         }
+    }
+
+    override fun fetchDataForInvite(invite: String): Flow<FetchStatus> = flow {
+        emit(FetchStatus.Pending)
+        delay(700)
+        emit(FetchStatus.Success(QueueDescriptionProto.QueueDescription.newBuilder()
+            .setDescription("Some long long long description\n".repeat(5))
+            .setName("Some queue name")
+            .build()))
+    }
+
+    override fun join(invite: String): Flow<JoinStatus> {
+        TODO("Not yet implemented")
     }
 
     override fun addListener(listener: StatusProvider.Listener) {

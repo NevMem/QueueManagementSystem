@@ -4,6 +4,7 @@
     <string name="title_home">Home</string>
     <string name="title_join">Join</string>
     <string name="title_status">Status</string>
+    <string name="splash_string">Splash</string>
 
     <string name="login_string">Login</string>
     <string name="password_string">Password</string>
