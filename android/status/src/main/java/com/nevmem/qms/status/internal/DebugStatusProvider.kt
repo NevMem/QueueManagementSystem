@@ -56,6 +56,7 @@ internal class DebugStatusProvider : StatusProvider {
         emit(FetchStatus.Success(QueueDescriptionProto.QueueDescription.newBuilder()
             .setDescription("Some long long long description\n".repeat(5))
             .setName("Some queue name")
+            .setImageUrl("https://lh3.googleusercontent.com/proxy/QR-0JKa6Fnrz414msqbIyTsaJocvTxsg8BixfKu_VmGC2Vfa-Znewk__FBevbhKpD_2-x2in6QuY4RToS5UKQ1yXSwcChcjV85WzZGJ7M1UDkw")
             .build()))
     }
 
