@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_splash" >
         <action
             android:id="@+id/actionOnLoggedIn"
-            app:destination="@id/navigation_home"
+            app:destination="@id/navigation_join"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
             app:launchSingleTop="true"
@@ -39,7 +39,11 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/moveToHomeAfterLogin"
-            app:destination="@id/navigation_home" />
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
+            app:destination="@id/navigation_join" />
     </fragment>
 
     <fragment

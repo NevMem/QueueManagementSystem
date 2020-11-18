@@ -34,7 +34,6 @@ class DoJoinStep : JoinStep {
                         status.payload.imageUrl?.let { url ->
                             Glide.with(this)
                                 .load(url)
-                                .placeholder(R.drawable.ic_launcher_background)
                                 .into(image)
                         }
 
