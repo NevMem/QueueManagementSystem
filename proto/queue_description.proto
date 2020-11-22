@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package qms;
 
@@ -6,7 +6,7 @@ option java_package = "com.nevmem.qms";
 option java_outer_classname = "QueueDescriptionProto";
 
 message QueueDescription {
-    required string name = 1;
-    optional string imageUrl = 2;
-    required string description = 3;
+    string name = 1;
+    string imageUrl = 2;
+    string description = 3;
 }

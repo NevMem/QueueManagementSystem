@@ -37,7 +37,7 @@ class DoJoinStep : JoinStep {
                                 .into(image)
                         }
 
-                        image.isVisible = status.payload.hasImageUrl()
+                        image.isVisible = status.payload.imageUrl != null
 
                         inviteDescription.text = status.payload.description
                     }
