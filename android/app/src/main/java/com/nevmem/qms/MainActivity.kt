@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         bottomBarHidingUsecase = BottomBarHidingUsecase(this, navView, listOf(
-            R.id.navigation_scan,
+            R.id.navigation_join,
             R.id.navigation_home,
             R.id.navigation_status))
 

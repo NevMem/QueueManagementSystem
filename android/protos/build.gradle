@@ -1,0 +1,42 @@
+apply plugin: 'java-library'
+apply plugin: 'com.google.protobuf'
+
+sourceSets {
+    main.java {
+        srcDirs += "${protobuf.generatedFilesBaseDir}/main/javalite"
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:$versions.protobuf"
+    }
+    plugins {
+        javalite {
+            artifact = "com.google.protobuf:protoc-gen-javalite:$versions.protobuf"
+        }
+    }
+
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                remove java
+            }
+            task.plugins {
+                javalite {}
+            }
+        }
+    }
+
+    sourceSets {
+        main {
+            proto {
+                srcDirs += "$projectDir/../../proto"
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation "com.google.protobuf:protobuf-lite:$versions.protobuf"
+}

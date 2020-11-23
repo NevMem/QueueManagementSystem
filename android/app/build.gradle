@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
@@ -41,6 +42,12 @@ android {
         }
     }
 
+//    sourceSets {
+//        main.java {
+//            srcDirs += "../protos/build/generated/source/proto/main/javalite"
+//        }
+//    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -66,9 +73,12 @@ dependencies {
     implementation "org.koin:koin-android-scope:$versions.koin"
     implementation "org.koin:koin-android-viewmodel:$versions.koin"
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
+    implementation "com.google.protobuf:protobuf-lite:$versions.protobuf"
+    implementation "com.github.bumptech.glide:glide:$versions.glide"
 
     implementation project(':auth')
     implementation project(':common-ui')
+    implementation project(':protos')
     implementation project(':status')
     implementation project(':toast')
 

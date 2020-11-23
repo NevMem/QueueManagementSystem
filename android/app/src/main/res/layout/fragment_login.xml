@@ -25,6 +25,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:labelFor="@id/loginField"
             android:layout_marginTop="@dimen/indent"
             android:hint="@string/login_string">
             <com.google.android.material.textfield.TextInputEditText
@@ -37,6 +39,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:labelFor="@id/passwordField"
             android:layout_marginTop="@dimen/indent"
             android:hint="@string/password_string">
             <com.google.android.material.textfield.TextInputEditText

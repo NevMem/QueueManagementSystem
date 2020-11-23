@@ -8,10 +8,11 @@
     <fragment
         android:id="@+id/navigation_splash"
         android:name="com.nevmem.qms.fragments.SplashFragment"
+        android:label="@string/splash_string"
         tools:layout="@layout/fragment_splash" >
         <action
             android:id="@+id/actionOnLoggedIn"
-            app:destination="@id/navigation_home"
+            app:destination="@id/navigation_join"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
             app:launchSingleTop="true"
@@ -34,10 +35,15 @@
     <fragment
         android:id="@+id/navigation_login"
         android:name="com.nevmem.qms.fragments.login.LoginFragment"
+        android:label="@string/login_string"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/moveToHomeAfterLogin"
-            app:destination="@id/navigation_home" />
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
+            app:destination="@id/navigation_join" />
     </fragment>
 
     <fragment
@@ -53,9 +59,9 @@
         tools:layout="@layout/fragment_queue_status" />
 
     <fragment
-        android:id="@+id/navigation_scan"
-        android:name="com.nevmem.qms.fragments.ScanFragment"
-        android:label="@string/title_scan"
-        tools:layout="@layout/fragment_scan" />
+        android:id="@+id/navigation_join"
+        android:name="com.nevmem.qms.fragments.join.JoinFragment"
+        android:label="@string/title_join"
+        tools:layout="@layout/fragment_join" />
 
 </navigation>
