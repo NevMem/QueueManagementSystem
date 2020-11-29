@@ -32,6 +32,7 @@ class DoJoinStep : JoinStep {
                         image.isVisible = status.payload.imageUrl != null
 
                         inviteDescription.text = status.payload.description
+                        inviteName.text = status.payload.name
                     }
                 }
             }

@@ -16,10 +16,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/inviteName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/nameTextSize"
+            android:layout_marginTop="@dimen/indent"
+            tools:text="Some name" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/indent"
             tools:src="@drawable/ic_launcher_background" />
 
         <com.google.android.material.textview.MaterialTextView
