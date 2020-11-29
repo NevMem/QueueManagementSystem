@@ -2,7 +2,7 @@ ext.kotlinVersion = '1.3.72'
 ext.gradlePluginVersion = '4.1.0'
 
 ext.globalMinSdkVersion = 23
-ext.globalTargetSdkVersion = 28
+ext.globalTargetSdkVersion = 29
 
 ext.versions = [
     'activityKtx': '1.1.0',

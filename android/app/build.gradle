@@ -10,8 +10,9 @@ android {
 
     defaultConfig {
         applicationId "com.nevmem.qms"
-        minSdkVersion 23
-        targetSdkVersion 29
+        minSdkVersion globalMinSdkVersion
+        targetSdkVersion globalTargetSdkVersion
+
         versionCode 1
         versionName "0.0.1"
     }
@@ -41,12 +42,6 @@ android {
             minifyEnabled false
         }
     }
-
-//    sourceSets {
-//        main.java {
-//            srcDirs += "../protos/build/generated/source/proto/main/javalite"
-//        }
-//    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
