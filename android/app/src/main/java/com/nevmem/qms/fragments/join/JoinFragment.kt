@@ -45,6 +45,7 @@ class JoinFragment : Fragment(R.layout.fragment_join), JoinUsecase {
         super.onViewCreated(view, savedInstanceState)
 
         pager.adapter = JoinPagerAdapter(this, steps)
+        pager.isUserInputEnabled = false
     }
 
     private fun moveToSecondStep() {
