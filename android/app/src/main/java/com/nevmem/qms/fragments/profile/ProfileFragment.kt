@@ -49,6 +49,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 item as ProfileFragmentViewModel.ProfileAvatar
                 Glide.with(context)
                     .load(item.avatarUrl)
+                    .placeholder(R.drawable.icon_profile)
                     .apply(RequestOptions().circleCrop())
                     .into(itemView.avatarImage)
             }
