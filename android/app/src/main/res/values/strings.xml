@@ -12,4 +12,5 @@
     <string name="show_scheme">Show scheme</string>
     <string name="invite_code">Invite code</string>
     <string name="join_string">Join</string>
+    <string name="profile_string_name">Name:</string>
 </resources>

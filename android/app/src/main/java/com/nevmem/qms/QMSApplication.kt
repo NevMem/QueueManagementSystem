@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.nevmem.qms.auth.createDebugAuthManager
 import com.nevmem.qms.fragments.login.LoginPageViewModel
+import com.nevmem.qms.fragments.profile.ProfileFragmentViewModel
 import com.nevmem.qms.keyvalue.createKeyValueStorage
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.createDebugNetworkManager
@@ -34,6 +35,7 @@ class QMSApplication : Application() {
         single<NetworkManager> { createDebugNetworkManager() }
         single<StatusProvider> { createDebugStatusProvider(get()) }
         viewModel { LoginPageViewModel(get()) }
+        viewModel { ProfileFragmentViewModel() }
     }
 
     override fun onCreate() {
