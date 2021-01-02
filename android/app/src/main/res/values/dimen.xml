@@ -8,6 +8,7 @@
 
     <dimen name="formHeaderTextSize">32sp</dimen>
     <dimen name="descriptionTextSize">20sp</dimen>
+    <dimen name="nameTextSize">26sp</dimen>
     <dimen name="numberInLine">30sp</dimen>
     <dimen name="ticketNumberSize">36sp</dimen>
     <dimen name="etaTextSize">32sp</dimen>
