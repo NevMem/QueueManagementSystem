@@ -25,5 +25,4 @@ class ProfileFragmentViewModel : ViewModel() {
             ProfileRating(4.92)
         ))
     }
-
 }
