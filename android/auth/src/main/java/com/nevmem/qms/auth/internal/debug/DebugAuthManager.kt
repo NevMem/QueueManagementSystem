@@ -2,6 +2,7 @@ package com.nevmem.qms.auth.internal.debug
 
 import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.auth.data.*
+import com.nevmem.qms.keyvalue.KeyValueStorage
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -9,7 +10,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
-internal class DebugAuthManager : AuthManager {
+private const val AUTH_TOKEN_STORAGE_KEY = "authentication-token"
+
+internal class DebugAuthManager(
+    private val storage: KeyValueStorage
+) : AuthManager {
     override var token: String = ""
     private var attempt = 0
 
@@ -18,7 +23,11 @@ internal class DebugAuthManager : AuthManager {
                 GlobalScope.launch {
                     channel.send(AuthenticationStatus.Pending)
                     delay(750)
-                    channel.send(AuthenticationStatus.Unauthorized)
+                    if (storage.hasKey(AUTH_TOKEN_STORAGE_KEY)) {
+                        channel.send(AuthenticationStatus.LoggedIn)
+                    } else {
+                        channel.send(AuthenticationStatus.Unauthorized)
+                    }
                     channel.close()
                 }
             }
@@ -27,6 +36,7 @@ internal class DebugAuthManager : AuthManager {
             emit(LoginState.Processing)
             delay(500)
             if (credentials.login == credentials.password) {
+                storage.setValue(AUTH_TOKEN_STORAGE_KEY, credentials.login)
                 emit(LoginState.Success)
             } else {
                 emit(LoginState.Error("Login or password is incorrect ${attempt + 1}"))

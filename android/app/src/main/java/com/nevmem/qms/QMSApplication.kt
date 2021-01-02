@@ -1,8 +1,10 @@
 package com.nevmem.qms
 
 import android.app.Application
+import android.content.Context
 import com.nevmem.qms.auth.createDebugAuthManager
 import com.nevmem.qms.fragments.login.LoginPageViewModel
+import com.nevmem.qms.keyvalue.createKeyValueStorage
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.createDebugNetworkManager
 import com.nevmem.qms.status.QueueStatus
@@ -20,10 +22,12 @@ import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
+private const val AUTH_PREFS_NAME = "auth-prefs"
+
 class QMSApplication : Application() {
 
     private val appModule = module {
-        single { createDebugAuthManager() }
+        single { createDebugAuthManager(createKeyValueStorage(getSharedPreferences(AUTH_PREFS_NAME, Context.MODE_PRIVATE))) }
         single<ToastManager> { createToastManager() }
         single<ShowToastManager> { get<ToastManager>() }
         single<ToastProvider> { get<ToastManager>() }
