@@ -50,10 +50,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_profile"
         android:name="com.nevmem.qms.fragments.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_status"
