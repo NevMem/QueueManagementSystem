@@ -20,9 +20,9 @@ class ProfileFragmentViewModel : ViewModel() {
         profileList.postValue(listOf(
             ProfileAvatar("https://pickaface.net/gallery/avatar/unr_sample_161118_2054_ynlrg.png"),
             ProfileName("Игорь"),
-            ProfileLastName("Зверев")/*,
-            ProfileRating(4.92),
-            ProfileEmail("memlolkek@gmail.com")*/
+            ProfileLastName("Зверев"),
+            ProfileEmail("memlolkek@gmail.com"),
+            ProfileRating(4.92)
         ))
     }
 

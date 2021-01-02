@@ -15,4 +15,6 @@
 
     <dimen name="profileNameTextSize">28sp</dimen>
     <dimen name="profileLastNameTextSize">18sp</dimen>
+    <dimen name="profileEmailTextSize">16sp</dimen>
+    <dimen name="profileRatingTextSize">40sp</dimen>
 </resources>

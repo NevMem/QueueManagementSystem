@@ -16,8 +16,10 @@ import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.recycler.RVItemFactory
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.profile_avatar.view.*
+import kotlinx.android.synthetic.main.profile_email.view.*
 import kotlinx.android.synthetic.main.profile_lastname.view.*
 import kotlinx.android.synthetic.main.profile_name.view.*
+import kotlinx.android.synthetic.main.profile_rating.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
@@ -34,7 +36,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 list,
                 ProfileAvatarFactory(requireContext()),
                 ProfileNameFactory(requireContext()),
-                ProfileLastNameFactory(requireContext()))
+                ProfileLastNameFactory(requireContext()),
+                ProfileEmailFactory(requireContext()),
+                ProfileRatingFactory())
         })
     }
 
@@ -74,5 +78,34 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileLastName
         override fun createHolder(root: ViewGroup): RVHolder
             = Holder(LayoutInflater.from(context).inflate(R.layout.profile_lastname, root, false))
+    }
+
+    private class ProfileEmailFactory(private val context: Context) : RVItemFactory {
+        private inner class Holder(view: View) : RVHolder(view) {
+            override fun onBind(item: RVItem) {
+                item as ProfileFragmentViewModel.ProfileEmail
+                itemView.profileEmail.text = item.email
+            }
+        }
+        override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileEmail
+        override fun createHolder(root: ViewGroup): RVHolder
+            = Holder(LayoutInflater.from(context).inflate(R.layout.profile_email, root, false))
+    }
+
+    private inner class ProfileRatingFactory : RVItemFactory {
+        private inner class Holder(view: View) : RVHolder(view) {
+            override fun onBind(item: RVItem) {
+                item as ProfileFragmentViewModel.ProfileRating
+                itemView.profileRating.text = "${item.rating}"
+                if (item.rating >= 4) {
+                    itemView.profileRating.setTextColor(requireContext().getColor(R.color.successColor))
+                } else {
+                    itemView.profileRating.setTextColor(requireContext().getColor(R.color.errorColor))
+                }
+            }
+        }
+        override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileRating
+        override fun createHolder(root: ViewGroup): RVHolder
+            = Holder(LayoutInflater.from(context).inflate(R.layout.profile_rating, root, false))
     }
 }
