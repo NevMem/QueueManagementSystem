@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.nevmem.qms.R
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.recycler.RVHolder
@@ -48,6 +49,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 item as ProfileFragmentViewModel.ProfileAvatar
                 Glide.with(context)
                     .load(item.avatarUrl)
+                    .apply(RequestOptions().circleCrop())
                     .into(itemView.avatarImage)
             }
         }
