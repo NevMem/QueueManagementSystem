@@ -10,11 +10,20 @@ class ProfileFragmentViewModel : ViewModel() {
     private val profileList = MutableLiveData<List<RVItem>>()
     internal val profile: LiveData<List<RVItem>> = profileList
 
+    private val visitedList = MutableLiveData<List<RVItem>>()
+    internal val visited: LiveData<List<RVItem>> = visitedList
+
     data class ProfileAvatar(var avatarUrl: String? = null): RVItem()
     data class ProfileName(var name: String = ""): RVItem()
     data class ProfileLastName(var lastName: String = ""): RVItem()
     data class ProfileRating(var rating: Double = 0.0): RVItem()
     data class ProfileEmail(var email: String = ""): RVItem()
+
+    data class ProfileVisitedPlace(
+        var title: String = "",
+        var imageUrl: String? = null,
+        var tags: List<String> = emptyList()
+    ) : RVItem()
 
     init {
         profileList.postValue(listOf(
@@ -24,5 +33,11 @@ class ProfileFragmentViewModel : ViewModel() {
             ProfileEmail("memlolkek@gmail.com"),
             ProfileRating(4.92)
         ))
+
+        visitedList.postValue((0..30).map { listOf(
+            ProfileVisitedPlace("Hospital", "https://gb2bel.belzdrav.ru/upload/medialibrary/1a8/%D0%B3%D0%BB%D0%B0%D0%B2.jpg", listOf("Medical", "Health care")),
+            ProfileVisitedPlace("Yandex", "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Yandex_Logo.svg/1200px-Yandex_Logo.svg.png", listOf("IT", "Company")),
+            ProfileVisitedPlace("Check tags", "https://blackbirdesolutions.com/files/2020/02/tags-and-categories.jpg", (0..10).map { "Tag $it" })
+        ) }.flatten())
     }
 }

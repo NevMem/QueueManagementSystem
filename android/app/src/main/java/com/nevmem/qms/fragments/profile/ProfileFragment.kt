@@ -5,22 +5,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.nevmem.qms.R
+import com.nevmem.qms.inflate
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.recycler.RVHolder
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.recycler.RVItemFactory
+import com.nevmem.qms.utils.livedata.mergeLatest
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.profile_avatar.view.*
 import kotlinx.android.synthetic.main.profile_email.view.*
 import kotlinx.android.synthetic.main.profile_lastname.view.*
 import kotlinx.android.synthetic.main.profile_name.view.*
 import kotlinx.android.synthetic.main.profile_rating.view.*
+import kotlinx.android.synthetic.main.profile_visited.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
@@ -32,14 +37,15 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         recycler.layoutManager = LinearLayoutManager(context)
 
-        model.profile.observe(viewLifecycleOwner, Observer { list ->
+        mergeLatest(model.profile, model.visited).observe(viewLifecycleOwner, Observer { list ->
             recycler.adapter = BaseRecyclerAdapter(
                 list,
                 ProfileAvatarFactory(requireContext()),
                 ProfileNameFactory(requireContext()),
                 ProfileLastNameFactory(requireContext()),
                 ProfileEmailFactory(requireContext()),
-                ProfileRatingFactory())
+                ProfileRatingFactory(),
+                ProfileVisitedFactory())
         })
     }
 
@@ -110,5 +116,23 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileRating
         override fun createHolder(root: ViewGroup): RVHolder
             = Holder(LayoutInflater.from(context).inflate(R.layout.profile_rating, root, false))
+    }
+
+    private inner class ProfileVisitedFactory : RVItemFactory {
+        private inner class Holder(view: View) : RVHolder(view) {
+            override fun onBind(item: RVItem) {
+                item as ProfileFragmentViewModel.ProfileVisitedPlace
+                Glide.with(context!!)
+                    .load(item.imageUrl)
+                    .into(itemView.placeIcon)
+                itemView.visitedTitle.text = item.title
+                val padding = context!!.resources.getDimension(R.dimen.indent).toInt()
+                val views = item.tags.map { AppCompatTextView(context!!).apply { text = it; updatePadding(left = padding, right = padding) } }
+                itemView.tagsBox.removeAllViews()
+                views.forEach { itemView.tagsBox.addView(it) }
+            }
+        }
+        override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileVisitedPlace
+        override fun createHolder(root: ViewGroup): RVHolder = Holder(context!!.inflate(R.layout.profile_visited, root))
     }
 }
