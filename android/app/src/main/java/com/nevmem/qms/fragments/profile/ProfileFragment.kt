@@ -126,10 +126,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     .load(item.imageUrl)
                     .into(itemView.placeIcon)
                 itemView.visitedTitle.text = item.title
-                val padding = context!!.resources.getDimension(R.dimen.indent).toInt()
-                val views = item.tags.map { AppCompatTextView(context!!).apply { text = it; updatePadding(left = padding, right = padding) } }
-                itemView.tagsBox.removeAllViews()
-                views.forEach { itemView.tagsBox.addView(it) }
+                itemView.tagsBox.setTags(item.tags)
             }
         }
         override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileVisitedPlace

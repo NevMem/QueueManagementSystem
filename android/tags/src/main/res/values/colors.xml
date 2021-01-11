@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tag_background_tint_color_1">#c0900000</color>
+    <color name="tag_background_tint_color_2">#c0009000</color>
+    <color name="tag_background_tint_color_3">#c0000090</color>
+    <color name="tag_background_tint_color_4">#c0900090</color>
+    <color name="tag_background_tint_color_5">#c0009090</color>
+    <color name="tag_background_tint_color_6">#c0909000</color>
+    <color name="tag_background_tint_color_7">#c0909090</color>
+</resources>

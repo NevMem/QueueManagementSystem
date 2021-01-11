@@ -29,12 +29,11 @@
             android:fontFamily="@font/montserrat_light"
             tools:text="Hospital" />
 
-        <com.google.android.flexbox.FlexboxLayout
+        <com.nevmem.qms.tags.TagsContainer
             android:id="@+id/tagsBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/indent"
-            app:flexWrap="wrap" />
+            android:layout_marginTop="@dimen/indent" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

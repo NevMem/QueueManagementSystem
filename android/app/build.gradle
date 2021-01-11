@@ -70,7 +70,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
     implementation "com.google.protobuf:protobuf-lite:$versions.protobuf"
     implementation "com.github.bumptech.glide:glide:$versions.glide"
-    implementation "com.google.android:flexbox:$versions.flexbox"
 
     implementation project(':auth')
     implementation project(':common-ui')
@@ -79,6 +78,7 @@ dependencies {
     implementation project(':protos')
     implementation project(':recycler')
     implementation project(':status')
+    implementation project(':tags')
     implementation project(':toast')
 
     testImplementation 'junit:junit:4.12'
