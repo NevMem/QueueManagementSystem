@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.doOnAttach
+import androidx.core.view.doOnDetach
+import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -13,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.nevmem.qms.R
+import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.inflate
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.recycler.RVHolder
@@ -26,11 +30,14 @@ import kotlinx.android.synthetic.main.profile_lastname.view.*
 import kotlinx.android.synthetic.main.profile_name.view.*
 import kotlinx.android.synthetic.main.profile_rating.view.*
 import kotlinx.android.synthetic.main.profile_visited.view.*
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private val model: ProfileFragmentViewModel by viewModel()
+
+    private val featureManager: FeatureManager by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -119,7 +126,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private inner class ProfileVisitedFactory : RVItemFactory {
-        private inner class Holder(view: View) : RVHolder(view) {
+        private inner class Holder(view: View) : RVHolder(view), FeatureManager.Listener {
+            override fun onFeaturesUpdated() {
+                itemView.tagsBox.isVisible =
+                    featureManager.getFeature("visited_tags_visible") == "visible"
+            }
+
             override fun onBind(item: RVItem) {
                 item as ProfileFragmentViewModel.ProfileVisitedPlace
                 Glide.with(context!!)
@@ -127,6 +139,15 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     .into(itemView.placeIcon)
                 itemView.visitedTitle.text = item.title
                 itemView.tagsBox.setTags(item.tags)
+
+                itemView.doOnAttach {
+                    featureManager.addListener(this)
+                    onFeaturesUpdated()
+
+                    itemView.doOnDetach {
+                        featureManager.removeListener(this)
+                    }
+                }
             }
         }
         override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileVisitedPlace

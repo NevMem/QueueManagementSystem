@@ -29,18 +29,54 @@ internal class DebugNetworkManager : NetworkManager {
         fun fetchDataByInvite(@Path("id") invite: String): Call<String>
     }
 
+    interface NetworkWithJsonService {
+        @GET("/simple/auh")
+        fun fetchFeaturesMap(): Call<Map<String, String>>
+    }
+
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(ScalarsConverterFactory.create())
         .baseUrl("https://nevmem.com")
         .build()
 
+    private val retrofitWithJson = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create())
+        .baseUrl("https://nevmem.com")
+        .build()
+
     private val backendService: NetworkService
+    private val backendJsonService: NetworkWithJsonService
 
     init {
         backendService = retrofit.create(NetworkService::class.java)
+        backendJsonService = retrofitWithJson.create(NetworkWithJsonService::class.java)
     }
 
     data class Description(var name: String? = null, var description: String? = null, var imageUrl: String? = null)
+
+    override suspend fun loadFeatures(): Map<String, String> = suspendCoroutine { continuation ->
+        GlobalScope.launch(Dispatchers.IO) {
+            backendJsonService.fetchFeaturesMap().enqueue(object : Callback<Map<String, String>> {
+                override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
+                    continuation.resumeWith(Result.failure(t))
+                }
+
+                override fun onResponse(
+                    call: Call<Map<String, String>>,
+                    response: Response<Map<String, String>>
+                ) {
+                    val body = response.body()
+                    if (response.code() != 200) {
+                        continuation.resumeWith(Result.failure(UnusualResponseCodeException(response.code())))
+                    } else if (!response.isSuccessful || body == null) {
+                        continuation.resumeWith(Result.failure(BodyNotPresentException()))
+                    } else {
+                        continuation.resumeWith(Result.success(body))
+                    }
+                }
+            })
+        }
+    }
 
     override suspend fun fetchDataForInvite(invite: String): QueueDescriptionProto.QueueDescription = suspendCoroutine { continuation ->
         GlobalScope.launch(Dispatchers.IO) {
