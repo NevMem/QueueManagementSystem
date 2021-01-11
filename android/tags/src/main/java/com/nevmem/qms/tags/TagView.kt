@@ -13,6 +13,15 @@ class TagView : AppCompatTextView {
     constructor(ctx: Context, attrs: AttributeSet): super(ctx, attrs)
     constructor(ctx: Context, attrs: AttributeSet, defaultStyle: Int): super(ctx, attrs, defaultStyle)
 
+    var colorized = false
+        set(value) {
+            if (field == value) {
+                return
+            }
+            field = value
+            text = text
+        }
+
     init {
         val indent = context.resources.getDimensionPixelSize(R.dimen.indent)
         updatePadding(left = indent * 2, right = indent * 2, top = indent / 2, bottom = indent / 2)
@@ -28,6 +37,9 @@ class TagView : AppCompatTextView {
 
     override fun setText(text: CharSequence?, type: BufferType?) {
         super.setText(text, type)
-        backgroundTintList = ColorStateList.valueOf(TagsColorizer.colorFor(context, text.toString()))
+        if (colorized) {
+            backgroundTintList =
+                ColorStateList.valueOf(TagsColorizer.colorFor(context, text.toString()))
+        }
     }
 }
