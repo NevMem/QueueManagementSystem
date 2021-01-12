@@ -22,10 +22,12 @@ import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.recycler.RVHolder
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.recycler.RVItemFactory
+import com.nevmem.qms.utils.ifDebug
 import com.nevmem.qms.utils.livedata.mergeLatest
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.profile_avatar.view.*
 import kotlinx.android.synthetic.main.profile_email.view.*
+import kotlinx.android.synthetic.main.profile_header.view.*
 import kotlinx.android.synthetic.main.profile_lastname.view.*
 import kotlinx.android.synthetic.main.profile_name.view.*
 import kotlinx.android.synthetic.main.profile_rating.view.*
@@ -160,6 +162,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private inner class HeaderFactory : RVItemFactory {
         private inner class Holder(view: View) : RVHolder(view) {
             override fun onBind(item: RVItem) {
+                ifDebug {
+                    itemView.settingsButton.isVisible = true
+                }
             }
         }
 
