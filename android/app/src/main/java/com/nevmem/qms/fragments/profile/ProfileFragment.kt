@@ -39,6 +39,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private val featureManager: FeatureManager by inject()
 
+    object HeaderStub : RVItem()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -46,13 +48,14 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         mergeLatest(model.profile, model.visited).observe(viewLifecycleOwner, Observer { list ->
             recycler.adapter = BaseRecyclerAdapter(
-                list,
+                listOf(HeaderStub) + list,
                 ProfileAvatarFactory(requireContext()),
                 ProfileNameFactory(requireContext()),
                 ProfileLastNameFactory(requireContext()),
                 ProfileEmailFactory(requireContext()),
                 ProfileRatingFactory(),
-                ProfileVisitedFactory())
+                ProfileVisitedFactory(),
+                HeaderFactory())
         })
     }
 
@@ -152,5 +155,15 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
         override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileVisitedPlace
         override fun createHolder(root: ViewGroup): RVHolder = Holder(context!!.inflate(R.layout.profile_visited, root))
+    }
+
+    private inner class HeaderFactory : RVItemFactory {
+        private inner class Holder(view: View) : RVHolder(view) {
+            override fun onBind(item: RVItem) {
+            }
+        }
+
+        override fun isAppropriateType(item: RVItem): Boolean = item is HeaderStub
+        override fun createHolder(root: ViewGroup): RVHolder = Holder(context!!.inflate(R.layout.profile_header, root))
     }
 }
