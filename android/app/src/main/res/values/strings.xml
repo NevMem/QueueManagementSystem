@@ -16,4 +16,6 @@
     <string name="profile_rating_postfix">/ 5.00</string>
     <string name="logout_string">Logout</string>
     <string name="settings_string">Settings</string>
+
+    <string name="version">Version:</string>
 </resources>
