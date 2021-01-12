@@ -10,6 +10,7 @@ import com.nevmem.qms.R
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.recycler.RVItem
+import com.nevmem.qms.toast.manager.ShowToastManager
 import com.nevmem.qms.utils.livedata.mergeLatest
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.android.ext.android.inject
@@ -20,6 +21,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val model: ProfileFragmentViewModel by viewModel()
 
     private val featureManager: FeatureManager by inject()
+    private val showToastManager: ShowToastManager by inject()
 
     object HeaderStub : RVItem()
 
@@ -38,6 +40,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 ProfileRatingFactory(requireContext()),
                 ProfileVisitedFactory(requireContext(), featureManager),
                 ProfileDocumentFactory(requireContext()),
+                ProfileAddDocumentFactory(requireContext(), showToastManager),
                 HeaderFactory(findNavController(), requireContext()))
         })
     }

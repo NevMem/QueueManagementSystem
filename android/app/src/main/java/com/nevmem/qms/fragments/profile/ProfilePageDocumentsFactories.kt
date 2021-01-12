@@ -8,6 +8,8 @@ import com.nevmem.qms.inflate
 import com.nevmem.qms.recycler.RVHolder
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.recycler.RVItemFactory
+import com.nevmem.qms.toast.manager.ShowToastManager
+import com.nevmem.qms.toast.manager.Type
 import kotlinx.android.synthetic.main.profile_document.view.*
 
 internal class ProfileDocumentFactory(private val context: Context) : RVItemFactory {
@@ -41,4 +43,21 @@ internal class ProfileDocumentFactory(private val context: Context) : RVItemFact
 
     override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileDocument
     override fun createHolder(root: ViewGroup): RVHolder = Holder(context.inflate(R.layout.profile_document, root))
+}
+
+internal class ProfileAddDocumentFactory(
+    private val context: Context,
+    private val showToastManager: ShowToastManager
+) : RVItemFactory {
+    private inner class Holder(view: View) : RVHolder(view) {
+        override fun onBind(item: RVItem) {
+            itemView.setOnClickListener {
+                showToastManager.showToast("Not supported yet", Type.Error)
+            }
+        }
+    }
+
+    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileAddDocument
+    override fun createHolder(root: ViewGroup): RVHolder =
+        Holder(context.inflate(R.layout.profile_add_document, root))
 }

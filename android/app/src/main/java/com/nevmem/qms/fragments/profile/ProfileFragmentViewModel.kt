@@ -24,6 +24,7 @@ class ProfileFragmentViewModel : ViewModel() {
         Policy,
     }
     data class ProfileDocument(var type: DocumentType, var number: String? = null): RVItem()
+    object ProfileAddDocument : RVItem()
 
     data class ProfileVisitedPlace(
         var title: String = "",
@@ -40,7 +41,8 @@ class ProfileFragmentViewModel : ViewModel() {
             ProfileRating(4.92),
             ProfileDocument(DocumentType.Passport, "9214 775590"),
             ProfileDocument(DocumentType.InternationalPassport, "9214775590"),
-            ProfileDocument(DocumentType.Policy, "*******9999")
+            ProfileDocument(DocumentType.Policy, "*******9999"),
+            ProfileAddDocument
         ))
 
         visitedList.postValue((0..30).map { listOf(

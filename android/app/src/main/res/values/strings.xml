@@ -23,4 +23,5 @@
     <string name="profile_international_passport">International passport</string>
     <string name="profile_health_insurance">Health insurance policy</string>
     <string name="profile_document_number">Number:</string>
+    <string name="add_document">Add new document</string>
 </resources>
