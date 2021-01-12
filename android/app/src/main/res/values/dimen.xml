@@ -12,4 +12,15 @@
     <dimen name="numberInLine">30sp</dimen>
     <dimen name="ticketNumberSize">36sp</dimen>
     <dimen name="etaTextSize">32sp</dimen>
+
+    <dimen name="profileNameTextSize">28sp</dimen>
+    <dimen name="profileLastNameTextSize">18sp</dimen>
+    <dimen name="profileEmailTextSize">16sp</dimen>
+    <dimen name="profileRatingTextSize">40sp</dimen>
+
+    <dimen name="profileVisitedIconWidth">64dp</dimen>
+    <dimen name="profileVisitedTitleTextSize">18sp</dimen>
+
+    <dimen name="documentNameTextSize">24sp</dimen>
+    <dimen name="documentNumberTextSize">16sp</dimen>
 </resources>

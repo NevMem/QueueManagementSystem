@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="0dp"
+    android:layout_margin="@dimen/indent"
+    app:cardBackgroundColor="@color/backgroundColor"
+    app:strokeColor="@color/bottomBarColor"
+    app:strokeWidth="2dp"
+    app:cardCornerRadius="@dimen/indent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/indent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/documentIcon"
+            android:layout_height="wrap_content"
+            android:layout_width="96dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/icon_passport" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/documentName"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:fontFamily="@font/montserrat_light"
+            android:textSize="@dimen/documentNameTextSize"
+            android:layout_marginStart="@dimen/indent_double"
+            android:maxLines="4"
+            android:textColor="@color/defaultTextColor"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/documentIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="@string/profile_health_insurance" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/documentNumber"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            android:textSize="@dimen/documentNumberTextSize"
+            android:layout_marginStart="@dimen/indent_double"
+            android:layout_marginTop="@dimen/indent"
+            android:textColor="@color/secondaryTextColor"
+            app:layout_constraintTop_toBottomOf="@id/documentName"
+            app:layout_constraintStart_toEndOf="@+id/documentIcon"
+            tools:text="Number: 9214 ******" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

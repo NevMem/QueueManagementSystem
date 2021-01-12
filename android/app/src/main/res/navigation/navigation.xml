@@ -39,18 +39,31 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/moveToHomeAfterLogin"
+            app:destination="@id/navigation_join"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
+            app:launchSingleTop="true"
             app:popEnterAnim="@anim/fragment_fade_enter"
             app:popExitAnim="@anim/fragment_fade_exit"
-            app:destination="@id/navigation_join" />
+            app:popUpTo="@id/navigation_login"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.nevmem.qms.fragments.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_settings"
+        android:name="com.nevmem.qms.fragments.settings.SettingsFragment"
+        android:label="@string/settings_string"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.nevmem.qms.fragments.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/moveFromProfileToSettings"
+            app:destination="@id/navigation_settings" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_status"

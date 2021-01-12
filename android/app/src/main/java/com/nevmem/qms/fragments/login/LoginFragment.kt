@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.nevmem.qms.R
 import com.nevmem.qms.auth.data.LoginState
@@ -27,33 +28,23 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loginButton.setOnClickListener {
-            setButtonEnabled(false)
-            GlobalScope.launch {
-                model.doLogin(loginField.text.toString(), passwordField.text.toString()).collect {
-                    if (it !is LoginState.Processing) {
-                        setButtonEnabled(true)
-                    }
-                    if (it is LoginState.Error) {
-                        handleError(it.error)
-                    } else if (it is LoginState.Success) {
-                        launch(Dispatchers.Main) {
-                            val action = LoginFragmentDirections.moveToHomeAfterLogin()
-                            findNavController().navigate(action)
-                        }
-                    }
-                }
+        model.loginButtonInteractive.observe(viewLifecycleOwner, Observer {
+            loginButton.isEnabled = it
+        })
+
+        model.loginErrors.observe(viewLifecycleOwner, Observer {
+            showToastManager.showToast(it, Type.Error)
+        })
+
+        model.loginSuccess.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                val action = LoginFragmentDirections.moveToHomeAfterLogin()
+                findNavController().navigate(action)
             }
-        }
-    }
+        })
 
-    private fun handleError(error: String) {
-        showToastManager.showToast(error, Type.Error)
-    }
-
-    private fun setButtonEnabled(enabled: Boolean) {
-        GlobalScope.launch(Dispatchers.Main) {
-            loginButton.isEnabled = enabled
+        loginButton.setOnClickListener {
+            model.performLogin(loginField.text.toString(), passwordField.text.toString())
         }
     }
 }

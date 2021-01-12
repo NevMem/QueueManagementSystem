@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">QMS</string>
 
-    <string name="title_home">Home</string>
+    <string name="title_profile">Profile</string>
     <string name="title_join">Join</string>
     <string name="title_status">Status</string>
     <string name="splash_string">Splash</string>
@@ -12,4 +12,16 @@
     <string name="show_scheme">Show scheme</string>
     <string name="invite_code">Invite code</string>
     <string name="join_string">Join</string>
+    <string name="profile_string_name">Name:</string>
+    <string name="profile_rating_postfix">/ 5.00</string>
+    <string name="logout_string">Logout</string>
+    <string name="settings_string">Settings</string>
+
+    <string name="version">Version:</string>
+
+    <string name="profile_passport">Passport</string>
+    <string name="profile_international_passport">International passport</string>
+    <string name="profile_health_insurance">Health insurance policy</string>
+    <string name="profile_document_number">Number:</string>
+    <string name="add_document">Add new document</string>
 </resources>

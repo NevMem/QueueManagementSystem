@@ -1,3 +1,7 @@
+include ':features'
+include ':tags'
+include ':recycler'
+include ':keyvalue'
 include ':network'
 include ':protos'
 include ':status'
