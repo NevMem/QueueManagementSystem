@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.nevmem.qms.toast.manager.ToastProvider
 import com.nevmem.qms.toast.ui.ToastContainer
 import com.nevmem.qms.usecase.BottomBarHidingUsecase
@@ -25,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.navigationHost)
         navView.setupWithNavController(navController)
+        navView.setupCorners()
 
         bottomBarHidingUsecase = BottomBarHidingUsecase(this, navView, listOf(
             R.id.navigation_join,
@@ -39,5 +42,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<ToastContainer>(R.id.toastContainer).setToastProvider(toastProvider)
+    }
+
+    private fun BottomNavigationView.setupCorners() {
+        val barBackground = background as MaterialShapeDrawable
+        barBackground.shapeAppearanceModel = barBackground.shapeAppearanceModel.toBuilder()
+            .setAllCornerSizes(resources.getDimensionPixelSize(R.dimen.indent).toFloat())
+            .build()
     }
 }
