@@ -18,4 +18,9 @@
     <string name="settings_string">Settings</string>
 
     <string name="version">Version:</string>
+
+    <string name="profile_passport">Passport</string>
+    <string name="profile_international_passport">International passport</string>
+    <string name="profile_health_insurance">Health insurance policy</string>
+    <string name="profile_document_number">Number:</string>
 </resources>

@@ -6,4 +6,7 @@
 
     <color name="backgroundColor">#101010</color>
     <color name="bottomBarColor">#191919</color>
+
+    <color name="defaultTextColor">#D2FFFFFF</color>
+    <color name="secondaryTextColor">#90FFFFFF</color>
 </resources>

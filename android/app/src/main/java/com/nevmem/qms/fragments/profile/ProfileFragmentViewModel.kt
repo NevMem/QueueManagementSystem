@@ -18,6 +18,12 @@ class ProfileFragmentViewModel : ViewModel() {
     data class ProfileLastName(var lastName: String = ""): RVItem()
     data class ProfileRating(var rating: Double = 0.0): RVItem()
     data class ProfileEmail(var email: String = ""): RVItem()
+    enum class DocumentType {
+        Passport,
+        InternationalPassport,
+        Policy,
+    }
+    data class ProfileDocument(var type: DocumentType, var number: String? = null): RVItem()
 
     data class ProfileVisitedPlace(
         var title: String = "",
@@ -31,7 +37,10 @@ class ProfileFragmentViewModel : ViewModel() {
             ProfileName("Игорь"),
             ProfileLastName("Зверев"),
             ProfileEmail("memlolkek@gmail.com"),
-            ProfileRating(4.92)
+            ProfileRating(4.92),
+            ProfileDocument(DocumentType.Passport, "9214 775590"),
+            ProfileDocument(DocumentType.InternationalPassport, "9214775590"),
+            ProfileDocument(DocumentType.Policy, "*******9999")
         ))
 
         visitedList.postValue((0..30).map { listOf(

@@ -20,4 +20,7 @@
 
     <dimen name="profileVisitedIconWidth">64dp</dimen>
     <dimen name="profileVisitedTitleTextSize">18sp</dimen>
+
+    <dimen name="documentNameTextSize">24sp</dimen>
+    <dimen name="documentNumberTextSize">16sp</dimen>
 </resources>
