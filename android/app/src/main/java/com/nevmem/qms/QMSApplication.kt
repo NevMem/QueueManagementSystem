@@ -24,6 +24,7 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
 private const val AUTH_PREFS_NAME = "auth-prefs"
+private const val FEATURES_PREFS_NAME = "features-prefs"
 
 class QMSApplication : Application() {
 
@@ -34,7 +35,7 @@ class QMSApplication : Application() {
         single<ToastProvider> { get<ToastManager>() }
         single<NetworkManager> { createDebugNetworkManager() }
         single<StatusProvider> { createDebugStatusProvider(get()) }
-        single { createFeatureManager(get()) }
+        single { createFeatureManager(get(), createKeyValueStorage(getSharedPreferences(FEATURES_PREFS_NAME, Context.MODE_PRIVATE))) }
         viewModel { LoginPageViewModel(get()) }
         viewModel { ProfileFragmentViewModel() }
     }

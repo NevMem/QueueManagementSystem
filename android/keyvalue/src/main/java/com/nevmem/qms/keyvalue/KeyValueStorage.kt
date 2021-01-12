@@ -5,4 +5,6 @@ interface KeyValueStorage {
     fun getValue(key: String): String?
     fun getValue(key: String, notFound: String): String
     fun setValue(key: String, value: String)
+
+    fun keys(): List<String>
 }

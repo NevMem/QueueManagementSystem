@@ -7,7 +7,7 @@ internal class PrefsKeyValueStorage(private val prefs: SharedPreferences) : KeyV
     override fun hasKey(key: String): Boolean = prefs.contains(key)
 
     override fun getValue(key: String): String? {
-        if (hasKey(key)) {
+        if (!hasKey(key)) {
             return null
         }
         return prefs.getString(key, null)!!
@@ -20,4 +20,6 @@ internal class PrefsKeyValueStorage(private val prefs: SharedPreferences) : KeyV
             .putString(key, value)
             .commit()) { "Commit to shared preferences not succeeded" }
     }
+
+    override fun keys(): List<String> = prefs.all.keys.toList()
 }
