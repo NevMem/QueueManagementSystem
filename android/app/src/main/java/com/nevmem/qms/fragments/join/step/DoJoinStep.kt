@@ -26,6 +26,7 @@ class DoJoinStep : JoinStep {
                         status.payload.imageUrl?.let { url ->
                             Glide.with(this)
                                 .load(url)
+                                .placeholder(R.drawable.join_placeholder)
                                 .into(image)
                         }
 

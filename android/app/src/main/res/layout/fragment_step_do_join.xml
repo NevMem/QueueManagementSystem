@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/nameTextSize"
             android:layout_marginTop="@dimen/indent"
+            android:fontFamily="@font/montserrat_light"
             tools:text="Some name" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -37,6 +38,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/descriptionTextSize"
             android:layout_marginTop="@dimen/indent"
+            android:fontFamily="@font/montserrat_light"
             tools:text="Some long long long long long description" />
 
         <com.google.android.material.button.MaterialButton
@@ -44,6 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/indent"
+            android:fontFamily="@font/montserrat_medium"
             android:text="@string/join_string" />
 
     </LinearLayout>

@@ -41,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:id="@+id/inviteField"
+                android:fontFamily="@font/montserrat_light"
                 android:inputType="textCapCharacters" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -50,6 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/indent"
+            android:fontFamily="@font/montserrat_medium"
             android:text="@string/join_string" />
 
     </LinearLayout>
