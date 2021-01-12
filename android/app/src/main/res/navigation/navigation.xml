@@ -50,10 +50,20 @@
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.nevmem.qms.fragments.settings.SettingsFragment"
+        android:label="@string/settings_string"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
         android:id="@+id/navigation_profile"
         android:name="com.nevmem.qms.fragments.profile.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/moveFromProfileToSettings"
+            app:destination="@id/navigation_settings" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_status"
