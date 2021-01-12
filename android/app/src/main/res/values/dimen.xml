@@ -23,4 +23,6 @@
 
     <dimen name="documentNameTextSize">24sp</dimen>
     <dimen name="documentNumberTextSize">16sp</dimen>
+
+    <dimen name="join_action_text_size">30sp</dimen>
 </resources>
