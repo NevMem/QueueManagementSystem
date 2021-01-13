@@ -37,4 +37,5 @@ dependencies {
     implementation "com.google.android.material:material:$versions.material"
     implementation "androidx.constraintlayout:constraintlayout:$versions.constraintLayout"
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
+    implementation "com.google.mlkit:barcode-scanning:$versions.mlKitBarcode"
 }
