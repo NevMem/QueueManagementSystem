@@ -45,4 +45,29 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:text="Grant" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/previewHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/scan_qr_code_string"
+        android:layout_marginTop="@dimen/indent_double"
+        android:fontFamily="@font/montserrat_light"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/preview"
+        android:layout_width="256dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/indent_double"
+        android:layout_marginBottom="@dimen/indent_quadruple"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/previewHeader"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

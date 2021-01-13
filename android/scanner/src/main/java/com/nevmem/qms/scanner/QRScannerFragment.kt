@@ -9,6 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
@@ -41,6 +46,8 @@ class QRScannerFragment : BottomSheetDialogFragment() {
     private lateinit var textView: AppCompatTextView
     private lateinit var iconView: AppCompatImageView
     private lateinit var actionButton: MaterialButton
+    private lateinit var preview: PreviewView
+    private lateinit var previewHeader: AppCompatTextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,9 +60,11 @@ class QRScannerFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        iconView = view.findViewById<AppCompatImageView>(R.id.fragmentIcon)
-        textView = view.findViewById<AppCompatTextView>(R.id.fragmentText)
-        actionButton = view.findViewById<MaterialButton>(R.id.actionButton)
+        iconView = view.findViewById(R.id.fragmentIcon)
+        textView = view.findViewById(R.id.fragmentText)
+        actionButton = view.findViewById(R.id.actionButton)
+        preview = view.findViewById(R.id.preview)
+        previewHeader = view.findViewById(R.id.previewHeader)
 
         state = State.START
     }
@@ -146,6 +155,32 @@ class QRScannerFragment : BottomSheetDialogFragment() {
         iconView.isVisible = false
         textView.isVisible = false
         actionButton.isVisible = false
+
+        preview.isVisible = true
+        previewHeader.isVisible = true
+        startCamera()
+    }
+
+    private fun startCamera() {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        cameraProviderFuture.addListener(Runnable {
+            val cameraProvider = cameraProviderFuture.get()
+
+            val preview = Preview.Builder()
+                .build()
+                .also {
+                    it.setSurfaceProvider(preview.createSurfaceProvider())
+                }
+
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+            try {
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(viewLifecycleOwner, cameraSelector, preview)
+            } catch (exception: Exception) {
+                println("cur_deb ${exception.message}")
+            }
+        }, ContextCompat.getMainExecutor(requireContext()))
     }
 
     companion object {

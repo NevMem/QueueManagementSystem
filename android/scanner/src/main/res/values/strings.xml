@@ -6,4 +6,5 @@
 
     <string name="action_button_grant">Grant</string>
     <string name="action_button_grant_in_settings">Go to settings</string>
+    <string name="scan_qr_code_string">Scan QR code</string>
 </resources>
