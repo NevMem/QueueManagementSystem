@@ -1,15 +1,20 @@
 package com.nevmem.qms.scanner
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.nevmem.qms.permissions.Permission
 import com.nevmem.qms.permissions.PermissionsManager
+
 
 class QRScannerFragment : BottomSheetDialogFragment() {
 
@@ -18,7 +23,8 @@ class QRScannerFragment : BottomSheetDialogFragment() {
         START,
         ASKING_FOR_PERMISSION,
         SCANNING,
-        PERMISSION_DENIED
+        PERMISSION_DENIED,
+        PERMISSION_DENIED_OUTSIDE_APP_RETRY,
     }
 
     private var state: State = State.NONE
@@ -54,11 +60,21 @@ class QRScannerFragment : BottomSheetDialogFragment() {
         state = State.START
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (state == State.PERMISSION_DENIED_OUTSIDE_APP_RETRY && permissionsManager.hasPermission(Permission.CAMERA)) {
+            state = State.SCANNING
+        }
+    }
+
     private fun processState() {
         when (state) {
             State.START -> processStartState()
             State.ASKING_FOR_PERMISSION -> processAskingForPermission()
             State.PERMISSION_DENIED -> processPermissionDenied()
+            State.PERMISSION_DENIED_OUTSIDE_APP_RETRY -> processPermissionDeniedAndCannotRetry()
+            State.SCANNING -> processScanning()
+            else -> {}
         }
     }
 
@@ -80,8 +96,10 @@ class QRScannerFragment : BottomSheetDialogFragment() {
                     if (state == State.ASKING_FOR_PERMISSION) {
                         state = if (response.isAllGranted) {
                             State.SCANNING
-                        } else {
+                        } else if (!response.cannotRetry) {
                             State.PERMISSION_DENIED
+                        } else {
+                            State.PERMISSION_DENIED_OUTSIDE_APP_RETRY
                         }
                     }
                 }
@@ -99,13 +117,35 @@ class QRScannerFragment : BottomSheetDialogFragment() {
                     if (state == State.ASKING_FOR_PERMISSION) {
                         state = if (response.isAllGranted) {
                             State.SCANNING
-                        } else {
+                        } else if (!response.cannotRetry) {
                             State.PERMISSION_DENIED
+                        } else {
+                            State.PERMISSION_DENIED_OUTSIDE_APP_RETRY
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun processPermissionDeniedAndCannotRetry() {
+        iconView.apply { setImageResource(R.drawable.icon_sadface) }
+        textView.apply { setText(R.string.not_granted_cannot_retry) }
+        actionButton.apply {
+            setText(R.string.action_button_grant_in_settings)
+            setOnClickListener {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri: Uri = Uri.fromParts("package", context.packageName, null)
+                intent.data = uri
+                startActivity(intent)
+            }
+        }
+    }
+
+    private fun processScanning() {
+        iconView.isVisible = false
+        textView.isVisible = false
+        actionButton.isVisible = false
     }
 
     companion object {

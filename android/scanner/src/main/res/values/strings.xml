@@ -2,6 +2,8 @@
 <resources>
     <string name="ask_for_permissions">We need access to camera to use scanner</string>
     <string name="not_granted_and_ask_for_permissions">You haven\'t granted camera permission, and we still need this permission to start scanner</string>
+    <string name="not_granted_cannot_retry">You haven\'t granted camera permission and we cannot request it inside app, you should go to settings and grant it explicitly</string>
 
     <string name="action_button_grant">Grant</string>
+    <string name="action_button_grant_in_settings">Go to settings</string>
 </resources>
