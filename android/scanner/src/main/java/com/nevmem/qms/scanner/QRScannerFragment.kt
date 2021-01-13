@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -17,8 +18,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
+import com.google.mlkit.vision.barcode.Barcode
 import com.nevmem.qms.permissions.Permission
 import com.nevmem.qms.permissions.PermissionsManager
+import com.nevmem.qms.scanner.internal.QRCodeAnalyzer
 
 
 class QRScannerFragment : BottomSheetDialogFragment() {
@@ -42,6 +45,7 @@ class QRScannerFragment : BottomSheetDialogFragment() {
         }
 
     lateinit var permissionsManager: PermissionsManager
+    lateinit var onFound: (String) -> Unit
 
     private lateinit var textView: AppCompatTextView
     private lateinit var iconView: AppCompatImageView
@@ -163,6 +167,7 @@ class QRScannerFragment : BottomSheetDialogFragment() {
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        val executor = ContextCompat.getMainExecutor(requireContext())
         cameraProviderFuture.addListener(Runnable {
             val cameraProvider = cameraProviderFuture.get()
 
@@ -172,15 +177,30 @@ class QRScannerFragment : BottomSheetDialogFragment() {
                     it.setSurfaceProvider(preview.createSurfaceProvider())
                 }
 
+            val analyzer = ImageAnalysis.Builder()
+                .build().also { it.setAnalyzer(executor, QRCodeAnalyzer { barcodes ->
+                    processBarcodes(barcodes)
+                }) }
+
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
                 cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(viewLifecycleOwner, cameraSelector, preview)
-            } catch (exception: Exception) {
-                println("cur_deb ${exception.message}")
+                cameraProvider.bindToLifecycle(viewLifecycleOwner, cameraSelector, preview, analyzer)
+            } catch (exception: Exception) {}
+        }, executor)
+    }
+
+    private fun processBarcodes(barcodes: List<Barcode>) {
+        barcodes.forEach {
+            val rawValue = it.rawValue
+            if (rawValue != null) {
+                if (rawValue.startsWith("invite: ", ignoreCase = true)) {
+                    val invite = rawValue.replace("invite: ", "", ignoreCase = true)
+                    onFound(invite)
+                }
             }
-        }, ContextCompat.getMainExecutor(requireContext()))
+        }
     }
 
     companion object {
