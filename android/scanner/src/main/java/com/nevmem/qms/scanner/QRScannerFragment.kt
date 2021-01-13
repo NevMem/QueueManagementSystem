@@ -127,7 +127,7 @@ class QRScannerFragment : BottomSheetDialogFragment() {
             setText(R.string.action_button_grant)
             setOnClickListener {
                 permissionsManager.requestPermissions(listOf(Permission.CAMERA)) { response ->
-                    if (state == State.ASKING_FOR_PERMISSION) {
+                    if (state == State.PERMISSION_DENIED) {
                         state = if (response.isAllGranted) {
                             State.SCANNING
                         } else if (!response.cannotRetry) {
