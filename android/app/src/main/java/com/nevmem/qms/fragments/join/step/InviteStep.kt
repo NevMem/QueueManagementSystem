@@ -3,10 +3,15 @@ package com.nevmem.qms.fragments.join.step
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.doOnAttach
+import androidx.core.view.doOnDetach
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.nevmem.qms.R
+import com.nevmem.qms.features.FeatureManager
+import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.fragments.join.JoinStep
 import com.nevmem.qms.fragments.join.JoinUsecase
 import com.nevmem.qms.status.FetchStatus
@@ -26,13 +31,18 @@ class InviteStep : JoinStep {
     override fun createFragment(): Fragment = InviteFragment()
 
     companion object {
-        class InviteFragment : Fragment(R.layout.fragment_step_invite) {
+        class InviteFragment : Fragment(R.layout.fragment_step_invite), FeatureManager.Listener {
 
             private val usecase: JoinUsecase by inject()
             private val statusProvider: StatusProvider by inject()
             private val showToastManager: ShowToastManager by inject()
+            private val featureManager: FeatureManager by inject()
 
             private var animator: ValueAnimator? = null
+
+            override fun onFeaturesUpdated() {
+                showScanner.isVisible = featureManager.isFeatureEnabled("qr_code_scanner_enabled")
+            }
 
             override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                 super.onViewCreated(view, savedInstanceState)
@@ -40,6 +50,14 @@ class InviteStep : JoinStep {
                 usecase.invite.observe(viewLifecycleOwner, Observer {
                     inviteField.setText(it)
                 })
+
+                view.doOnAttach {
+                    featureManager.addListener(this)
+                    onFeaturesUpdated()
+                    view.doOnDetach {
+                        featureManager.removeListener(this)
+                    }
+                }
 
                 joinButton.setOnClickListener {
                     joinButton.isEnabled = false
