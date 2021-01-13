@@ -19,6 +19,7 @@ internal class PermissionsManagerImpl : PermissionsManager {
         callback: (PermissionsResponse) -> Unit
     ) {
         queue.add(PermissionsRequest(permissions, callback))
+        delegate?.onHasNewPermissionsRequest()
     }
 
     override fun hasPermission(permission: Permission): Boolean{

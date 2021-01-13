@@ -14,6 +14,7 @@ import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.fragments.join.JoinStep
 import com.nevmem.qms.fragments.join.JoinUsecase
+import com.nevmem.qms.permissions.PermissionsManager
 import com.nevmem.qms.scanner.QRScannerFragment
 import com.nevmem.qms.status.FetchStatus
 import com.nevmem.qms.status.StatusProvider
@@ -38,6 +39,7 @@ class InviteStep : JoinStep {
             private val statusProvider: StatusProvider by inject()
             private val showToastManager: ShowToastManager by inject()
             private val featureManager: FeatureManager by inject()
+            private val permissionsManager: PermissionsManager by inject()
 
             private var animator: ValueAnimator? = null
 
@@ -61,8 +63,11 @@ class InviteStep : JoinStep {
                 }
 
                 showScanner.setOnClickListener {
-                    parentFragmentManager.let {
-                        QRScannerFragment.newInstance().show(it, "scanner")
+                    parentFragmentManager.let { fm ->
+                        QRScannerFragment.newInstance().let {
+                            it.permissionsManager = permissionsManager
+                            it.show(fm, "scanner")
+                        }
                     }
                 }
 

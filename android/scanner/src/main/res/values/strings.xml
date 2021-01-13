@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="ask_for_permissions">We need access to camera to use scanner</string>
+    <string name="not_granted_and_ask_for_permissions">You haven\'t granted camera permission, and we still need this permission to start scanner</string>
 
     <string name="action_button_grant">Grant</string>
 </resources>
