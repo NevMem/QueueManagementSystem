@@ -4,6 +4,8 @@ import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import com.nevmem.qms.R
 import com.nevmem.qms.fragments.join.JoinStep
 import com.nevmem.qms.fragments.join.JoinUsecase
@@ -34,6 +36,10 @@ class InviteStep : JoinStep {
 
             override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                 super.onViewCreated(view, savedInstanceState)
+
+                usecase.invite.observe(viewLifecycleOwner, Observer {
+                    inviteField.setText(it)
+                })
 
                 joinButton.setOnClickListener {
                     joinButton.isEnabled = false

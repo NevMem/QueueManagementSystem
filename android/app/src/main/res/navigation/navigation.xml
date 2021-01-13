@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation.xml"
     app:startDestination="@+id/navigation_splash">
 
@@ -9,7 +9,7 @@
         android:id="@+id/navigation_splash"
         android:name="com.nevmem.qms.fragments.SplashFragment"
         android:label="@string/splash_string"
-        tools:layout="@layout/fragment_splash" >
+        tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/actionOnLoggedIn"
             app:destination="@id/navigation_join"
@@ -59,7 +59,7 @@
         android:id="@+id/navigation_profile"
         android:name="com.nevmem.qms.fragments.profile.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/moveFromProfileToSettings"
             app:destination="@id/navigation_settings" />
@@ -75,6 +75,10 @@
         android:id="@+id/navigation_join"
         android:name="com.nevmem.qms.fragments.join.JoinFragment"
         android:label="@string/title_join"
-        tools:layout="@layout/fragment_join" />
+        tools:layout="@layout/fragment_join">
+        <deepLink
+            android:id="@+id/deepLinkInvite"
+            app:uri="nevmem.com/invite/?invite_id={invite_id}" />
+    </fragment>
 
 </navigation>
