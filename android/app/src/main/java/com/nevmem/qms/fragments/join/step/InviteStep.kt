@@ -14,6 +14,7 @@ import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.fragments.join.JoinStep
 import com.nevmem.qms.fragments.join.JoinUsecase
+import com.nevmem.qms.scanner.QRScannerFragment
 import com.nevmem.qms.status.FetchStatus
 import com.nevmem.qms.status.StatusProvider
 import com.nevmem.qms.toast.manager.ShowToastManager
@@ -56,6 +57,12 @@ class InviteStep : JoinStep {
                     onFeaturesUpdated()
                     view.doOnDetach {
                         featureManager.removeListener(this)
+                    }
+                }
+
+                showScanner.setOnClickListener {
+                    parentFragmentManager.let {
+                        QRScannerFragment.newInstance().show(it, "scanner")
                     }
                 }
 

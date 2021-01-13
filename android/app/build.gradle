@@ -78,6 +78,7 @@ dependencies {
     implementation project(':network')
     implementation project(':protos')
     implementation project(':recycler')
+    implementation project(':scanner')
     implementation project(':status')
     implementation project(':tags')
     implementation project(':toast')
