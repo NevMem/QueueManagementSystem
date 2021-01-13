@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ask_for_permissions">We need access to camera to use scanner</string>
+
+    <string name="action_button_grant">Grant</string>
+</resources>
