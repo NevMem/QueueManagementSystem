@@ -1,11 +1,15 @@
 package com.nevmem.qms
 
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.nevmem.qms.permissions.*
 import com.nevmem.qms.toast.manager.ToastProvider
 import com.nevmem.qms.toast.ui.ToastContainer
 import com.nevmem.qms.usecase.BottomBarHidingUsecase
@@ -13,11 +17,26 @@ import com.yandex.metrica.YandexMetrica
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
-class MainActivity : AppCompatActivity() {
+private const val ACTIVITY_PERMISSIONS_REQUEST_CODE = 123
+
+class MainActivity : AppCompatActivity(), PermissionsDelegate {
 
     private lateinit var bottomBarHidingUsecase: BottomBarHidingUsecase
 
     private val toastProvider: ToastProvider by inject()
+    private val permissionsManager: PermissionsManager by inject()
+
+    private var currentPermissionsRequest: PermissionsRequest? = null
+        set(value) {
+            if (field == value) {
+                return
+            }
+            field = value
+            if (field == null) {
+                checkPermissionsRequests()
+            }
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +61,60 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<ToastContainer>(R.id.toastContainer).setToastProvider(toastProvider)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        permissionsManager.registerDelegate(this)
+        checkPermissionsRequests()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        permissionsManager.removeDelegate(this)
+    }
+
+    override fun onHasNewPermissionsRequest() {
+        checkPermissionsRequests()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == ACTIVITY_PERMISSIONS_REQUEST_CODE && currentPermissionsRequest != null) {
+            val partitioned = currentPermissionsRequest!!.permissions.map { permission ->
+                val index = permissions.indexOfFirst { it == permission.androidPermission }
+                if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
+                    PartitionedPermissionsResponse(permission, PermissionStatus.GRANTED)
+                } else if (shouldShowRequestPermissionRationale(permission.androidPermission)) {
+                    PartitionedPermissionsResponse(permission, PermissionStatus.DENIED)
+                } else {
+                    PartitionedPermissionsResponse(permission, PermissionStatus.DENIED_AND_CANNOT_RETRY)
+                }
+            }
+            val response = PermissionsResponse(partitioned)
+            currentPermissionsRequest!!.callback(response)
+            currentPermissionsRequest = null
+        }
+    }
+
+    override fun hasPermission(permission: Permission): Boolean =
+        ContextCompat.checkSelfPermission(this, permission.androidPermission) == PackageManager.PERMISSION_GRANTED
+
+    private fun checkPermissionsRequests() {
+        if (!permissionsManager.hasRequests && currentPermissionsRequest == null) {
+            return
+        }
+
+        val request = permissionsManager.popRequest()
+        currentPermissionsRequest = request
+        ActivityCompat.requestPermissions(
+            this,
+            request.permissions.map { it.androidPermission }.toTypedArray(),
+            ACTIVITY_PERMISSIONS_REQUEST_CODE)
     }
 
     private fun BottomNavigationView.setupCorners() {

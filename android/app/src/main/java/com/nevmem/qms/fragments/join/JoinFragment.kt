@@ -3,12 +3,15 @@ package com.nevmem.qms.fragments.join
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.nevmem.qms.R
 import com.nevmem.qms.fragments.join.step.DoJoinStep
 import com.nevmem.qms.fragments.join.step.InviteStep
 import com.nevmem.qms.status.FetchStatus
 import kotlinx.android.synthetic.main.fragment_join.*
+import org.koin.android.ext.android.inject
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.unloadKoinModules
 import org.koin.dsl.module
@@ -31,6 +34,8 @@ class JoinFragment : Fragment(R.layout.fragment_join), JoinUsecase {
             }
         }
 
+    override val invite = MutableLiveData<String>()
+
     override fun onResume() {
         super.onResume()
         loadKoinModules(joinModules)
@@ -46,6 +51,10 @@ class JoinFragment : Fragment(R.layout.fragment_join), JoinUsecase {
 
         pager.adapter = JoinPagerAdapter(this, steps)
         pager.isUserInputEnabled = false
+
+        arguments?.getString("invite_id")?.let { invite_id ->
+            invite.postValue(invite_id)
+        }
     }
 
     private fun moveToSecondStep() {

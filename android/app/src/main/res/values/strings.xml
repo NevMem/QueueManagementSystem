@@ -24,4 +24,5 @@
     <string name="profile_health_insurance">Health insurance policy</string>
     <string name="profile_document_number">Number:</string>
     <string name="add_document">Add new document</string>
+    <string name="invite_step_action_text">Enter invite code to join queue</string>
 </resources>

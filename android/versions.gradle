@@ -7,6 +7,8 @@ ext.globalTargetSdkVersion = 29
 ext.versions = [
     'activityKtx': '1.1.0',
     'appcompat': '1.2.0',
+    'cameraX': '1.0.0-beta07',
+    'cameraXView': '1.0.0-alpha14',
     'constraintLayout': '2.0.2',
     'converterGson': '2.5.0',
     'converterProtobuf': '2.5.0',
@@ -23,6 +25,7 @@ ext.versions = [
     'material': '1.1.0',
     'metrica': '3.16.1',
     'multidex': '2.0.1',
+    'mlKitBarcode': '16.1.0',
     'navigation': '2.3.0',
     'navigationFragmentKtx': '2.3.0',
     'navigationFragment': '2.3.0',

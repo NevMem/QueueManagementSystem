@@ -1,3 +1,5 @@
+include ':permissions'
+include ':scanner'
 include ':features'
 include ':tags'
 include ':recycler'

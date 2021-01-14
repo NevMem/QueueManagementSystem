@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -14,26 +15,66 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/joinIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="96dp"
+            app:tint="@color/colorPrimary"
+            app:srcCompat="@drawable/icon_join" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/join_action_text_size"
+            android:fontFamily="@font/montserrat_light"
+            android:layout_marginTop="@dimen/indent"
+            android:text="@string/invite_step_action_text" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_height="wrap_content"
             android:labelFor="@id/inviteField"
             android:hint="@string/invite_code"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="300dp">
+            android:layout_marginTop="@dimen/indent"
+            android:layout_width="300dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:id="@+id/inviteField" />
+                android:id="@+id/inviteField"
+                android:fontFamily="@font/montserrat_light"
+                android:inputType="textCapCharacters" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/joinButton"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/indent"
-            android:text="@string/join_string" />
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/indent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/joinButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="@string/join_string" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:id="@+id/showScanner"
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:padding="@dimen/indent"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_qr_code"
+                android:tint="@color/colorPrimary"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </LinearLayout>
 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/fragmentIcon"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/indent_double"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:src="@drawable/icon_camera" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fragmentText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_light"
+        android:textSize="20sp"
+        android:maxLines="4"
+        android:layout_marginStart="@dimen/indent_quadruple"
+        android:layout_marginEnd="@dimen/indent_quadruple"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragmentIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="We need camera permission to scan QR code" />
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:id="@+id/actionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_medium"
+        android:layout_marginTop="@dimen/indent_double"
+        android:layout_marginBottom="@dimen/indent_double"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragmentText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="Grant" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/previewHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/scan_qr_code_string"
+        android:layout_marginTop="@dimen/indent_double"
+        android:fontFamily="@font/montserrat_light"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/preview"
+        android:layout_width="256dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/indent_double"
+        android:layout_marginBottom="@dimen/indent_quadruple"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/previewHeader"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

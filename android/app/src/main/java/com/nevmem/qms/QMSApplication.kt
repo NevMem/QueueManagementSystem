@@ -9,6 +9,7 @@ import com.nevmem.qms.fragments.profile.ProfileFragmentViewModel
 import com.nevmem.qms.keyvalue.createKeyValueStorage
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.createDebugNetworkManager
+import com.nevmem.qms.permissions.createPermissionsManager
 import com.nevmem.qms.status.StatusProvider
 import com.nevmem.qms.status.createDebugStatusProvider
 import com.nevmem.qms.toast.manager.ShowToastManager
@@ -36,6 +37,7 @@ class QMSApplication : Application() {
         single<NetworkManager> { createDebugNetworkManager() }
         single<StatusProvider> { createDebugStatusProvider(get()) }
         single { createFeatureManager(get(), createKeyValueStorage(getSharedPreferences(FEATURES_PREFS_NAME, Context.MODE_PRIVATE))) }
+        single { createPermissionsManager() }
         viewModel { LoginPageViewModel(get()) }
         viewModel { ProfileFragmentViewModel() }
     }
