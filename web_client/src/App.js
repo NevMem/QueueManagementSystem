@@ -1,9 +1,14 @@
+import { HashRouter as Router, Switch, Route } from 'react-router-dom'
+
 
 function App() {
     return (
-        <div>
-            Hello bitch!
-        </div>
+        <Router>
+            <Switch>
+                <Route path="/">
+                </Route>
+            </Switch>
+        </Router>
     );
 }
 
