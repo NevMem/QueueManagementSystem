@@ -6,7 +6,8 @@ option java_package = "com.nevmem.qms";
 option java_outer_classname = "QueueDescriptionProto";
 
 message QueueDescription {
-    string name = 1;
-    string imageUrl = 2;
-    string description = 3;
+    string id = 1;
+    string name = 2;
+    string imageUrl = 3;
+    string description = 4;
 }
