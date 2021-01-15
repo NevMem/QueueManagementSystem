@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
+import logo from '../images/connection.svg'
 
 const useStyles = makeStyles({
     authCard: {
@@ -43,8 +44,13 @@ export default class StartPage extends Component {
         return (
             <Grid container>
                 <Grid item xs={12} md={7}>
-                    <div style={{height: '100vh'}} className="intro_section">
-                        
+                    <div style={{height: '100vh', display: 'flex', justifyContent: 'center'}} className="intro_section">
+                        <div style={{margin: 'auto auto', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
+                            <img src={logo} alt="logo" style={{margin: '0 auto'}} className="logo"/>
+                            <Typography variant="h4" style={{maxWidth: '500px', textAlign: 'center'}}>
+                                QMS - сервис для организации электронных очередей
+                            </Typography>
+                        </div>
                     </div>
                 </Grid>
                 <Grid item xs={12} md={5}>
