@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package qms;
+
+option java_package = "com.nevmem.qms";
+option java_outer_classname = "ClientApiProto";
+
+message UserIdentity {
+  string email = 1;
+  string password = 2;
+}
+
+message RegisterRequest {
+  string name = 1;
+  string surname = 2;
+  UserIdentity identity = 3;
+}
+
+message AuthRequest {
+  UserIdentity identity = 1;
+}
+
+message AuthResponse {
+  string token = 1;
+}
+
+message User {
+  string id = 1;
+
+  string email = 2;
+
+  string name = 3;
+  string surname = 4;
+  repeated string rights = 5;
+}
