@@ -17,10 +17,10 @@ class Context:
 class AbstractMiddleware:
 
     async def process_request(self, request, context: Context):
-        return request, context
+        return request
 
     async def process_response(self, response, context: Context):
-        return response, context
+        return response
 
     async def process_finally(self):
         pass
