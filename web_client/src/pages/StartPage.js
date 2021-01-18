@@ -13,7 +13,7 @@ const useStyles = makeStyles({
     authCard: {
         minWidth: '350px',
         margin: 'auto 64px',
-        boxShadow: '0px 3px 6px rgb(240, 240, 240)',
+        boxShadow: '0px 3px 6px rgb(12, 12, 12)',
         padding: '16px',
     },
     buttons: {
@@ -47,7 +47,7 @@ export default class StartPage extends Component {
                     <div style={{height: '100vh', display: 'flex', justifyContent: 'center'}} className="intro_section">
                         <div style={{margin: 'auto auto', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
                             <img src={logo} alt="logo" style={{margin: '0 auto'}} className="logo"/>
-                            <Typography variant="h4" style={{maxWidth: '500px', textAlign: 'center'}}>
+                            <Typography variant="h4" style={{maxWidth: '500px', textAlign: 'center', color: '#ccc'}}>
                                 QMS - сервис для организации электронных очередей
                             </Typography>
                         </div>
