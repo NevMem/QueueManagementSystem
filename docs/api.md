@@ -12,12 +12,22 @@ Response: Empty
 Request: proto.client.ClientIdentity 
 Response: proto.client.LoginResponse
 
-#### GET `client/queues?organization=<id органицазции>`
-
-Response: proto.queue_description.QueueDescriptionResponse
-
 #### POST `client/enqueue`
 
 Request: proto.client.EnqueueRequest
 
 Response: proto.client.EnqueueResponse
+
+#### POST `admin/update_queue`
+
+Обновить очередь. При пустом поле id создается новая очередь
+
+#### POST `admin/next_client?queue_id=<id очереди>`
+
+Request: None
+
+Response: proto.user.User
+
+#### POST `admin/update_organization`
+
+Обновить информацию об организации
