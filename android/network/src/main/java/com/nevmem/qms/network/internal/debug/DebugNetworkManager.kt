@@ -1,7 +1,7 @@
 package com.nevmem.qms.network.internal.debug
 
 import com.google.gson.Gson
-import com.nevmem.qms.QueueDescriptionProto
+import com.nevmem.qms.QueueProto
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.exceptions.BodyNotPresentException
 import com.nevmem.qms.network.exceptions.UnusualResponseCodeException
@@ -14,7 +14,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
-import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 internal class DebugNetworkManager : NetworkManager {
@@ -78,7 +77,7 @@ internal class DebugNetworkManager : NetworkManager {
         }
     }
 
-    override suspend fun fetchDataForInvite(invite: String): QueueDescriptionProto.QueueDescription = suspendCoroutine { continuation ->
+    override suspend fun fetchDataForInvite(invite: String): QueueProto.Queue = suspendCoroutine { continuation ->
         GlobalScope.launch(Dispatchers.IO) {
             backendService.fetchDataByInvite(invite).enqueue(object : Callback<String> {
                 override fun onFailure(call: Call<String>, t: Throwable) {
@@ -94,7 +93,7 @@ internal class DebugNetworkManager : NetworkManager {
                         continuation.resumeWith(Result.failure(UnusualResponseCodeException(response.code())))
                     } else if (response.isSuccessful && body != null) {
                         val result: Description = gson.fromJson(body, Description::class.java)
-                        val builder = QueueDescriptionProto.QueueDescription.newBuilder()
+                        val builder = QueueProto.Queue.newBuilder()
                         result.apply {
                             name?.let { builder.setName(it) }
                             description?.let { builder.setDescription(it) }
