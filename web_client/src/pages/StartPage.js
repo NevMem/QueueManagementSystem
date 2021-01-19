@@ -13,7 +13,7 @@ const useStyles = makeStyles({
     authCard: {
         minWidth: '350px',
         margin: 'auto 64px',
-        boxShadow: '0px 3px 6px rgb(12, 12, 12)',
+        boxShadow: '0px 0px 2px rgb(12, 12, 12)',
         padding: '16px',
     },
     buttons: {
