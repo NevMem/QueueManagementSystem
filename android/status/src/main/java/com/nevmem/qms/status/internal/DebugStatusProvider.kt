@@ -1,6 +1,5 @@
 package com.nevmem.qms.status.internal
 
-import com.nevmem.qms.QueueDescriptionProto
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.status.FetchStatus
 import com.nevmem.qms.status.JoinStatus
