@@ -1,91 +1,94 @@
-import functools
-import typing as tp
-from aiohttp import web
+import json
+import base64
+import itsdangerous
+from google.protobuf.json_format import ParseDict
+from itsdangerous.exc import BadTimeSignature, SignatureExpired
 
-from google.protobuf.message import Message
-from google.protobuf.json_format import Parse, ParseDict
+from starlette.authentication import SimpleUser
+from starlette.datastructures import MutableHeaders
+from starlette.middleware import Middleware
+from starlette.middleware.authentication import AuthenticationMiddleware, AuthenticationBackend, AuthCredentials
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import HTTPConnection
+from starlette.types import ASGIApp, Message, Receive, Scope, Send
+
+from server.app.utils.web import get_signature
+from server.app.utils.db_utils import session_scope
+from server.app.config import Config
 
 
-class Context:
+class BasicAuthBackend(AuthenticationBackend):
+    async def authenticate(self, request):
+        if 'user' not in request.session:
+            return
 
-    def __getattribute__(self, item):
-        if item not in super().__getattribute__('__dict__'):
-            return None
-        return super().__getattribute__(item)
+        return AuthCredentials(["authenticated"]), SimpleUser(request.session['user'])
 
 
-class AbstractMiddleware:
+class Proto2JsonMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        content_type = request.headers.get('Content-Type')
+        signature = get_signature(request.url.path)
 
-    async def process_request(self, request, context: Context):
-        return request
+        if content_type == 'application/protobuf':
+            request.parsed = signature[0]().ParseFromString(await request.body())
+        else:
+            body = await request.body()
+            if not body:
+                message = {}
+            else:
+                message = json.loads(body)
 
-    async def process_response(self, response, context: Context):
+            request.scope['_parsed'] = ParseDict(message, signature[0](), ignore_unknown_fields=True)
+
+        response = await call_next(request)
         return response
 
-    async def process_finally(self):
-        pass
 
+class SessionMiddleware:
+    def __init__(
+        self,
+        app: ASGIApp,
+        secret_key: str,
+        session_header: str = "session",
+        max_age: int = 14 * 24 * 60 * 60,  # 14 days, in seconds
+    ) -> None:
+        self.app = app
+        self.signer = itsdangerous.TimestampSigner(str(secret_key))
+        self.session_header = session_header
+        self.max_age = max_age
 
-class ProtobufMiddleware(AbstractMiddleware):
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] not in ("http", "websocket"):
+            await self.app(scope, receive, send)
+            return
 
-    # noinspection PyBroadException
-    async def process_request(self, request: web.Request, context: Context) -> Message:
-        data = await request.read()
-        try:
-            request = context.request_type().ParseFromString(data)
-        except:
-            request = Parse(data, context.request_type(), ignore_unknown_fields=True)
-            context.is_rest = True
+        connection = HTTPConnection(scope)
 
-        return request
-
-    async def process_response(self, response: Message, context: Context) -> web.Response:
-        pass  # TODO: response
-
-
-class MiddlewareApplier:
-
-    def __init__(self, *middlewares: AbstractMiddleware):
-        self.middlewares: tp.Tuple[AbstractMiddleware] = middlewares
-
-    def __call__(self, func: tp.Callable):
-
-        @functools.wraps(func)
-        async def _wrapped(request, context: tp.Optional[Context] = None):
-            if context is None:
-                context = Context()
-
-            # noinspection PyUnresolvedReferences
-            annotations = func.__annotations__
-
+        if self.session_header in connection.headers:
+            data = connection.headers[self.session_header].encode("utf-8")
             try:
-                context.response_type = annotations.pop('returns')
-            except KeyError:
-                raise ValueError(f'Response type for function {func} not specified')
+                data = self.signer.unsign(data, max_age=self.max_age)
+                scope["session"] = json.loads(base64.b64decode(data))
+            except (BadTimeSignature, SignatureExpired):
+                scope["session"] = {}
+        else:
+            scope["session"] = {}
 
-            try:
-                context.request_type = next(iter(annotations.values()))
-            except StopIteration:
-                raise ValueError(f'Request type for function {func} not specified')
+        async def send_wrapper(message: Message) -> None:
+            if message["type"] == "http.response.start":
+                if scope["session"]:
+                    _data = base64.b64encode(json.dumps(scope["session"]).encode("utf-8"))
+                    _data = self.signer.sign(_data)
+                    headers = MutableHeaders(scope=message)
+                    headers.append('session', _data.decode('utf-8'))
+            await send(message)
 
-            middleware_processed = 0
-            try:
-                for middleware in self.middlewares:
-                    middleware_processed += 1
-                    request = await middleware.process_request(request, context)
-
-                response = await func(request, context)
-
-                for middleware in reversed(self.middlewares):
-                    response = await middleware.process_response(response, context)
-            finally:
-
-                for middleware in reversed(self.middlewares):
-                    await middleware.process_finally()
-
-            return response
-
-        return _wrapped
+        await self.app(scope, receive, send_wrapper)
 
 
-default = MiddlewareApplier(ProtobufMiddleware(), )
+middleware = [
+    Middleware(SessionMiddleware, secret_key=Config.SECRET_KEY),
+    Middleware(AuthenticationMiddleware, backend=BasicAuthBackend()),
+    Middleware(Proto2JsonMiddleware),
+]

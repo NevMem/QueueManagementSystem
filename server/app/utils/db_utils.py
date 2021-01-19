@@ -1,26 +1,14 @@
 import uuid
 import contextlib
-import enum
-import functools
-import logging
-import os
-import six
-import threading
-import traceback
 
 from sqlalchemy.dialects.postgresql import UUID as _UUID
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import TypeDecorator, CHAR
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+
 from sqlalchemy_mixins import ReprMixin, SmartQueryMixin
 
-from sqlalchemy.engine import create_engine
-from sqlalchemy.exc import OperationalError
-from sqlalchemy.orm import defer as _defer, noload, scoped_session, sessionmaker
-from sqlalchemy.orm.attributes import InstrumentedAttribute
-from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.sql import ClauseElement
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy_mixins import ReprMixin, SmartQueryMixin
+from server.app.config import Config
 
 Base = declarative_base()
 
@@ -34,6 +22,9 @@ class BaseModel(Base, SmartQueryMixin, ReprMixin):
     __repr_max_length__ = float('inf')
 
     subclasses_map = {}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     @property
     def pks(self):
@@ -94,81 +85,23 @@ class Timeout(Exception):
     pass
 
 
-@contextlib.contextmanager
-def session_scope(
-    timeout=None,
-    statement_timeout=None,
-    lock_timeout=None,
-    interruption_log_level=logging.WARNING,
-    isolation_level=None,
-    nested=False,
-    application_name=None,
-):
-    """
-    Provides a transactional scope around a series of operations.
+engine = create_async_engine(Config.DB_URL, echo=True)
 
-    If :param:`timeout` is set, cancellation request will be send after :param:`timeout` seconds.
 
-    :param timeout: application level timeout in seconds
-    :param statement_timeout: statement timeout for session in seconds (https://www.postgresql.org/docs/9.4/static/runtime-config-client.html)
-    :param lock_timeout: lock timeout for session in seconds (https://www.postgresql.org/docs/9.4/static/runtime-config-client.html)
-    :param interruption_log_level: logging level to use to log exceptions raised during session
-    :param isolation_level: transaction isolation level (database default used if None)
-    :param nested: if True, new session is created; otherwise the same session is used
-    :param application_name: used for `SET application_name` if not None
-    """
-    prepare_module()
+@contextlib.asynccontextmanager
+async def session_scope(autocommit=True):
+    async with AsyncSession(engine) as session:
+        try:
+            yield session
 
-    timer = None
+            if autocommit:
+                await session.commit()
 
-    if nested:
-        Session.remove()
+        except:
+            await session.rollback()
+            raise
 
-    session = BaseModel.session()
 
-    try:
-        if statement_timeout is not None and lock_timeout is not None:
-            if lock_timeout > statement_timeout:
-                LOGGER.warning('lock_timeout greater than statement_timeout is pointless')
-
-        if statement_timeout is not None:
-            session.execute('SET SESSION statement_timeout = {};'.format(int(statement_timeout * 1000)))
-
-        if lock_timeout is not None:
-            session.execute('SET SESSION lock_timeout = {};'.format(int(lock_timeout * 1000)))
-
-        if isolation_level is not None:
-            session.connection(execution_options=dict(isolation_level=isolation_level.value))
-
-        if timeout is not None:
-            timer = threading.Timer(timeout, lambda: _cancel_request(session))
-            timer.start()
-
-        if application_name is None:
-            caller = traceback.extract_stack()[-3]
-            application_name = '{}:{}'.format(caller[0], caller[1])
-
-        session.execute("SET application_name = '{}';".format(six.moves.urllib_parse.quote(application_name)))
-
-        yield session
-        session.commit()
-
-    except Exception as e:
-        formatted_exception = str(e)
-
-        session.rollback()
-
-        if 'deadlock' in formatted_exception:
-            log_pg_stat_activity()
-
-        if isinstance(e, OperationalError) and e.args == TIMEOUT_EXCEPTION_ARGS:
-            raise Timeout()
-
-        raise
-
-    finally:
-        if timer:
-            timer.cancel()
-
-        session.close()
-
+async def prepare_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)

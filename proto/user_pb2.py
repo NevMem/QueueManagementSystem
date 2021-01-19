@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\016ClientApiProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\nuser.proto\x12\x03qms\"/\n\x0cUserIdentity\x12\r\n\x05login\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"U\n\x0fRegisterRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07surname\x18\x02 \x01(\t\x12#\n\x08identity\x18\x03 \x01(\x0b\x32\x11.qms.UserIdentity\"2\n\x0b\x41uthRequest\x12#\n\x08identity\x18\x01 \x01(\x0b\x32\x11.qms.UserIdentity\"\x1d\n\x0c\x41uthResponse\x12\r\n\x05token\x18\x01 \x01(\t\"P\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x0f\n\x07surname\x18\x04 \x01(\t\x12\x0e\n\x06rights\x18\x05 \x03(\tB \n\x0e\x63om.nevmem.qmsB\x0e\x43lientApiProtob\x06proto3'
+  serialized_pb=b'\n\nuser.proto\x12\x03qms\"/\n\x0cUserIdentity\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"U\n\x0fRegisterRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07surname\x18\x02 \x01(\t\x12#\n\x08identity\x18\x03 \x01(\x0b\x32\x11.qms.UserIdentity\"2\n\x0b\x41uthRequest\x12#\n\x08identity\x18\x01 \x01(\x0b\x32\x11.qms.UserIdentity\"\x1d\n\x0c\x41uthResponse\x12\r\n\x05token\x18\x01 \x01(\t\"P\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x0f\n\x07surname\x18\x04 \x01(\t\x12\x0e\n\x06rights\x18\x05 \x03(\tB \n\x0e\x63om.nevmem.qmsB\x0e\x43lientApiProtob\x06proto3'
 )
 
 
@@ -34,7 +34,7 @@ _USERIDENTITY = _descriptor.Descriptor(
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='login', full_name='qms.UserIdentity.login', index=0,
+      name='email', full_name='qms.UserIdentity.email', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,

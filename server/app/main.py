@@ -1,38 +1,55 @@
-from aiohttp import web
-from itsdangerous.serializer import Serializer
+from google.protobuf import empty_pb2
+from sqlalchemy.sql import select
 
-from server.app.config import Config
-from server.app import model
-from server.app.utils.db_utils import session_scope
-from server.app.utils import sha_hash
-from server.app import middleware
+from starlette.authentication import requires
+
 from proto import user_pb2
+from server.app.middleware import middleware
+from server.app import model
+from server.app.utils import sha_hash
+from server.app.utils.db_utils import session_scope, prepare_db
+from server.app.utils.web import route, prepare_app, Request, ProtobufResponse
 
-routes = web.RouteTableDef()
-serializer = Serializer(Config.SECRET_KEY)
+
+@route('/', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
+@requires('authenticated')
+async def ping(request: Request):
+    return ProtobufResponse(user_pb2.User(name=request.user.username, email='pufit@yandex.ru'))
 
 
-@routes.post('/auth')
-@middleware.default
-async def auth(request: user_pb2.UserIdentity, _):
+@route('/register', methods=['POST'], request_type=user_pb2.RegisterRequest)
+async def register(request: Request) -> ProtobufResponse:
+    # todo: validation
+
     async with session_scope() as session:
-        if user_id := await (
-            session.query(model.User.id)
-            .filter(
-                model.User.email == request.email,
-                model.User.password == sha_hash(request.password)
-            )
-        ):
-            token = serializer.dumps({'id': user_id})
+        new_user = model.User(
+            name=request.parsed.name,
+            surname=request.parsed.surname,
+            email=request.parsed.identity.email,
+            password=sha_hash(request.parsed.identity.password)
+        )
 
-    # todo: response
+        session.add(new_user)
 
-
-def main():
-    app = web.Application()
-    app.add_routes(routes)
-    web.run_app(app)
+    return ProtobufResponse(empty_pb2.Empty())
 
 
-if __name__ == '__main__':
-    main()
+@route('/login', methods=['POST'], request_type=user_pb2.AuthRequest)
+async def login(request: Request) -> ProtobufResponse:
+    async with session_scope() as session:
+        query = (
+            select(model.User.email)
+            .filter_by(email=request.parsed.identity.email, password=sha_hash(request.parsed.identity.password))
+        )
+
+        result = await session.execute(query)
+        user = result.scalars().first()
+
+        if user is None:
+            return ProtobufResponse(user_pb2.AuthResponse(), status_code=401)
+
+        request.session['user'] = user
+        return ProtobufResponse(user_pb2.AuthResponse(token=user))  # todo: empty response
+
+
+app = prepare_app(debug=True, middleware=middleware, on_startup=[prepare_db])

@@ -1,2 +1,5 @@
 aiohttp==3.7.3
 itsdangerous==1.1.0
+starlette==0.14.1
+uvicorn[standard]
+sqlalchemy==1.4.0b1
