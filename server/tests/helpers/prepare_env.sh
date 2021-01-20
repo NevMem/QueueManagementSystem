@@ -10,3 +10,5 @@ sudo apt -y install postgresql-12 python3 python3-pip
 pip3 install -r ./server/app/requirenments.txt
 
 pip3 install pytest
+
+. ~/.bashrc
