@@ -1,0 +1,20 @@
+on:
+  push:
+    paths:
+      - 'server*'
+      - 'proto*'
+
+
+name: server_tests
+
+jobs:
+  test:
+    name: Server units
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Add postgres repo
+        run: sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+      - name: Install postgres
+        run: sudo apt-get update && sudo apt-get -y install postgresql-12
+      # todo: install python, deps, run tests
