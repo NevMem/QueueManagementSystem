@@ -7,6 +7,6 @@ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-
 sudo apt update
 sudo apt -y install postgresql-12 python3 python3-pip
 
-sudo pip3 install -r server/app/requirenments.txt
+pip3 install -r ./server/app/requirenments.txt
 
-sudo pip3 install pytest
+pip3 install pytest
