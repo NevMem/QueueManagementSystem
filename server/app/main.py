@@ -11,10 +11,16 @@ from server.app.utils.db_utils import session_scope, prepare_db
 from server.app.utils.web import route, prepare_app, Request, ProtobufResponse
 
 
-@route('/', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
+@route('/check_auth', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
 @requires('authenticated')
-async def ping(request: Request):
+async def check_auth(request: Request):
     return ProtobufResponse(user_pb2.User(name=request.user.username, email='pufit@yandex.ru'))
+
+
+@route('/ping', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
+async def ping(_: Request):
+    async with session_scope():
+        return ProtobufResponse(empty_pb2.Empty())
 
 
 @route('/register', methods=['POST'], request_type=user_pb2.RegisterRequest)
