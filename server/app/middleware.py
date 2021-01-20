@@ -1,10 +1,10 @@
-import json
 import base64
 import itsdangerous
+import json
 from google.protobuf.json_format import ParseDict
 from itsdangerous.exc import BadTimeSignature, SignatureExpired
+from sqlalchemy.sql import select
 
-from starlette.authentication import SimpleUser
 from starlette.datastructures import MutableHeaders
 from starlette.middleware import Middleware
 from starlette.middleware.authentication import AuthenticationMiddleware, AuthenticationBackend, AuthCredentials
@@ -12,9 +12,10 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import HTTPConnection
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
-from server.app.utils.web import get_signature
-from server.app.utils.db_utils import session_scope
+from server.app import model
 from server.app.config import Config
+from server.app.utils.db_utils import session_scope
+from server.app.utils.web import get_signature
 
 
 class BasicAuthBackend(AuthenticationBackend):
@@ -22,7 +23,11 @@ class BasicAuthBackend(AuthenticationBackend):
         if 'user' not in request.session:
             return
 
-        return AuthCredentials(["authenticated"]), SimpleUser(request.session['user'])
+        query = select(model.User).where(model.User.email == request.session['user'])
+        result = await request.scope['_connection'].execute(query)
+        user = result.scalar()
+
+        return AuthCredentials(["authenticated"]), user
 
 
 class Proto2JsonMiddleware(BaseHTTPMiddleware):
@@ -31,7 +36,7 @@ class Proto2JsonMiddleware(BaseHTTPMiddleware):
         signature = get_signature(request.url.path)
 
         if content_type == 'application/protobuf':
-            request.parsed = signature[0]().ParseFromString(await request.body())
+            request.scope['_parsed'] = signature[0]().ParseFromString(await request.body())
         else:
             body = await request.body()
             if not body:
@@ -87,7 +92,15 @@ class SessionMiddleware:
         await self.app(scope, receive, send_wrapper)
 
 
+class DBSessionMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        async with session_scope() as session:
+            request.scope['_connection'] = session
+            return await call_next(request)
+
+
 middleware = [
+    Middleware(DBSessionMiddleware),
     Middleware(SessionMiddleware, secret_key=Config.SECRET_KEY),
     Middleware(AuthenticationMiddleware, backend=BasicAuthBackend()),
     Middleware(Proto2JsonMiddleware),

@@ -16,6 +16,7 @@ _signatures: tp.Dict[str, tp.Tuple[Message, Message]] = {}
 
 class Request(StarletteRequest):
     parsed = None
+    connection = None
 
 
 class ProtobufResponse(Response):
@@ -48,6 +49,7 @@ def route(path: str, request_type: Message = empty_pb2.Empty, response_type: Mes
         @functools.wraps(func)
         async def _wrapped(request, **fn_kwargs):
             request.parsed = request.scope['_parsed']
+            request.connection = request.scope['_connection']
             return await func(request, **fn_kwargs)
 
         _signatures[path] = (request_type, response_type)

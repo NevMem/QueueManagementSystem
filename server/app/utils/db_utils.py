@@ -102,6 +102,10 @@ async def session_scope(autocommit=True):
             raise
 
 
+def generate_session():
+    return AsyncSession(engine)
+
+
 async def prepare_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
