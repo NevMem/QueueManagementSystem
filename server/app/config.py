@@ -3,5 +3,10 @@ import os
 
 class Config:
 
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'lol, so secret')
-    DB_URL = os.environ['DB_URL']
+    @property
+    def SECRET_KEY(self) -> str:
+        return os.environ.get('SECRET_KEY', 'lol, so secret')
+
+    @property
+    def DB_URL(self) -> str:
+        return os.environ['DB_URL']
