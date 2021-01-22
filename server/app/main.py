@@ -2,6 +2,7 @@ from google.protobuf import empty_pb2
 from sqlalchemy.sql import select
 
 from starlette.authentication import requires
+from starlette.exceptions import HTTPException
 
 from proto import user_pb2, permissions_pb2
 from server.app.middleware import middleware
@@ -57,6 +58,12 @@ async def get_user(request: Request):
 @route('/register', methods=['POST'], request_type=user_pb2.RegisterRequest)
 async def register(request: Request) -> ProtobufResponse:
     # todo: validation
+
+    query = select(model.User.email).where(model.User.email == request.parsed.identity.email)
+    result = await request.connection.execute(query)
+
+    if result.scalars().first():
+        raise HTTPException(409)
 
     new_user = model.User(
         name=request.parsed.name,
