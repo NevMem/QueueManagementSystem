@@ -5,4 +5,5 @@ uvicorn[standard]
 sqlalchemy==1.4.0b1
 pycryptodome==3.9.9
 sqlalchemy_mixins
-asyngpg
+asyngpg==0.21.0
+protobuf==3.14.0
