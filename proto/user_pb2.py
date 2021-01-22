@@ -11,6 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+import proto.permissions_pb2 as permissions__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -19,8 +20,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\016ClientApiProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\nuser.proto\x12\x03qms\"/\n\x0cUserIdentity\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"U\n\x0fRegisterRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07surname\x18\x02 \x01(\t\x12#\n\x08identity\x18\x03 \x01(\x0b\x32\x11.qms.UserIdentity\"2\n\x0b\x41uthRequest\x12#\n\x08identity\x18\x01 \x01(\x0b\x32\x11.qms.UserIdentity\"\x1d\n\x0c\x41uthResponse\x12\r\n\x05token\x18\x01 \x01(\t\"P\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x0f\n\x07surname\x18\x04 \x01(\t\x12\x0e\n\x06rights\x18\x05 \x03(\tB \n\x0e\x63om.nevmem.qmsB\x0e\x43lientApiProtob\x06proto3'
-)
+  serialized_pb=b'\n\nuser.proto\x12\x03qms\x1a\x11permissions.proto\"/\n\x0cUserIdentity\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"U\n\x0fRegisterRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07surname\x18\x02 \x01(\t\x12#\n\x08identity\x18\x03 \x01(\x0b\x32\x11.qms.UserIdentity\"2\n\x0b\x41uthRequest\x12#\n\x08identity\x18\x01 \x01(\x0b\x32\x11.qms.UserIdentity\"\x1d\n\x0c\x41uthResponse\x12\r\n\x05token\x18\x01 \x01(\t\"f\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x0f\n\x07surname\x18\x04 \x01(\t\x12$\n\x0bpermissions\x18\x05 \x03(\x0b\x32\x0f.qms.PermissionB \n\x0e\x63om.nevmem.qmsB\x0e\x43lientApiProtob\x06proto3'
+  ,
+  dependencies=[permissions__pb2.DESCRIPTOR,])
 
 
 
@@ -59,8 +61,8 @@ _USERIDENTITY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=19,
-  serialized_end=66,
+  serialized_start=38,
+  serialized_end=85,
 )
 
 
@@ -105,8 +107,8 @@ _REGISTERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=68,
-  serialized_end=153,
+  serialized_start=87,
+  serialized_end=172,
 )
 
 
@@ -137,8 +139,8 @@ _AUTHREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=155,
-  serialized_end=205,
+  serialized_start=174,
+  serialized_end=224,
 )
 
 
@@ -169,8 +171,8 @@ _AUTHRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=207,
-  serialized_end=236,
+  serialized_start=226,
+  serialized_end=255,
 )
 
 
@@ -211,8 +213,8 @@ _USER = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='rights', full_name='qms.User.rights', index=4,
-      number=5, type=9, cpp_type=9, label=3,
+      name='permissions', full_name='qms.User.permissions', index=4,
+      number=5, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -229,12 +231,13 @@ _USER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=238,
-  serialized_end=318,
+  serialized_start=257,
+  serialized_end=359,
 )
 
 _REGISTERREQUEST.fields_by_name['identity'].message_type = _USERIDENTITY
 _AUTHREQUEST.fields_by_name['identity'].message_type = _USERIDENTITY
+_USER.fields_by_name['permissions'].message_type = permissions__pb2._PERMISSION
 DESCRIPTOR.message_types_by_name['UserIdentity'] = _USERIDENTITY
 DESCRIPTOR.message_types_by_name['RegisterRequest'] = _REGISTERREQUEST
 DESCRIPTOR.message_types_by_name['AuthRequest'] = _AUTHREQUEST

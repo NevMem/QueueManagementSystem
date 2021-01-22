@@ -34,7 +34,7 @@ class ProtobufResponse(Response):
                 content_type = value
 
         if content_type != b'application/protobuf':
-            self.media_type = 'application/json'
+            self.headers['content-type'] = 'application/json'
             self.body = self.render(MessageToJson(self.proto))
 
         else:
