@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package qms;
+
+option java_package = "com.nevmem.qms";
+option java_outer_classname = "PermissionsProto";
+
+
+message Permission {
+    string id = 1;
+    string user_id = 2;
+    string organisation_id = 3;
+    string queue_id = 4;
+    string permission_name = 5;
+}
+

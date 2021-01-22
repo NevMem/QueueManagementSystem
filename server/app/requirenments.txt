@@ -4,3 +4,5 @@ starlette==0.14.1
 uvicorn[standard]
 sqlalchemy==1.4.0b1
 pycryptodome==3.9.9
+sqlalchemy_mixins
+asyngpg

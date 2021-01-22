@@ -3,7 +3,7 @@ from sqlalchemy.sql import select
 
 from starlette.authentication import requires
 
-from proto import user_pb2
+from proto import user_pb2, permissions_pb2
 from server.app.middleware import middleware
 from server.app import model
 from server.app.utils import sha_hash
@@ -20,6 +20,38 @@ async def check_auth(request: Request):
 @route('/ping', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
 async def ping(_: Request):
     return ProtobufResponse(empty_pb2.Empty())
+
+
+@route('/get_user', methods=['POST'], request_type=empty_pb2.Empty)
+@requires('authenticated')
+async def get_user(request: Request):
+    query = (
+        select(model.Permission)
+        .where(
+            model.Permission.user_id == request.user.id
+        )
+    )
+
+    result = await request.connection.execute(query)
+    permissions = result.scalars().all()
+
+    response = user_pb2.User(
+        id=str(request.user.id),
+        name=request.user.name,
+        surname=request.user.surname,
+        email=request.user.email,
+        permissions=[
+            permissions_pb2.Permission(
+                id=str(permission.id),
+                organisation_id=str(permission.organisation_id),
+                queue_id=str(permission.queue_id),
+                permission_name=permission.permission_name,
+            )
+            for permission in permissions
+        ]
+    )
+
+    return ProtobufResponse(response)
 
 
 @route('/register', methods=['POST'], request_type=user_pb2.RegisterRequest)

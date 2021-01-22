@@ -5,6 +5,9 @@ package qms;
 option java_package = "com.nevmem.qms";
 option java_outer_classname = "ClientApiProto";
 
+import "proto/permissions.proto";
+
+
 message UserIdentity {
   string email = 1;
   string password = 2;
@@ -31,5 +34,5 @@ message User {
 
   string name = 3;
   string surname = 4;
-  repeated string rights = 5;
+  repeated Permission permissions = 5;
 }
