@@ -48,7 +48,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
 
         registerButton.setOnClickListener {
-
+            findNavController().navigate(LoginFragmentDirections.moveToRegistration())
         }
     }
 }

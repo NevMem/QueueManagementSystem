@@ -56,7 +56,7 @@
             android:layout_marginTop="@dimen/indent"
             android:hint="@string/email_hint_string">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/loginField"
+                android:id="@+id/emailField"
                 android:fontFamily="@font/light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
