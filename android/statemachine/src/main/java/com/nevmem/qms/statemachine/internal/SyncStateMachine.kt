@@ -27,8 +27,8 @@ internal class SyncStateMachine(initialState: State) : StateMachine() {
     }
 
     override fun <T : State> state(state: Class<T>, block: StateMachineAddHandlerSession.() -> Unit)
-        = block(object : StateMachineAddHandlerSession {
-            override fun handler(handle: Handler) {
+        = block(object : StateMachineAddHandlerSession() {
+            override fun generalHandler(handle: Handler) {
                 generalHandler(state, handle)
             }
         })

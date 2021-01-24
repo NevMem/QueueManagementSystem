@@ -3,8 +3,17 @@ package com.nevmem.qms.statemachine
 abstract class State
 abstract class Event
 
-interface StateMachineAddHandlerSession {
-    fun handler(handle: StateMachine.(Event) -> Boolean)
+abstract class StateMachineAddHandlerSession {
+    abstract fun generalHandler(handle: StateMachine.(Event) -> Boolean)
+    inline fun<reified E> handler(crossinline handle: StateMachine.(E) -> Boolean) {
+        generalHandler { event ->
+            if (event is E) {
+                handle(event)
+            } else {
+                false
+            }
+        }
+    }
 }
 
 interface StateChangedDelegate {

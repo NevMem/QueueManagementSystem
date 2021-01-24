@@ -17,13 +17,9 @@ class SimpleSyncStateMachineTests {
         class Event1 : Event()
         val machine = createSyncStateMachine(State1())
         machine.state(State1::class.java) {
-            handler { event ->
-                if (event is Event1) {
-                    transition(State2())
-                    true
-                } else {
-                    false
-                }
+            handler { event: Event1 ->
+                transition(State2())
+                true
             }
         }
         check(machine.currentState is State1) { "Initial state class doesn't match" }
@@ -43,12 +39,10 @@ class SimpleSyncStateMachineTests {
 
         val machine = createSyncStateMachine(State1())
         machine.state(State1::class.java) {
-
-        }
-
-        machine.handler(State1::class.java) { event: Event1 ->
-            transition(State2(10))
-            true
+            handler { event: Event1 ->
+                transition(State2(10))
+                true
+            }
         }
 
         machine.handler(State2::class.java) { event: Event1 ->
