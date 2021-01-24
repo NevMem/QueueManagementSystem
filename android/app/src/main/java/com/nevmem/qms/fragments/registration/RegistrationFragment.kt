@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.nevmem.qms.R
 import com.nevmem.qms.toast.manager.ShowToastManager
-import com.nevmem.qms.toast.manager.Type
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
