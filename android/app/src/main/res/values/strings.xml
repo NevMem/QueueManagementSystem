@@ -25,4 +25,5 @@
     <string name="profile_document_number">Number:</string>
     <string name="add_document">Add new document</string>
     <string name="invite_step_action_text">Enter invite code to join queue</string>
+    <string name="register_button_string">Register</string>
 </resources>
