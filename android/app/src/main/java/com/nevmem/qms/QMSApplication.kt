@@ -6,6 +6,7 @@ import com.nevmem.qms.auth.createDebugAuthManager
 import com.nevmem.qms.features.createFeatureManager
 import com.nevmem.qms.fragments.login.LoginPageViewModel
 import com.nevmem.qms.fragments.profile.ProfileFragmentViewModel
+import com.nevmem.qms.fragments.registration.RegistrationPageViewModel
 import com.nevmem.qms.keyvalue.createKeyValueStorage
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.createDebugNetworkManager
@@ -40,6 +41,7 @@ class QMSApplication : Application() {
         single { createPermissionsManager() }
         viewModel { LoginPageViewModel(get()) }
         viewModel { ProfileFragmentViewModel() }
+        viewModel { RegistrationPageViewModel() }
     }
 
     override fun onCreate() {
