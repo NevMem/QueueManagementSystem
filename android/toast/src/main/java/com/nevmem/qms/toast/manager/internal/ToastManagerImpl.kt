@@ -21,6 +21,10 @@ internal class ToastManagerImpl : ToastManager {
         listeners.forEach { it.onHasToastsChanged() }
     }
 
+    override fun default(message: String) = showToast(message, Type.Default)
+    override fun error(message: String) = showToast(message, Type.Error)
+    override fun success(message: String) = showToast(message, Type.Success)
+
     override fun addListener(listener: ToastProvider.Listener) {
         listeners.add(listener)
     }
