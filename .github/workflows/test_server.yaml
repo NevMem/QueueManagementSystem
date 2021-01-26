@@ -7,6 +7,8 @@ jobs:
   test:
     name: Server units
     runs-on: ubuntu-latest
+    container:
+      image: python:3.9
     services:
       postgres:
         image: postgres:12
