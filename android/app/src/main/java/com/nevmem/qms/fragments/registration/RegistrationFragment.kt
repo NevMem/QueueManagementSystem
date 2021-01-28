@@ -2,11 +2,11 @@ package com.nevmem.qms.fragments.registration
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.nevmem.qms.R
 import com.nevmem.qms.toast.manager.ShowToastManager
-import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_registration.*
 import kotlinx.android.synthetic.main.fragment_registration.passwordField
 import org.koin.android.ext.android.inject
@@ -39,6 +39,21 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
         model.passwordVerification.observe(viewLifecycleOwner, Observer {
             passwordField.error = it
         })
+
+        model.registrationEnabled.observe(viewLifecycleOwner, Observer {
+            performRegistrationButton.isEnabled = it
+        })
+
+        listOf(
+            nameField to model::nameChanged,
+            surnameField to model::surnameChanged,
+            passwordField to model::passwordChanged,
+            emailField to model::emailChanged
+        ).forEach {
+            it.first.addTextChangedListener { text ->
+                it.second(text?.toString())
+            }
+        }
 
         performRegistrationButton.setOnClickListener {
             model.processRegistration(

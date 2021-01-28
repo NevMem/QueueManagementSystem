@@ -11,7 +11,7 @@ internal class SyncStateMachine(initialState: State) : StateMachine() {
             if (value == field)
                 return
             field = value
-            delegate?.onStateChanged(field)
+            delegate?.invoke(field)
         }
 
     private var delegate: StateChangedDelegate? = null
@@ -33,8 +33,9 @@ internal class SyncStateMachine(initialState: State) : StateMachine() {
             }
         })
 
-    override fun transition(to: State) {
+    override fun transition(to: State): Boolean {
         currentState = to
+        return true
     }
 
     override fun dispatchEvent(event: Event) = handle(event)
@@ -43,7 +44,12 @@ internal class SyncStateMachine(initialState: State) : StateMachine() {
         this.delegate = delegate
     }
 
+    override fun removeDelegate() {
+        this.delegate = null
+    }
+
     private fun handle(event: Event) {
+        println("cur_deb got event $event")
         handlers[currentState.javaClass]?.forEach { handler ->
             if (handler(this, event)) {
                 return

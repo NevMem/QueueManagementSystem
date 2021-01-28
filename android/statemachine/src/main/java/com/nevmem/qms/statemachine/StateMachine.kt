@@ -16,9 +16,7 @@ abstract class StateMachineAddHandlerSession {
     }
 }
 
-interface StateChangedDelegate {
-    fun onStateChanged(to: State)
-}
+typealias StateChangedDelegate = (State) -> Unit
 
 abstract class StateMachine {
     abstract val currentState: State
@@ -39,7 +37,8 @@ abstract class StateMachine {
 
     abstract fun dispatchEvent(event: Event)
 
-    abstract fun transition(to: State)
+    abstract fun transition(to: State): Boolean
 
     abstract fun setStateDelegate(delegate: StateChangedDelegate)
+    abstract fun removeDelegate()
 }
