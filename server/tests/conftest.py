@@ -2,7 +2,7 @@ import asyncio
 import pytest
 from server.app.main import app
 from starlette.testclient import TestClient
-from server.app.utils.db_utils import drop_db
+from server.app.utils.db_utils import drop_db, prepare_db
 
 
 @pytest.fixture(scope='function')
@@ -18,6 +18,7 @@ def clean_db():
         loop = asyncio.get_event_loop_policy().new_event_loop()
 
     loop.run_until_complete(drop_db())
+    loop.run_until_complete(prepare_db())
 
 
 class Server(TestClient):
