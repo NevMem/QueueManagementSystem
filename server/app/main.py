@@ -93,4 +93,19 @@ async def login(request: Request) -> ProtobufResponse:
     return ProtobufResponse(user_pb2.AuthResponse(token=user))  # todo: empty response
 
 
+@route('/client/check_unique_user', methods=['POST'], request_type=user_pb2.UserIdentity)
+async def check_unique_user(request: Request):
+    query = (
+        select(model.User.email)
+        .filter_by(email=request.parsed.identity.email)
+    )
+
+    result = await request.connection.execute(query)
+    user = result.scalars().first()
+
+    if user is None:
+        return ProtobufResponse(user_pb2.CheckUniqueUserResponse(is_unique=True))
+    return ProtobufResponse(user_pb2.CheckUniqueUserResponse(is_unique=False))
+
+
 app = prepare_app(debug=True, middleware=middleware, on_startup=[prepare_db])
