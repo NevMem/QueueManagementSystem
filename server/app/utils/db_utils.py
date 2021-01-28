@@ -5,7 +5,6 @@ from sqlalchemy.dialects.postgresql import UUID as _UUID
 from sqlalchemy.types import TypeDecorator, CHAR
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.util.concurrency import await_fallback
 
 from sqlalchemy_mixins import ReprMixin, SmartQueryMixin
 
@@ -115,8 +114,3 @@ async def prepare_db():
 async def drop_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
-
-
-def drop_db_sync():
-    conn = engine.begin()
-    await_fallback(conn.run_sync(Base.metadata.drop_all))
