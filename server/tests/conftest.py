@@ -28,5 +28,8 @@ class Server(TestClient):
     def ping(self):
         return self.get('/ping')
 
-    def check_unique_user(self):
-        return self.post('/client/check_unique_user', json={'email': 'notpufit'})
+    def check_unique_user(self, email: str):
+        return self.post('/client/check_unique_user', json={'email': email})
+
+    def register_user(self, email: str, password: str, name: str = '', surname: str = ''):
+        return self.post('/register', json={'identity': {'email': email, 'password': password}, 'name': name, 'surname': surname})
