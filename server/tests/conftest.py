@@ -1,12 +1,17 @@
 import pytest
 from server.app.main import app
 from starlette.testclient import TestClient
+from server.app.utils.db_utils import drop_db_sync
 
 
 @pytest.fixture(scope='function')
 def server():
     return Server()
 
+
+@pytest.fixture(scope='function', autouse=True)
+def clean_db():
+    drop_db_sync()
 
 
 class Server(TestClient):

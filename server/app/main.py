@@ -97,7 +97,7 @@ async def login(request: Request) -> ProtobufResponse:
 async def check_unique_user(request: Request):
     query = (
         select(model.User.email)
-        .filter_by(email=request.parsed.identity.email)
+        .filter_by(email=request.parsed.email)
     )
 
     result = await request.connection.execute(query)
