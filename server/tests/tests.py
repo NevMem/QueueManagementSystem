@@ -5,4 +5,4 @@ def test_ping(server):
 def test_check_unique_user(server):
     response = server.check_unique_user()
     assert response.status_code == 200
-    assert response.json() == {'is_unique': True}
+    assert response.json() == {'isUnique': True}
