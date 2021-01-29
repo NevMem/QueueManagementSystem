@@ -49,6 +49,7 @@ class VerificationUsecase(private val type: Type) {
             add(EmailCheck())
         }
         if (type == Type.PasswordCheck) {
+            add(TooShortCheck())
             add(SimplePasswordCheck())
         }
     }

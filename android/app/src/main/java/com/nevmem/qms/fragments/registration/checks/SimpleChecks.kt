@@ -29,7 +29,17 @@ class SimplePasswordCheck : Check {
             '0'..'9'
         )
         return if (checkList.all { range -> nonNull.any { it in range } }) {
+            Check.Result.Ok
+        } else {
             Check.Result.Error("Password is too simple")
+        }
+    }
+}
+
+class TooShortCheck : Check {
+    override suspend fun check(value: String?): Check.Result {
+        return if ((value?.length ?: 0) < 6) {
+            Check.Result.Error("Password is too short")
         } else {
             Check.Result.Ok
         }
