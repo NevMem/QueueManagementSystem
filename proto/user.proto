@@ -27,6 +27,10 @@ message AuthResponse {
   string token = 1;
 }
 
+message CheckUniqueUserResponse {
+  bool is_unique = 1;
+}
+
 message User {
   string id = 1;
 
