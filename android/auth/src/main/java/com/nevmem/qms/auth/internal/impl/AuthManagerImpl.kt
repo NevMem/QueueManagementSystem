@@ -15,7 +15,7 @@ internal class AuthManagerImpl : AuthManager {
         TODO("Not yet implemented")
     }
 
-    override fun register(credentials: RegisterCredentials): Channel<RegisterState> {
+    override fun register(credentials: RegisterCredentials): Flow<RegisterState> {
         TODO("Not yet implemented")
     }
 }

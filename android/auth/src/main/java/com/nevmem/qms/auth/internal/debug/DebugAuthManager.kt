@@ -44,13 +44,11 @@ internal class DebugAuthManager(
             }
         }
 
-    override fun register(credentials: RegisterCredentials): Channel<RegisterState> =
-        Channel<RegisterState>(Channel.UNLIMITED).also { channel ->
+    override fun register(credentials: RegisterCredentials): Flow<RegisterState> = flow {
             GlobalScope.launch {
-                channel.send(RegisterState.Processing)
+                emit(RegisterState.Processing)
                 delay(3000)
-                channel.send(RegisterState.Success)
-                channel.close()
+                emit(RegisterState.Success)
             }
         }
 }
