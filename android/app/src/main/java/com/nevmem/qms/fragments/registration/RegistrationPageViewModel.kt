@@ -3,17 +3,28 @@ package com.nevmem.qms.fragments.registration
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.nevmem.qms.auth.AuthManager
+import com.nevmem.qms.auth.data.RegisterCredentials
+import com.nevmem.qms.auth.data.RegisterState
 import com.nevmem.qms.fragments.registration.checks.VerificationUsecase
 import com.nevmem.qms.statemachine.*
+import com.nevmem.qms.toast.manager.ShowToastManager
 import com.yandex.metrica.YandexMetrica
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.*
 
 data class Checks(val passed: MutableSet<String>) : State()
 object AllChecksPassed : State()
+object ProcessingRegistration : State()
 
 data class CheckScheduled(val check: String) : Event()
 data class CheckPassed(val check: String) : Event()
 data class CheckFailed(val check: String) : Event()
+object ProcessRegistration : Event()
+object RegistrationFailed : Event()
+object RegistrationSucceeded : Event()
 
 private const val NAME_CHECK = "name"
 private const val SURNAME_CHECK = "surname"
@@ -21,7 +32,10 @@ private const val EMAIL_CHECK = "email"
 private const val PASSWORD_CHECK = "password"
 private val allChecks = mutableSetOf(NAME_CHECK, SURNAME_CHECK, EMAIL_CHECK, PASSWORD_CHECK)
 
-class RegistrationPageViewModel : ViewModel() {
+class RegistrationPageViewModel(
+    private val authManager: AuthManager,
+    private val showToastManager: ShowToastManager
+) : ViewModel() {
     private val errorsLiveData = MutableLiveData<String>()
     val errors: LiveData<String> = errorsLiveData
 
@@ -36,6 +50,9 @@ class RegistrationPageViewModel : ViewModel() {
     val surnameVerification: LiveData<String?> = liveDataForCheck.getValue(SURNAME_CHECK)
     val passwordVerification: LiveData<String?> = liveDataForCheck.getValue(PASSWORD_CHECK)
     val emailVerification: LiveData<String?> = liveDataForCheck.getValue(EMAIL_CHECK)
+
+    private val changingEnabled = MutableLiveData<Boolean>(true)
+    val fieldsEnabled: LiveData<Boolean> = changingEnabled
 
     private val regEnabled = MutableLiveData<Boolean>(false)
     val registrationEnabled: LiveData<Boolean> = regEnabled
@@ -82,10 +99,20 @@ class RegistrationPageViewModel : ViewModel() {
                 passed.addAll(allChecks.filter { it != event.check })
                 transition(Checks(passed))
             }
+            handler<ProcessRegistration> { event ->
+                transition(ProcessingRegistration)
+            }
+        }
+
+        machine.state(ProcessingRegistration::class.java) {
+            handler<RegistrationFailed> {
+                transition(AllChecksPassed)
+            }
         }
 
         machine.setStateDelegate { state ->
             regEnabled.postValue(state == AllChecksPassed)
+            changingEnabled.postValue(state != ProcessingRegistration)
             println("cur_deb state changed to $state")
             YandexMetrica.reportEvent("reg-page-vm-state-change", mapOf(
                 "new-state" to state
@@ -99,7 +126,18 @@ class RegistrationPageViewModel : ViewModel() {
     fun emailChanged(value: String?) = fieldChanged(EMAIL_CHECK, value)
 
     fun processRegistration(name: String?, surname: String?, password: String?, email: String?) {
-
+        machine.dispatchEvent(ProcessRegistration)
+        GlobalScope.launch {
+            authManager.register(RegisterCredentials(email!!, password!!, name!!, surname!!)).collect { state ->
+                if (state is RegisterState.Error) {
+                    launch(Dispatchers.Main) { showToastManager.error(state.error) }
+                    machine.dispatchEvent(RegistrationFailed)
+                } else if (state == RegisterState.Success) {
+                    launch(Dispatchers.Main) { showToastManager.success("Registration succeeded") }
+                    machine.dispatchEvent(RegistrationSucceeded)
+                }
+            }
+        }
     }
 
     private fun fieldChanged(check: String, value: String?) {

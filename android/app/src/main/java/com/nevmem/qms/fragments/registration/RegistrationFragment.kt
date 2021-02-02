@@ -44,16 +44,24 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
             performRegistrationButton.isEnabled = it
         })
 
-        listOf(
+        val fields = listOf(
             nameField to model::nameChanged,
             surnameField to model::surnameChanged,
             passwordField to model::passwordChanged,
             emailField to model::emailChanged
-        ).forEach {
+        )
+
+        fields.forEach {
             it.first.addTextChangedListener { text ->
                 it.second(text?.toString())
             }
         }
+
+        model.fieldsEnabled.observe(viewLifecycleOwner, Observer {
+            fields.forEach { pair ->
+                pair.first.isEnabled = it
+            }
+        })
 
         performRegistrationButton.setOnClickListener {
             model.processRegistration(

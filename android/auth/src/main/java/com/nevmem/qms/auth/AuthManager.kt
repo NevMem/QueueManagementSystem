@@ -9,5 +9,5 @@ interface AuthManager {
     val authenticationStatus: Channel<AuthenticationStatus>
 
     fun login(credentials: LoginCredentials): Flow<LoginState>
-    fun register(credentials: RegisterCredentials): Channel<RegisterState>
+    fun register(credentials: RegisterCredentials): Flow<RegisterState>
 }

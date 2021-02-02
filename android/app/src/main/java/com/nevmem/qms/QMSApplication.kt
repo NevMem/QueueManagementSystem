@@ -41,7 +41,7 @@ class QMSApplication : Application() {
         single { createPermissionsManager() }
         viewModel { LoginPageViewModel(get()) }
         viewModel { ProfileFragmentViewModel() }
-        viewModel { RegistrationPageViewModel() }
+        viewModel { RegistrationPageViewModel(get(), get()) }
     }
 
     override fun onCreate() {
