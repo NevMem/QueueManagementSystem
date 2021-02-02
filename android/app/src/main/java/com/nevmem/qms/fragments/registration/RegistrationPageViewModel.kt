@@ -59,6 +59,9 @@ class RegistrationPageViewModel(
 
     private val machine = createSyncStateMachine(Checks(mutableSetOf()))
 
+    private val success = MutableLiveData<Boolean>()
+    val registrationSucceded: LiveData<Boolean> = success
+
     private val checkers = mapOf(
         NAME_CHECK to VerificationUsecase(VerificationUsecase.Type.NameSurnameCheck),
         SURNAME_CHECK to VerificationUsecase(VerificationUsecase.Type.NameSurnameCheck),
@@ -109,6 +112,7 @@ class RegistrationPageViewModel(
                 transition(AllChecksPassed)
             }
             handler<RegistrationSucceeded> {
+                success.postValue(true)
                 transition(AllChecksPassed)
             }
         }

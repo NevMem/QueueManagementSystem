@@ -47,6 +47,7 @@ internal class DebugAuthManager(
     override fun register(credentials: RegisterCredentials): Flow<RegisterState> = flow {
             emit(RegisterState.Processing)
             delay(1500)
+            storage.setValue(AUTH_TOKEN_STORAGE_KEY, credentials.login)
             emit(RegisterState.Success)
         }
 }

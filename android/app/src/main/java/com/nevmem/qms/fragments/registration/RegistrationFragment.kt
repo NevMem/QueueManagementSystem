@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.nevmem.qms.R
 import com.nevmem.qms.toast.manager.ShowToastManager
 import kotlinx.android.synthetic.main.fragment_registration.*
@@ -42,6 +43,12 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
 
         model.registrationEnabled.observe(viewLifecycleOwner, Observer {
             performRegistrationButton.isEnabled = it
+        })
+
+        model.registrationSucceded.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                findNavController().navigate(RegistrationFragmentDirections.moveToJoinAfterSuccessRegistration())
+            }
         })
 
         val fields = listOf(
