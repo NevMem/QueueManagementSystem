@@ -45,10 +45,8 @@ internal class DebugAuthManager(
         }
 
     override fun register(credentials: RegisterCredentials): Flow<RegisterState> = flow {
-            GlobalScope.launch {
-                emit(RegisterState.Processing)
-                delay(3000)
-                emit(RegisterState.Success)
-            }
+            emit(RegisterState.Processing)
+            delay(1500)
+            emit(RegisterState.Success)
         }
 }
