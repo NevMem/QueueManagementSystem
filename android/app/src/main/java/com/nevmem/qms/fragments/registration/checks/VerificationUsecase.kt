@@ -29,7 +29,6 @@ class VerificationUsecase(private val type: Type) {
         job = GlobalScope.launch {
             for (check in assembleCheckList(type)) {
                 val result = check.check(value)
-                println("cur_deb $type $value $check $result")
                 if (result is Check.Result.Error) {
                     launch(Dispatchers.Main) {
                         listener?.invoke(VerificationStatus.Error(result.message))

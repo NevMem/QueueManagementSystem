@@ -108,12 +108,14 @@ class RegistrationPageViewModel(
             handler<RegistrationFailed> {
                 transition(AllChecksPassed)
             }
+            handler<RegistrationSucceeded> {
+                transition(AllChecksPassed)
+            }
         }
 
         machine.setStateDelegate { state ->
             regEnabled.postValue(state == AllChecksPassed)
             changingEnabled.postValue(state != ProcessingRegistration)
-            println("cur_deb state changed to $state")
             YandexMetrica.reportEvent("reg-page-vm-state-change", mapOf(
                 "new-state" to state
             ))
@@ -154,7 +156,6 @@ class RegistrationPageViewModel(
 
     private fun createVerificationUsecaseListener(check: String): ((VerificationUsecase.VerificationStatus) -> Unit) {
         return { status ->
-            println("cur_deb VerificationUsecaseListener $status")
             when (status) {
                 VerificationUsecase.VerificationStatus.Scheduled -> {
                     machine.dispatchEvent(CheckScheduled(check))

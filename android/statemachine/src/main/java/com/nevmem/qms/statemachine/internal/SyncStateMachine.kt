@@ -49,7 +49,6 @@ internal class SyncStateMachine(initialState: State) : StateMachine() {
     }
 
     private fun handle(event: Event) {
-        println("cur_deb got event $event")
         handlers[currentState.javaClass]?.forEach { handler ->
             if (handler(this, event)) {
                 return
