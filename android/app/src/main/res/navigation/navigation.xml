@@ -79,6 +79,12 @@
         <action
             android:id="@+id/moveFromProfileToSettings"
             app:destination="@id/navigation_settings" />
+        <action
+            android:id="@+id/moveToLoginOnLogout"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation.xml"
+            app:popUpToInclusive="true"
+            app:destination="@id/navigation_login" />
     </fragment>
 
     <fragment

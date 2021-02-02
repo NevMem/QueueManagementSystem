@@ -10,4 +10,5 @@ interface AuthManager {
 
     fun login(credentials: LoginCredentials): Flow<LoginState>
     fun register(credentials: RegisterCredentials): Flow<RegisterState>
+    fun logout()
 }

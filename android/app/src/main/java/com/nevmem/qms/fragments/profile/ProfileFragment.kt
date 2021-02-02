@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nevmem.qms.R
+import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.recycler.RVItem
@@ -22,6 +23,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private val featureManager: FeatureManager by inject()
     private val showToastManager: ShowToastManager by inject()
+    private val authManager: AuthManager by inject()
 
     object HeaderStub : RVItem()
 
@@ -41,7 +43,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 ProfileVisitedFactory(requireContext(), featureManager),
                 ProfileDocumentFactory(requireContext()),
                 ProfileAddDocumentFactory(requireContext(), showToastManager),
-                HeaderFactory(findNavController(), requireContext()))
+                HeaderFactory(findNavController(), requireContext(), authManager))
         })
     }
 }

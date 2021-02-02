@@ -50,4 +50,8 @@ internal class DebugAuthManager(
             storage.setValue(AUTH_TOKEN_STORAGE_KEY, credentials.login)
             emit(RegisterState.Success)
         }
+
+    override fun logout() {
+        storage.removeKey(AUTH_TOKEN_STORAGE_KEY)
+    }
 }

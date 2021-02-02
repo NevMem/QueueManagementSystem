@@ -18,4 +18,8 @@ internal class AuthManagerImpl : AuthManager {
     override fun register(credentials: RegisterCredentials): Flow<RegisterState> {
         TODO("Not yet implemented")
     }
+
+    override fun logout() {
+        TODO("Not yet implemented")
+    }
 }

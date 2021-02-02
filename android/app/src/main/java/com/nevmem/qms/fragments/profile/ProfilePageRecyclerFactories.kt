@@ -11,6 +11,7 @@ import androidx.navigation.NavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.nevmem.qms.R
+import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.inflate
 import com.nevmem.qms.recycler.RVHolder
@@ -126,13 +127,22 @@ internal class ProfileRatingFactory(private val context: Context) : RVItemFactor
             = Holder(context.inflate(R.layout.profile_rating, root))
 }
 
-internal class HeaderFactory(private val navController: NavController, private val context: Context) : RVItemFactory {
+internal class HeaderFactory(
+    private val navController: NavController,
+    private val context: Context,
+    private val authManager: AuthManager
+) : RVItemFactory {
     private inner class Holder(view: View) : RVHolder(view) {
         override fun onBind(item: RVItem) {
             ifDebug {
                 itemView.settingsButton.isVisible = true
                 itemView.settingsButton.setOnClickListener {
                     val action = ProfileFragmentDirections.moveFromProfileToSettings()
+                    navController.navigate(action)
+                }
+                itemView.logoutButton.setOnClickListener {
+                    authManager.logout()
+                    val action = ProfileFragmentDirections.moveToLoginOnLogout()
                     navController.navigate(action)
                 }
             }

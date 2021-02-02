@@ -22,4 +22,10 @@ internal class PrefsKeyValueStorage(private val prefs: SharedPreferences) : KeyV
     }
 
     override fun keys(): List<String> = prefs.all.keys.toList()
+
+    override fun removeKey(key: String) {
+        check(prefs.edit()
+            .remove(key)
+            .commit()) { "Commit to shared preferences not succeeded" }
+    }
 }
