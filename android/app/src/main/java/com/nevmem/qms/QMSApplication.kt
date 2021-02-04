@@ -2,6 +2,7 @@ package com.nevmem.qms
 
 import android.app.Application
 import android.content.Context
+import com.nevmem.qms.auth.createAuthManager
 import com.nevmem.qms.auth.createDebugAuthManager
 import com.nevmem.qms.features.createFeatureManager
 import com.nevmem.qms.fragments.login.LoginPageViewModel
@@ -10,6 +11,7 @@ import com.nevmem.qms.fragments.registration.RegistrationPageViewModel
 import com.nevmem.qms.keyvalue.createKeyValueStorage
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.createDebugNetworkManager
+import com.nevmem.qms.network.createNetworkManager
 import com.nevmem.qms.permissions.createPermissionsManager
 import com.nevmem.qms.status.StatusProvider
 import com.nevmem.qms.status.createDebugStatusProvider
@@ -31,14 +33,14 @@ private const val FEATURES_PREFS_NAME = "features-prefs"
 class QMSApplication : Application() {
 
     private val appModule = module {
-        single { createDebugAuthManager(createKeyValueStorage(getSharedPreferences(AUTH_PREFS_NAME, Context.MODE_PRIVATE))) }
         single<ToastManager> { createToastManager() }
         single<ShowToastManager> { get<ToastManager>() }
         single<ToastProvider> { get<ToastManager>() }
-        single<NetworkManager> { createDebugNetworkManager() }
+        single<NetworkManager> { createNetworkManager() }
         single<StatusProvider> { createDebugStatusProvider(get()) }
         single { createFeatureManager(get(), createKeyValueStorage(getSharedPreferences(FEATURES_PREFS_NAME, Context.MODE_PRIVATE))) }
         single { createPermissionsManager() }
+        single { createAuthManager(createKeyValueStorage(getSharedPreferences(AUTH_PREFS_NAME, Context.MODE_PRIVATE)), get()) }
         viewModel { LoginPageViewModel(get()) }
         viewModel { ProfileFragmentViewModel() }
         viewModel { RegistrationPageViewModel(get(), get()) }

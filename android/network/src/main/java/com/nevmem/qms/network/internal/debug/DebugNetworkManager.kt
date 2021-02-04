@@ -1,8 +1,10 @@
 package com.nevmem.qms.network.internal.debug
 
 import com.google.gson.Gson
+import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.QueueProto
 import com.nevmem.qms.network.NetworkManager
+import com.nevmem.qms.network.data.RegisterResponse
 import com.nevmem.qms.network.exceptions.BodyNotPresentException
 import com.nevmem.qms.network.exceptions.UnusualResponseCodeException
 import kotlinx.coroutines.Dispatchers
@@ -107,5 +109,13 @@ internal class DebugNetworkManager : NetworkManager {
                 }
             })
         }
+    }
+
+    override suspend fun login(credentials: ClientApiProto.UserIdentity): String {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun register(credentials: ClientApiProto.RegisterRequest): RegisterResponse {
+        TODO("Not yet implemented")
     }
 }
