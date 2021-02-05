@@ -4,6 +4,7 @@ import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.auth.data.*
 import com.nevmem.qms.keyvalue.KeyValueStorage
+import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.data.RegisterResponse
 import kotlinx.coroutines.GlobalScope
@@ -17,7 +18,8 @@ private const val AUTH_MANAGER_TOKEN_KEY_NAME = "token_key"
 
 internal class AuthManagerImpl(
     private val storage: KeyValueStorage,
-    private val networkManager: NetworkManager
+    private val networkManager: NetworkManager,
+    private val logger: Logger
 ) : AuthManager {
 
     private var actualToken: String? = storage.getValue(AUTH_MANAGER_TOKEN_KEY_NAME)
@@ -32,6 +34,10 @@ internal class AuthManagerImpl(
                 storage.removeKey(AUTH_MANAGER_TOKEN_KEY_NAME)
             }
         }
+
+    init {
+        logger.debugLog("loaded token: $actualToken")
+    }
 
     override val token: String
         get() {
@@ -53,6 +59,7 @@ internal class AuthManagerImpl(
         }
 
     override fun login(credentials: LoginCredentials): Flow<LoginState> = flow {
+        logger.debugLog("AuthManagerImpl login")
         emit(LoginState.Processing)
         try {
             val response = networkManager.login(
@@ -61,34 +68,47 @@ internal class AuthManagerImpl(
                     .setPassword(credentials.password)
                     .build())
             actualToken = response
+            logger.debugLog("AuthManagerImpl success")
             emit(LoginState.Success)
         } catch (exception: Exception) {
+            logger.debugLog("AuthManagerImpl error")
             emit(LoginState.Error(exception.message ?: ""))
         }
     }
 
     override fun register(credentials: RegisterCredentials): Flow<RegisterState> = flow {
+        logger.debugLog("AuthManagerImpl register")
         emit(RegisterState.Processing)
-        val response = networkManager.register(ClientApiProto.RegisterRequest.newBuilder()
-            .setName(credentials.name)
-            .setSurname(credentials.lastName)
-            .setIdentity(ClientApiProto.UserIdentity.newBuilder()
-                .setEmail(credentials.login)
-                .setPassword(credentials.password)
-                .build())
-            .build())
-        if (response is RegisterResponse.Success) {
-            login(LoginCredentials(credentials.login, credentials.password))
-                .collect {
-                    if (it is LoginState.Success) {
-                        emit(RegisterState.Success)
-                    } else if (it is LoginState.Error) {
-                        emit(RegisterState.Error(it.error))
+        try {
+            val response = networkManager.register(
+                ClientApiProto.RegisterRequest.newBuilder()
+                    .setName(credentials.name)
+                    .setSurname(credentials.lastName)
+                    .setIdentity(
+                        ClientApiProto.UserIdentity.newBuilder()
+                            .setEmail(credentials.login)
+                            .setPassword(credentials.password)
+                            .build()
+                    )
+                    .build()
+            )
+            if (response is RegisterResponse.Success) {
+                logger.debugLog("AuthManagerImpl register success")
+                login(LoginCredentials(credentials.login, credentials.password))
+                    .collect {
+                        if (it is LoginState.Success) {
+                            emit(RegisterState.Success)
+                        } else if (it is LoginState.Error) {
+                            emit(RegisterState.Error(it.error))
+                        }
                     }
-                }
-            return@flow
+                return@flow
+            }
+            logger.debugLog("AuthManagerImpl register error")
+            emit(RegisterState.Error("Not unique email"))
+        } catch (exception: Exception) {
+            emit(RegisterState.Error(exception.message ?: ""))
         }
-        emit(RegisterState.Error("Not unique email"))
     }
 
     override fun logout() {

@@ -1,3 +1,4 @@
+include ':logger'
 include ':statemachine'
 include ':permissions'
 include ':scanner'

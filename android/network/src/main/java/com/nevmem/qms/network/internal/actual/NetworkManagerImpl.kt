@@ -9,18 +9,22 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.protobuf.ProtoConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
 import kotlin.coroutines.suspendCoroutine
 
 class NetworkManagerImpl : NetworkManager {
 
-    interface BackendService {
-        @POST("/login")
-        fun login(@Body body: ClientApiProto.UserIdentity): Call<ClientApiProto.AuthResponse>
+    data class UserIdentity(val email: String?, val password: String?)
+    data class RegisterRequest(val name: String?, val surname: String?, val identity: UserIdentity?)
 
-        @POST("/register")
-        fun register(@Body body: ClientApiProto.RegisterRequest): Call<Any>
+    interface BackendService {
+        @POST("/client/login")
+        fun login(@Body body: UserIdentity?): Call<ClientApiProto.AuthResponse>
+
+        @POST("/client/register")
+        fun register(@Body body: RegisterRequest?): Call<Any>
     }
 
     private val retrofit = Retrofit.Builder()
@@ -37,7 +41,7 @@ class NetworkManagerImpl : NetworkManager {
     override suspend fun loadFeatures(): Map<String, String> = mapOf()
 
     override suspend fun login(credentials: ClientApiProto.UserIdentity): String = suspendCoroutine { continuation ->
-        service.login(credentials).enqueue(object : Callback<ClientApiProto.AuthResponse> {
+        service.login(credentials.toDataClass()).enqueue(object : Callback<ClientApiProto.AuthResponse> {
             override fun onFailure(call: Call<ClientApiProto.AuthResponse>, t: Throwable) {
                 continuation.resumeWith(Result.failure(t))
             }
@@ -54,7 +58,7 @@ class NetworkManagerImpl : NetworkManager {
     }
 
     override suspend fun register(credentials: ClientApiProto.RegisterRequest): RegisterResponse = suspendCoroutine { continuation ->
-        service.register(credentials).enqueue(object : Callback<Any> {
+        service.register(credentials.toDataClass()).enqueue(object : Callback<Any> {
             override fun onFailure(call: Call<Any>, t: Throwable) {
                 continuation.resumeWith(Result.failure(t))
             }
@@ -67,5 +71,19 @@ class NetworkManagerImpl : NetworkManager {
                 }
             }
         })
+    }
+
+    private fun ClientApiProto.RegisterRequest?.toDataClass(): RegisterRequest? {
+        if (this == null) {
+            return null
+        }
+        return RegisterRequest(name, surname, identity.toDataClass())
+    }
+
+    private fun ClientApiProto.UserIdentity?.toDataClass(): UserIdentity? {
+        if (this == null) {
+            return null
+        }
+        return UserIdentity(email, password)
     }
 }

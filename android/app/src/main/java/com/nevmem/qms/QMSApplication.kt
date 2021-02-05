@@ -9,6 +9,8 @@ import com.nevmem.qms.fragments.login.LoginPageViewModel
 import com.nevmem.qms.fragments.profile.ProfileFragmentViewModel
 import com.nevmem.qms.fragments.registration.RegistrationPageViewModel
 import com.nevmem.qms.keyvalue.createKeyValueStorage
+import com.nevmem.qms.logger.Logger
+import com.nevmem.qms.logger.LoggerImpl
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.createDebugNetworkManager
 import com.nevmem.qms.network.createNetworkManager
@@ -40,7 +42,10 @@ class QMSApplication : Application() {
         single<StatusProvider> { createDebugStatusProvider(get()) }
         single { createFeatureManager(get(), createKeyValueStorage(getSharedPreferences(FEATURES_PREFS_NAME, Context.MODE_PRIVATE))) }
         single { createPermissionsManager() }
-        single { createAuthManager(createKeyValueStorage(getSharedPreferences(AUTH_PREFS_NAME, Context.MODE_PRIVATE)), get()) }
+        single {
+            createAuthManager(createKeyValueStorage(getSharedPreferences(AUTH_PREFS_NAME, Context.MODE_PRIVATE)), get(), get())
+        }
+        single<Logger> { LoggerImpl() }
         viewModel { LoginPageViewModel(get()) }
         viewModel { ProfileFragmentViewModel() }
         viewModel { RegistrationPageViewModel(get(), get()) }

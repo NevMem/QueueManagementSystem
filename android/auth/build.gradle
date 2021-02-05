@@ -30,6 +30,7 @@ dependencies {
     implementation "com.google.protobuf:protobuf-lite:$versions.protobuf"
 
     implementation project(':keyvalue')
+    implementation project(':logger')
     implementation project(':network')
     implementation project(':protos')
 }

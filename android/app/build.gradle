@@ -75,6 +75,7 @@ dependencies {
     implementation project(':common-ui')
     implementation project(':features')
     implementation project(':keyvalue')
+    implementation project(':logger')
     implementation project(':network')
     implementation project(':permissions')
     implementation project(':protos')
