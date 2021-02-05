@@ -10,3 +10,8 @@ message OrganizationInfo {
   string name = 2;
   string address = 3;
 }
+
+
+message OrganisationList {
+  repeated OrganizationInfo organisations = 1;
+}

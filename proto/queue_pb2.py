@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\nQueueProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x11proto/queue.proto\x12\x03qms\"H\n\x05Queue\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08imageUrl\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\tB\x1c\n\x0e\x63om.nevmem.qmsB\nQueueProtob\x06proto3'
+  serialized_pb=b'\n\x11proto/queue.proto\x12\x03qms\"b\n\x05Queue\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x11\n\timage_url\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x17\n\x0forganisation_id\x18\x05 \x01(\t\"Z\n\rQueueUserInfo\x12\x12\n\nuser_count\x18\x01 \x01(\r\x12\x1b\n\x13user_queue_position\x18\x02 \x01(\r\x12\x18\n\x10\x61pproximate_time\x18\x03 \x01(\x01\x42\x1c\n\x0e\x63om.nevmem.qmsB\nQueueProtob\x06proto3'
 )
 
 
@@ -48,7 +48,7 @@ _QUEUE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='imageUrl', full_name='qms.Queue.imageUrl', index=2,
+      name='image_url', full_name='qms.Queue.image_url', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -57,6 +57,13 @@ _QUEUE = _descriptor.Descriptor(
     _descriptor.FieldDescriptor(
       name='description', full_name='qms.Queue.description', index=3,
       number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='organisation_id', full_name='qms.Queue.organisation_id', index=4,
+      number=5, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -74,10 +81,57 @@ _QUEUE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=26,
-  serialized_end=98,
+  serialized_end=124,
+)
+
+
+_QUEUEUSERINFO = _descriptor.Descriptor(
+  name='QueueUserInfo',
+  full_name='qms.QueueUserInfo',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='user_count', full_name='qms.QueueUserInfo.user_count', index=0,
+      number=1, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='user_queue_position', full_name='qms.QueueUserInfo.user_queue_position', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='approximate_time', full_name='qms.QueueUserInfo.approximate_time', index=2,
+      number=3, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=126,
+  serialized_end=216,
 )
 
 DESCRIPTOR.message_types_by_name['Queue'] = _QUEUE
+DESCRIPTOR.message_types_by_name['QueueUserInfo'] = _QUEUEUSERINFO
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Queue = _reflection.GeneratedProtocolMessageType('Queue', (_message.Message,), {
@@ -86,6 +140,13 @@ Queue = _reflection.GeneratedProtocolMessageType('Queue', (_message.Message,), {
   # @@protoc_insertion_point(class_scope:qms.Queue)
   })
 _sym_db.RegisterMessage(Queue)
+
+QueueUserInfo = _reflection.GeneratedProtocolMessageType('QueueUserInfo', (_message.Message,), {
+  'DESCRIPTOR' : _QUEUEUSERINFO,
+  '__module__' : 'proto.queue_pb2'
+  # @@protoc_insertion_point(class_scope:qms.QueueUserInfo)
+  })
+_sym_db.RegisterMessage(QueueUserInfo)
 
 
 DESCRIPTOR._options = None

@@ -11,6 +11,6 @@ message Permission {
     string user_id = 2;
     string organisation_id = 3;
     string queue_id = 4;
-    string permission_name = 5;
+    string permission_type = 5;
 }
 
