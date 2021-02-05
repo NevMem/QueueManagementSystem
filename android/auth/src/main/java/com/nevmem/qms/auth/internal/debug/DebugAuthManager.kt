@@ -51,6 +51,10 @@ internal class DebugAuthManager(
             emit(RegisterState.Success)
         }
 
+    override suspend fun currentUser(): User {
+        TODO("Not yet implemented")
+    }
+
     override fun logout() {
         storage.removeKey(AUTH_TOKEN_STORAGE_KEY)
     }

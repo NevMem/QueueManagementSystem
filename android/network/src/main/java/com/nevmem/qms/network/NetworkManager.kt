@@ -11,4 +11,6 @@ interface NetworkManager {
 
     suspend fun login(credentials: ClientApiProto.UserIdentity): String
     suspend fun register(credentials: ClientApiProto.RegisterRequest): RegisterResponse
+
+    suspend fun getUser(token: String): ClientApiProto.User
 }

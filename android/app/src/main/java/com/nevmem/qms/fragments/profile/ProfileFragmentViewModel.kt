@@ -3,9 +3,15 @@ package com.nevmem.qms.fragments.profile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.nevmem.qms.auth.AuthManager
+import com.nevmem.qms.auth.data.User
 import com.nevmem.qms.recycler.RVItem
+import kotlinx.coroutines.launch
 
-class ProfileFragmentViewModel : ViewModel() {
+class ProfileFragmentViewModel(
+    private val authManager: AuthManager
+) : ViewModel() {
 
     private val profileList = MutableLiveData<List<RVItem>>()
     internal val profile: LiveData<List<RVItem>> = profileList
@@ -32,7 +38,19 @@ class ProfileFragmentViewModel : ViewModel() {
         var tags: List<String> = emptyList()
     ) : RVItem()
 
+    private var user: User? = null
+        set(value) {
+            if (field == value) {
+                return
+            }
+            field = value
+            updateData()
+        }
+
     init {
+        /* viewModelScope.launch {
+            user = authManager.currentUser()
+        } */
         profileList.postValue(listOf(
             ProfileAvatar("https://pickaface.net/gallery/avatar/unr_sample_161118_2054_ynlrg.png"),
             ProfileName("Игорь"),
@@ -50,5 +68,19 @@ class ProfileFragmentViewModel : ViewModel() {
             ProfileVisitedPlace("Yandex", "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Yandex_Logo.svg/1200px-Yandex_Logo.svg.png", listOf("IT", "Company")),
             ProfileVisitedPlace("Check tags", "https://blackbirdesolutions.com/files/2020/02/tags-and-categories.jpg", (0..10).map { "Tag $it" })
         ) }.flatten())
+    }
+
+    private fun updateData() {
+        profileList.postValue(listOf(
+            ProfileAvatar("https://pickaface.net/gallery/avatar/unr_sample_161118_2054_ynlrg.png"),
+            ProfileName(user!!.name),
+            ProfileLastName(user!!.surname),
+            ProfileEmail(user!!.email),
+            ProfileRating(4.92),
+            ProfileDocument(DocumentType.Passport, "9214 775590"),
+            ProfileDocument(DocumentType.InternationalPassport, "9214775590"),
+            ProfileDocument(DocumentType.Policy, "*******9999"),
+            ProfileAddDocument
+        ))
     }
 }

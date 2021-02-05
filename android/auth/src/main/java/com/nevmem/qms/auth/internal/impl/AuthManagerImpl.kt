@@ -111,6 +111,11 @@ internal class AuthManagerImpl(
         }
     }
 
+    override suspend fun currentUser(): User {
+        val user = networkManager.getUser(token)
+        return User.fromProto(user)
+    }
+
     override fun logout() {
         actualToken = null
     }

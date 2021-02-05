@@ -111,6 +111,10 @@ internal class DebugNetworkManager : NetworkManager {
         }
     }
 
+    override suspend fun getUser(token: String): ClientApiProto.User {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun login(credentials: ClientApiProto.UserIdentity): String {
         TODO("Not yet implemented")
     }

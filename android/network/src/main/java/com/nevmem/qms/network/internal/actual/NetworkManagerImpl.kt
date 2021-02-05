@@ -11,6 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.protobuf.ProtoConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
 import kotlin.coroutines.suspendCoroutine
 
@@ -18,6 +19,7 @@ class NetworkManagerImpl : NetworkManager {
 
     data class UserIdentity(val email: String?, val password: String?)
     data class RegisterRequest(val name: String?, val surname: String?, val identity: UserIdentity?)
+    data class User(val id: String?, val name: String?, val surname: String?, val email: String?)
 
     interface BackendService {
         @POST("/client/login")
@@ -25,6 +27,9 @@ class NetworkManagerImpl : NetworkManager {
 
         @POST("/client/register")
         fun register(@Body body: RegisterRequest?): Call<Any>
+
+        @POST("/client/get_user")
+        fun getUser(@Header("session") session: String): Call<ClientApiProto.User>
     }
 
     private val retrofit = Retrofit.Builder()
@@ -68,6 +73,25 @@ class NetworkManagerImpl : NetworkManager {
                     continuation.resumeWith(Result.success(RegisterResponse.Success))
                 } else {
                     continuation.resumeWith(Result.success(RegisterResponse.NotUniqueLogin))
+                }
+            }
+        })
+    }
+
+    override suspend fun getUser(token: String): ClientApiProto.User = suspendCoroutine { continuation ->
+        service.getUser(token).enqueue(object : Callback<ClientApiProto.User> {
+            override fun onFailure(call: Call<ClientApiProto.User>, t: Throwable) {
+                continuation.resumeWith(Result.failure(t))
+            }
+
+            override fun onResponse(
+                call: Call<ClientApiProto.User>,
+                response: Response<ClientApiProto.User>
+            ) {
+                if (response.code() == 200 && response.body() != null) {
+                    continuation.resumeWith(Result.success(response.body()!!))
+                } else {
+                    continuation.resumeWith(Result.failure(IllegalStateException("Response code isn't 200 or body not present")))
                 }
             }
         })
