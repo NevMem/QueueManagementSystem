@@ -2,8 +2,8 @@ package com.nevmem.qms.features.internal
 
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.keyvalue.KeyValueStorage
+import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.network.NetworkManager
-import com.yandex.metrica.YandexMetrica
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -14,7 +14,8 @@ const val overriddenPrefix = "overriden_"
 
 internal class FeatureManagerImpl(
     private val networkManager: NetworkManager,
-    private val storage: KeyValueStorage
+    private val storage: KeyValueStorage,
+    private val logger: Logger
 ) : FeatureManager {
 
     private val listeners = mutableSetOf<FeatureManager.Listener>()
@@ -42,13 +43,13 @@ internal class FeatureManagerImpl(
                         }
                         notifyListeners()
                     }
-                    YandexMetrica.reportEvent("update-features", mapOf(
+                    logger.reportEvent("update-features", mapOf(
                         "type" to "ok"
                     ))
                 } catch(exception: Exception) {
-                    YandexMetrica.reportEvent("update-features", mapOf(
+                    logger.reportEvent("update-features", mapOf(
                         "type" to "error",
-                        "reason" to exception.message
+                        "reason" to (exception.message ?: "")
                     ))
                 }
                 delay(updateDelay)

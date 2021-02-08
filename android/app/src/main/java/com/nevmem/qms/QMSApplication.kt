@@ -41,10 +41,18 @@ class QMSApplication : Application() {
         single<ToastProvider> { get<ToastManager>() }
         single<NetworkManager> { createNetworkManager(get()) }
         single<StatusProvider> { createDebugStatusProvider(get()) }
-        single { createFeatureManager(get(), createKeyValueStorage(getSharedPreferences(FEATURES_PREFS_NAME, Context.MODE_PRIVATE))) }
+        single {
+            createFeatureManager(
+                get(),
+                createKeyValueStorage(getSharedPreferences(FEATURES_PREFS_NAME, Context.MODE_PRIVATE)),
+                get())
+        }
         single { createPermissionsManager() }
         single {
-            createAuthManager(createKeyValueStorage(getSharedPreferences(AUTH_PREFS_NAME, Context.MODE_PRIVATE)), get(), get())
+            createAuthManager(
+                createKeyValueStorage(getSharedPreferences(AUTH_PREFS_NAME, Context.MODE_PRIVATE)),
+                get(),
+                get())
         }
         single<Logger> { LoggerImpl() }
         viewModel { LoginPageViewModel(get()) }
