@@ -3,12 +3,13 @@ buildscript {
     repositories {
         google()
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradlePluginVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$versions.navigation"
-        classpath "com.google.protobuf:protobuf-gradle-plugin:0.8.12"
+        classpath "com.google.protobuf:protobuf-gradle-plugin:$versions.protobufGradlePlugin"
     }
 }
 
