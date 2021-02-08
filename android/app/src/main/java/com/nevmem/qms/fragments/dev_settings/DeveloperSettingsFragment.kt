@@ -23,7 +23,8 @@ class DeveloperSettingsFragment : Fragment(R.layout.fragment_developer_settings)
         model.items.observe(viewLifecycleOwner, Observer { list ->
             recycler.adapter = BaseRecyclerAdapter(
                 list,
-                FeatureItemsFactory(requireContext(), featureManager))
+                FeatureItemsFactory(requireContext(), featureManager),
+                useAnimation = true)
         })
     }
 }
