@@ -5,12 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nevmem.qms.auth.AuthManager
-import com.nevmem.qms.auth.data.User
+import com.nevmem.qms.auth.data.UserLoadingState
 import com.nevmem.qms.recycler.RVItem
+import com.nevmem.qms.toast.manager.ShowToastManager
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ProfileFragmentViewModel(
-    private val authManager: AuthManager
+    private val authManager: AuthManager,
+    private val showToastManager: ShowToastManager
 ) : ViewModel() {
 
     private val profileList = MutableLiveData<List<RVItem>>()
@@ -38,7 +41,7 @@ class ProfileFragmentViewModel(
         var tags: List<String> = emptyList()
     ) : RVItem()
 
-    private var user: User? = null
+    private var user: UserLoadingState.User? = null
         set(value) {
             if (field == value) {
                 return
@@ -48,14 +51,17 @@ class ProfileFragmentViewModel(
         }
 
     init {
-        /* viewModelScope.launch {
-            user = authManager.currentUser()
-        } */
+        viewModelScope.launch {
+            authManager.currentUser().collect {
+                if (it is UserLoadingState.Error) {
+                    showToastManager.error(it.message)
+                } else if (it is UserLoadingState.User) {
+                    user = it
+                }
+            }
+        }
         profileList.postValue(listOf(
             ProfileAvatar("https://pickaface.net/gallery/avatar/unr_sample_161118_2054_ynlrg.png"),
-            ProfileName("Игорь"),
-            ProfileLastName("Зверев"),
-            ProfileEmail("memlolkek@gmail.com"),
             ProfileRating(4.92),
             ProfileDocument(DocumentType.Passport, "9214 775590"),
             ProfileDocument(DocumentType.InternationalPassport, "9214775590"),

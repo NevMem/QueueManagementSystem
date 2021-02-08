@@ -9,7 +9,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.protobuf.ProtoConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -29,7 +28,7 @@ class NetworkManagerImpl : NetworkManager {
         fun register(@Body body: RegisterRequest?): Call<Any>
 
         @POST("/client/get_user")
-        fun getUser(@Header("session") session: String): Call<ClientApiProto.User>
+        fun getUser(@Header("session") session: String): Call<User>
     }
 
     private val retrofit = Retrofit.Builder()
@@ -79,23 +78,35 @@ class NetworkManagerImpl : NetworkManager {
     }
 
     override suspend fun getUser(token: String): ClientApiProto.User = suspendCoroutine { continuation ->
-        service.getUser(token).enqueue(object : Callback<ClientApiProto.User> {
-            override fun onFailure(call: Call<ClientApiProto.User>, t: Throwable) {
+        service.getUser(token).enqueue(object : Callback<User> {
+            override fun onFailure(call: Call<User>, t: Throwable) {
                 continuation.resumeWith(Result.failure(t))
             }
 
             override fun onResponse(
-                call: Call<ClientApiProto.User>,
-                response: Response<ClientApiProto.User>
+                call: Call<User>,
+                response: Response<User>
             ) {
-                if (response.code() == 200 && response.body() != null) {
-                    continuation.resumeWith(Result.success(response.body()!!))
+                val body = response.body()
+                if (response.code() == 200 && body != null) {
+                    try {
+                        continuation.resumeWith(Result.success(body.toApiClass()))
+                    } catch (exception: Exception) {
+                        continuation.resumeWith(Result.failure(exception))
+                    }
                 } else {
                     continuation.resumeWith(Result.failure(IllegalStateException("Response code isn't 200 or body not present")))
                 }
             }
         })
     }
+
+    private fun User.toApiClass(): ClientApiProto.User
+        = ClientApiProto.User.newBuilder()
+            .setEmail(email)
+            .setName(name)
+            .setSurname(surname)
+            .build()
 
     private fun ClientApiProto.RegisterRequest?.toDataClass(): RegisterRequest? {
         if (this == null) {

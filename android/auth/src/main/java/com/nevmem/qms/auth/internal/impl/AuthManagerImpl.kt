@@ -111,9 +111,14 @@ internal class AuthManagerImpl(
         }
     }
 
-    override suspend fun currentUser(): User {
-        val user = networkManager.getUser(token)
-        return User.fromProto(user)
+    override fun currentUser(): Flow<UserLoadingState> = flow {
+        emit(UserLoadingState.Pending)
+        try {
+            val user = networkManager.getUser(token)
+            emit(UserLoadingState.User.fromProto(user))
+        } catch (exception: Exception) {
+            emit(UserLoadingState.Error(exception.message ?: ""))
+        }
     }
 
     override fun logout() {

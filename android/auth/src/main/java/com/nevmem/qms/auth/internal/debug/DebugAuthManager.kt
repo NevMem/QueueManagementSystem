@@ -51,7 +51,7 @@ internal class DebugAuthManager(
             emit(RegisterState.Success)
         }
 
-    override suspend fun currentUser(): User {
+    override fun currentUser(): Flow<UserLoadingState> {
         TODO("Not yet implemented")
     }
 

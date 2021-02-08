@@ -47,7 +47,7 @@ class QMSApplication : Application() {
         }
         single<Logger> { LoggerImpl() }
         viewModel { LoginPageViewModel(get()) }
-        viewModel { ProfileFragmentViewModel(get()) }
+        viewModel { ProfileFragmentViewModel(get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
     }
 

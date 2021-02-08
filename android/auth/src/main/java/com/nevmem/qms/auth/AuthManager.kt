@@ -8,7 +8,7 @@ interface AuthManager {
     val token: String
     val authenticationStatus: Channel<AuthenticationStatus>
 
-    suspend fun currentUser(): User
+    fun currentUser(): Flow<UserLoadingState>
 
     fun login(credentials: LoginCredentials): Flow<LoginState>
     fun register(credentials: RegisterCredentials): Flow<RegisterState>
