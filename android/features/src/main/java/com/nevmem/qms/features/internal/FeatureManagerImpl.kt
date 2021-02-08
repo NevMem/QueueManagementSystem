@@ -25,7 +25,7 @@ internal class FeatureManagerImpl(
     init {
         storage.keys().forEach { key ->
             if (key.startsWith(overriddenPrefix)) {
-                storage.getValue(key)?.let { overriddenFeatures[key] = it }
+                storage.getValue(key)?.let { overriddenFeatures[key.removePrefix(overriddenPrefix)] = it }
             } else {
                 storage.getValue(key)?.let { features[key] = it }
             }
