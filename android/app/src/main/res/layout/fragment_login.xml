@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:fontFamily="@font/light"
+            android:gravity="center"
             android:text="@string/sign_in_string"
             android:textSize="@dimen/formHeaderTextSize" />
 
@@ -50,19 +51,35 @@
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/indent"
-            android:textColor="@color/backgroundColor"
-            android:textSize="20sp"
-            android:padding="8dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:fontFamily="@font/light"
-            tools:enabled="true"
-            android:text="@string/login_string" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/indent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/loginButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/backgroundColor"
+                android:textSize="@dimen/loginPageActionButtonsTextSize"
+                android:fontFamily="@font/montserrat_medium"
+                android:layout_margin="@dimen/indent"
+                tools:enabled="true"
+                android:text="@string/login_string" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/registerButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/register_string"
+                android:layout_margin="@dimen/indent"
+                android:fontFamily="@font/montserrat_medium"
+                android:textSize="@dimen/loginPageActionButtonsTextSize"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

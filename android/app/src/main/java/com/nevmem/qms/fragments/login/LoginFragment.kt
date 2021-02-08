@@ -46,5 +46,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         loginButton.setOnClickListener {
             model.performLogin(loginField.text.toString(), passwordField.text.toString())
         }
+
+        registerButton.setOnClickListener {
+            findNavController().navigate(LoginFragmentDirections.moveToRegistration())
+        }
     }
 }

@@ -4,6 +4,8 @@
     <dimen name="navBarMargin">8dp</dimen>
     <dimen name="loginFormWidth">300dp</dimen>
 
+    <dimen name="loginPageActionButtonsTextSize">16sp</dimen>
+
     <dimen name="statusPanelMargin">32dp</dimen>
 
     <dimen name="formHeaderTextSize">32sp</dimen>

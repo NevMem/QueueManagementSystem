@@ -44,13 +44,14 @@ internal class DebugAuthManager(
             }
         }
 
-    override fun register(credentials: RegisterCredentials): Channel<RegisterState> =
-        Channel<RegisterState>(Channel.UNLIMITED).also { channel ->
-            GlobalScope.launch {
-                channel.send(RegisterState.Processing)
-                delay(3000)
-                channel.send(RegisterState.Success)
-                channel.close()
-            }
+    override fun register(credentials: RegisterCredentials): Flow<RegisterState> = flow {
+            emit(RegisterState.Processing)
+            delay(1500)
+            storage.setValue(AUTH_TOKEN_STORAGE_KEY, credentials.login)
+            emit(RegisterState.Success)
         }
+
+    override fun logout() {
+        storage.removeKey(AUTH_TOKEN_STORAGE_KEY)
+    }
 }

@@ -75,14 +75,17 @@ dependencies {
     implementation project(':common-ui')
     implementation project(':features')
     implementation project(':keyvalue')
+    implementation project(':logger')
     implementation project(':network')
     implementation project(':permissions')
     implementation project(':protos')
     implementation project(':recycler')
     implementation project(':scanner')
+    implementation project(':statemachine')
     implementation project(':status')
     implementation project(':tags')
     implementation project(':toast')
 
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.7'
 }

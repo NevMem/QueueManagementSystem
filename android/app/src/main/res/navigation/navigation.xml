@@ -47,6 +47,22 @@
             app:popExitAnim="@anim/fragment_fade_exit"
             app:popUpTo="@id/navigation_login"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/moveToRegistration"
+            app:destination="@id/navigation_registration" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_registration"
+        android:name="com.nevmem.qms.fragments.registration.RegistrationFragment"
+        android:label="@string/register_string"
+        tools:layout="@layout/fragment_registration">
+        <action
+            android:id="@+id/moveToJoinAfterSuccessRegistration"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation_login"
+            app:popUpToInclusive="true"
+            app:destination="@id/navigation_join" />
     </fragment>
 
     <fragment
@@ -63,6 +79,12 @@
         <action
             android:id="@+id/moveFromProfileToSettings"
             app:destination="@id/navigation_settings" />
+        <action
+            android:id="@+id/moveToLoginOnLogout"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation.xml"
+            app:popUpToInclusive="true"
+            app:destination="@id/navigation_login" />
     </fragment>
 
     <fragment

@@ -25,4 +25,12 @@
     <string name="profile_document_number">Number:</string>
     <string name="add_document">Add new document</string>
     <string name="invite_step_action_text">Enter invite code to join queue</string>
+    <string name="register_string">Register</string>
+
+    <string name="name_hint_string">Name</string>
+    <string name="surname_hint_string">Last name</string>
+    <string name="email_hint_string">Email</string>
+    <string name="password_hint_string">Password</string>
+
+    <string name="registration_page_title">Create your account</string>
 </resources>
