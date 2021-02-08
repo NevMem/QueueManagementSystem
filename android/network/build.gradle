@@ -36,11 +36,12 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$versions.converterGson"
     implementation "com.squareup.retrofit2:converter-scalars:$versions.converterScalars"
-    implementation("com.squareup.retrofit2:converter-protobuf:$versions.converterProtobuf") {
-        exclude group:"com.google.protobuf", module:"protobuf-java"
-    }
+//    implementation("com.squareup.retrofit2:converter-protobuf:$versions.converterProtobuf") {
+//        exclude group:"com.google.protobuf", module:"protobuf-java"
+//    }
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutinesCore"
     implementation "com.google.protobuf:protobuf-lite:$versions.protobuf"
 
+    implementation project(':logger')
     implementation project(':protos')
 }

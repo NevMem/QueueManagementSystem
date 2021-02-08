@@ -39,7 +39,7 @@ class QMSApplication : Application() {
         single<ToastManager> { createToastManager() }
         single<ShowToastManager> { get<ToastManager>() }
         single<ToastProvider> { get<ToastManager>() }
-        single<NetworkManager> { createNetworkManager() }
+        single<NetworkManager> { createNetworkManager(get()) }
         single<StatusProvider> { createDebugStatusProvider(get()) }
         single { createFeatureManager(get(), createKeyValueStorage(getSharedPreferences(FEATURES_PREFS_NAME, Context.MODE_PRIVATE))) }
         single { createPermissionsManager() }

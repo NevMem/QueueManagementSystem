@@ -2,8 +2,10 @@ package com.nevmem.qms.network.internal.actual
 
 import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.QueueProto
+import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.data.RegisterResponse
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -14,7 +16,9 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import kotlin.coroutines.suspendCoroutine
 
-class NetworkManagerImpl : NetworkManager {
+class NetworkManagerImpl(
+    private val logger: Logger
+) : NetworkManager {
 
     data class UserIdentity(val email: String?, val password: String?)
     data class RegisterRequest(val name: String?, val surname: String?, val identity: UserIdentity?)
@@ -31,9 +35,21 @@ class NetworkManagerImpl : NetworkManager {
         fun getUser(@Header("session") session: String): Call<User>
     }
 
+    private val client = OkHttpClient.Builder()
+        .addInterceptor {
+            logger.reportEvent("network_request_to",
+                mapOf("url" to it.request().url().toString()))
+            val response = it.proceed(it.request())
+            logger.reportEvent("network_response_from",
+                mapOf("url" to it.request().url().toString(), "code" to response.code()))
+            response
+        }
+        .build()
+
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
         .baseUrl("http://qms.nikitonsky.tk")
+        .client(client)
         .build()
 
     private val service = retrofit.create(BackendService::class.java)
