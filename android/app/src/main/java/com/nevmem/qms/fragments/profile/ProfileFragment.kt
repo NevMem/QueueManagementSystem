@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.nevmem.qms.R
 import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.features.FeatureManager
+import com.nevmem.qms.features.isFeatureEnabled
+import com.nevmem.qms.knownfeatures.KnownFeatures
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.toast.manager.ShowToastManager
@@ -45,7 +47,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 ProfileDocumentFactory(requireContext()),
                 ProfileAddDocumentFactory(requireContext(), showToastManager),
                 HeaderFactory(findNavController(), requireContext(), authManager),
-                useAnimation = true)
+                useAnimation = featureManager.isFeatureEnabled(KnownFeatures.UseAnimationsOnProfilePage.value))
         })
     }
 }
