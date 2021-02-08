@@ -44,7 +44,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 ProfileVisitedFactory(requireContext(), featureManager),
                 ProfileDocumentFactory(requireContext()),
                 ProfileAddDocumentFactory(requireContext(), showToastManager),
-                HeaderFactory(findNavController(), requireContext(), authManager))
+                HeaderFactory(findNavController(), requireContext(), authManager),
+                useAnimation = true)
         })
     }
 }
