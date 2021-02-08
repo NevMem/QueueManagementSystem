@@ -5,6 +5,7 @@ import android.content.Context
 import com.nevmem.qms.auth.createAuthManager
 import com.nevmem.qms.auth.createDebugAuthManager
 import com.nevmem.qms.features.createFeatureManager
+import com.nevmem.qms.fragments.dev_settings.DeveloperSettingsFragmentViewModel
 import com.nevmem.qms.fragments.login.LoginPageViewModel
 import com.nevmem.qms.fragments.profile.ProfileFragmentViewModel
 import com.nevmem.qms.fragments.registration.RegistrationPageViewModel
@@ -49,6 +50,7 @@ class QMSApplication : Application() {
         viewModel { LoginPageViewModel(get()) }
         viewModel { ProfileFragmentViewModel(get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
+        viewModel { DeveloperSettingsFragmentViewModel(get()) }
     }
 
     override fun onCreate() {

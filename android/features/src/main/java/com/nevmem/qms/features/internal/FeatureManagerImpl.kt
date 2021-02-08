@@ -10,6 +10,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 const val updateDelay = 5000L
+const val overriddenPrefix = "overriden_"
 
 internal class FeatureManagerImpl(
     private val networkManager: NetworkManager,
@@ -19,10 +20,15 @@ internal class FeatureManagerImpl(
     private val listeners = mutableSetOf<FeatureManager.Listener>()
 
     private val features = mutableMapOf<String, String>()
+    private val overriddenFeatures = mutableMapOf<String, String>()
 
     init {
         storage.keys().forEach { key ->
-            storage.getValue(key)?.let { features[key] = it }
+            if (key.startsWith(overriddenPrefix)) {
+                storage.getValue(key)?.let { overriddenFeatures[key] = it }
+            } else {
+                storage.getValue(key)?.let { features[key] = it }
+            }
         }
         GlobalScope.launch(Dispatchers.IO) {
             while (true) {
@@ -34,7 +40,7 @@ internal class FeatureManagerImpl(
                         newFeatures.keys.forEach { key ->
                             storage.setValue(key, newFeatures.getValue(key))
                         }
-                        listeners.forEach { it.onFeaturesUpdated() }
+                        notifyListeners()
                     }
                     YandexMetrica.reportEvent("update-features", mapOf(
                         "type" to "ok"
@@ -50,13 +56,15 @@ internal class FeatureManagerImpl(
         }
     }
 
-    override fun getFeature(name: String): String? {
-        return features[name]
+    override fun overrideFeature(name: String, value: String) {
+        overriddenFeatures[name] = value
+        storage.setValue(overriddenPrefix + name, value)
+        notifyListeners()
     }
 
-    override fun getFeature(name: String, defaultValue: String): String {
-        return getFeature(name) ?: defaultValue
-    }
+    override fun getFeature(name: String): String? = overriddenFeatures[name] ?: features[name]
+
+    override fun getFeature(name: String, defaultValue: String): String = getFeature(name) ?: defaultValue
 
     override fun addListener(listener: FeatureManager.Listener) {
         listeners.add(listener)
@@ -64,5 +72,9 @@ internal class FeatureManagerImpl(
 
     override fun removeListener(listener: FeatureManager.Listener) {
         listeners.remove(listener)
+    }
+
+    private fun notifyListeners() {
+        listeners.forEach { it.onFeaturesUpdated() }
     }
 }
