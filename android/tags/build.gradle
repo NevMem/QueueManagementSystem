@@ -31,10 +31,10 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    implementation "androidx.core:core-ktx:$versions.coreKtx"
-    implementation "androidx.appcompat:appcompat:$versions.appcompat"
     api "com.google.android:flexbox:$versions.flexbox"
+    implementation "androidx.appcompat:appcompat:$versions.appcompat"
+    implementation "androidx.core:core-ktx:$versions.coreKtx"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     implementation project(':common-ui')
 }

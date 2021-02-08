@@ -54,21 +54,21 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    implementation "androidx.core:core-ktx:$versions.coreKtx"
     implementation "androidx.appcompat:appcompat:$versions.appcompat"
     implementation "androidx.constraintlayout:constraintlayout:$versions.constraintLayout"
-    implementation "com.google.android.material:material:$versions.material"
-    implementation "androidx.navigation:navigation-fragment:$versions.navigationFragment"
-    implementation "androidx.navigation:navigation-ui:$versions.navigationUI"
+    implementation "androidx.core:core-ktx:$versions.coreKtx"
+    implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
     implementation "androidx.navigation:navigation-fragment-ktx:$versions.navigationFragmentKtx"
+    implementation "androidx.navigation:navigation-fragment:$versions.navigationFragment"
     implementation "androidx.navigation:navigation-ui-ktx:$versions.navigationUIKtx"
+    implementation "androidx.navigation:navigation-ui:$versions.navigationUI"
+    implementation "com.github.bumptech.glide:glide:$versions.glide"
+    implementation "com.google.android.material:material:$versions.material"
     implementation "com.yandex.android:mobmetricalib:$versions.metrica"
-    implementation "org.koin:koin-android:$versions.koin"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.koin:koin-android-scope:$versions.koin"
     implementation "org.koin:koin-android-viewmodel:$versions.koin"
-    implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
-    implementation "com.github.bumptech.glide:glide:$versions.glide"
+    implementation "org.koin:koin-android:$versions.koin"
 
     implementation project(':auth')
     implementation project(':common-ui')
