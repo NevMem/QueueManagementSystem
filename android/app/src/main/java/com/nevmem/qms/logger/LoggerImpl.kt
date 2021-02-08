@@ -1,6 +1,5 @@
 package com.nevmem.qms.logger
 
-import com.nevmem.qms.BuildConfig
 import com.nevmem.qms.utils.ifDebug
 import com.yandex.metrica.YandexMetrica
 
