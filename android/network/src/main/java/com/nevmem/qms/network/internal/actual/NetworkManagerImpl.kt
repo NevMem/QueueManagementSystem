@@ -101,12 +101,19 @@ class NetworkManagerImpl : NetworkManager {
         })
     }
 
-    private fun User.toApiClass(): ClientApiProto.User
-        = ClientApiProto.User.newBuilder()
-            .setEmail(email)
-            .setName(name)
-            .setSurname(surname)
-            .build()
+    private fun User.toApiClass(): ClientApiProto.User {
+        val builder = ClientApiProto.User.newBuilder()
+        if (email != null) {
+            builder.email = email
+        }
+        if (name != null) {
+            builder.name = name
+        }
+        if (surname != null) {
+            builder.surname = surname
+        }
+        return builder.build()
+    }
 
     private fun ClientApiProto.RegisterRequest?.toDataClass(): RegisterRequest? {
         if (this == null) {

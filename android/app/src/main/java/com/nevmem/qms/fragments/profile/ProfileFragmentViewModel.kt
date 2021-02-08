@@ -60,15 +60,6 @@ class ProfileFragmentViewModel(
                 }
             }
         }
-        profileList.postValue(listOf(
-            ProfileAvatar("https://pickaface.net/gallery/avatar/unr_sample_161118_2054_ynlrg.png"),
-            ProfileRating(4.92),
-            ProfileDocument(DocumentType.Passport, "9214 775590"),
-            ProfileDocument(DocumentType.InternationalPassport, "9214775590"),
-            ProfileDocument(DocumentType.Policy, "*******9999"),
-            ProfileAddDocument
-        ))
-
         visitedList.postValue((0..30).map { listOf(
             ProfileVisitedPlace("Hospital", "https://gb2bel.belzdrav.ru/upload/medialibrary/1a8/%D0%B3%D0%BB%D0%B0%D0%B2.jpg", listOf("Medical", "Health care")),
             ProfileVisitedPlace("Yandex", "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Yandex_Logo.svg/1200px-Yandex_Logo.svg.png", listOf("IT", "Company")),
@@ -77,16 +68,22 @@ class ProfileFragmentViewModel(
     }
 
     private fun updateData() {
-        profileList.postValue(listOf(
-            ProfileAvatar("https://pickaface.net/gallery/avatar/unr_sample_161118_2054_ynlrg.png"),
-            ProfileName(user!!.name),
-            ProfileLastName(user!!.surname),
-            ProfileEmail(user!!.email),
-            ProfileRating(4.92),
-            ProfileDocument(DocumentType.Passport, "9214 775590"),
-            ProfileDocument(DocumentType.InternationalPassport, "9214775590"),
-            ProfileDocument(DocumentType.Policy, "*******9999"),
-            ProfileAddDocument
-        ))
+        profileList.postValue(mutableListOf<RVItem>().apply {
+            add(ProfileAvatar("https://pickaface.net/gallery/avatar/unr_sample_161118_2054_ynlrg.png"))
+            addIf(user!!.name != null, ProfileName(user!!.name!!))
+            addIf(user!!.surname != null, ProfileLastName(user!!.surname!!))
+            addIf(user!!.email != null, ProfileEmail(user!!.email!!))
+            add(ProfileRating(4.92))
+            add(ProfileDocument(DocumentType.Passport, "9214 775590"))
+            add(ProfileDocument(DocumentType.InternationalPassport, "9214775590"))
+            add(ProfileDocument(DocumentType.Policy, "*******9999"))
+            add(ProfileAddDocument)
+        })
+    }
+
+    private fun<T, U : T> MutableList<T>.addIf(ifValue: Boolean, value: U) {
+        if (ifValue) {
+            add(value)
+        }
     }
 }
