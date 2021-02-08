@@ -12,6 +12,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import kotlin.coroutines.suspendCoroutine
@@ -35,6 +36,11 @@ class NetworkManagerImpl(
         fun getUser(@Header("session") session: String): Call<User>
     }
 
+    interface FeaturesService {
+        @GET("/config/1674cd24-ee20-41be-aea8-ded02649e8c3")
+        fun loadFeatures(): Call<Map<String, String>>
+    }
+
     private val client = OkHttpClient.Builder()
         .addInterceptor {
             logger.reportEvent("network_request_to",
@@ -46,19 +52,48 @@ class NetworkManagerImpl(
         }
         .build()
 
-    private val retrofit = Retrofit.Builder()
-        .addConverterFactory(GsonConverterFactory.create())
-        .baseUrl("http://qms.nikitonsky.tk")
-        .client(client)
-        .build()
+    private val retrofit by lazy {
+        Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl("http://qms.nikitonsky.tk")
+            .client(client)
+            .build()
+    }
 
-    private val service = retrofit.create(BackendService::class.java)
+    private val featuresRetrofit by lazy {
+        Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl("https://nevmem.com")
+            .client(client)
+            .build()
+    }
+
+    private val service by lazy { retrofit.create(BackendService::class.java) }
+    private val featuresService by lazy { featuresRetrofit.create(FeaturesService::class.java) }
 
     override suspend fun fetchDataForInvite(invite: String): QueueProto.Queue {
         TODO("Not yet implemented")
     }
 
-    override suspend fun loadFeatures(): Map<String, String> = mapOf()
+    override suspend fun loadFeatures(): Map<String, String> = suspendCoroutine { continuation ->
+        featuresService.loadFeatures().enqueue(object : Callback<Map<String, String>> {
+            override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
+                continuation.resumeWith(Result.failure(t))
+            }
+
+            override fun onResponse(
+                call: Call<Map<String, String>>,
+                response: Response<Map<String, String>>
+            ) {
+                val body = response.body()
+                if (response.code() == 200 && body != null) {
+                    continuation.resumeWith(Result.success(body))
+                } else {
+                    continuation.resumeWith(Result.failure(IllegalStateException("Response code isn't 200 or body not present")))
+                }
+            }
+        })
+    }
 
     override suspend fun login(credentials: ClientApiProto.UserIdentity): String = suspendCoroutine { continuation ->
         service.login(credentials.toDataClass()).enqueue(object : Callback<ClientApiProto.AuthResponse> {
