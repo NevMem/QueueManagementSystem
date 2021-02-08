@@ -57,9 +57,14 @@ internal class FeatureManagerImpl(
         }
     }
 
-    override fun overrideFeature(name: String, value: String) {
-        overriddenFeatures[name] = value
-        storage.setValue(overriddenPrefix + name, value)
+    override fun overrideFeature(name: String, value: String?) {
+        if (value == null) {
+            overriddenFeatures.remove(name)
+            storage.removeKey(name)
+        } else {
+            overriddenFeatures[name] = value
+            storage.setValue(overriddenPrefix + name, value)
+        }
         notifyListeners()
     }
 
