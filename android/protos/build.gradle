@@ -38,5 +38,5 @@ protobuf {
 }
 
 dependencies {
-    implementation "com.google.protobuf:protobuf-lite:$versions.protobuf"
+    api "com.google.protobuf:protobuf-lite:$versions.protobuf"
 }

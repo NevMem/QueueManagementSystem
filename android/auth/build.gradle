@@ -27,7 +27,6 @@ dependencies {
     implementation "androidx.core:core-ktx:$versions.coreKtx"
     implementation "androidx.appcompat:appcompat:$versions.appcompat"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutinesCore"
-    implementation "com.google.protobuf:protobuf-lite:$versions.protobuf"
 
     implementation project(':keyvalue')
     implementation project(':logger')
