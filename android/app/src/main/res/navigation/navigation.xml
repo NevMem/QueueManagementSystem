@@ -69,7 +69,11 @@
         android:id="@+id/navigation_settings"
         android:name="com.nevmem.qms.fragments.settings.SettingsFragment"
         android:label="@string/settings_string"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/goToDeveloperSettings"
+            app:destination="@id/navigation_developer_settings" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
@@ -102,5 +106,11 @@
             android:id="@+id/deepLinkInvite"
             app:uri="nevmem.com/invite/?invite_id={invite_id}" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_developer_settings"
+        android:name="com.nevmem.qms.fragments.dev_settings.DeveloperSettingsFragment"
+        android:label="Developer settings"
+        tools:layout="@layout/fragment_developer_settings" />
 
 </navigation>
