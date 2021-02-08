@@ -13,7 +13,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.nevmem.qms.R
 import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.features.FeatureManager
+import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.inflate
+import com.nevmem.qms.knownfeatures.KnownFeatures
 import com.nevmem.qms.recycler.RVHolder
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.recycler.RVItemFactory
@@ -85,7 +87,7 @@ internal class ProfileVisitedFactory(
     private inner class Holder(view: View) : RVHolder(view), FeatureManager.Listener {
         override fun onFeaturesUpdated() {
             itemView.tagsBox.isVisible =
-                featureManager.getFeature("visited_tags_visible") == "visible"
+                featureManager.isFeatureEnabled(KnownFeatures.VisitedTags.value)
         }
 
         override fun onBind(item: RVItem) {

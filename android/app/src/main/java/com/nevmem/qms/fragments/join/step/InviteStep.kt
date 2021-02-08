@@ -14,6 +14,7 @@ import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.fragments.join.JoinStep
 import com.nevmem.qms.fragments.join.JoinUsecase
+import com.nevmem.qms.knownfeatures.KnownFeatures
 import com.nevmem.qms.permissions.PermissionsManager
 import com.nevmem.qms.scanner.QRScannerFragment
 import com.nevmem.qms.status.FetchStatus
@@ -44,7 +45,7 @@ class InviteStep : JoinStep {
             private var animator: ValueAnimator? = null
 
             override fun onFeaturesUpdated() {
-                showScanner.isVisible = featureManager.isFeatureEnabled("qr_code_scanner_enabled")
+                showScanner.isVisible = featureManager.isFeatureEnabled(KnownFeatures.QrCodeScanningEnabled.value)
             }
 
             override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
