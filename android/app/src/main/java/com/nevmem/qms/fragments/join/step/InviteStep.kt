@@ -44,7 +44,7 @@ class InviteStep : JoinStep {
             private var animator: ValueAnimator? = null
 
             override fun onFeaturesUpdated() {
-                showScanner.isVisible = true//featureManager.isFeatureEnabled("qr_code_scanner_enabled")
+                showScanner.isVisible = featureManager.isFeatureEnabled("qr_code_scanner_enabled")
             }
 
             override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
