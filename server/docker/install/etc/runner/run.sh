@@ -1,3 +1,14 @@
-#!/usr/bin/env bash
+trap "true" TERM INT
 
-supervisorctl start qms
+mkdir -p /var/log/supervisor
+/usr/local/bin/supervisord -c /etc/supervisor/supervisord.conf &
+SUPERVISORD_PID=$!
+
+while supervisorctl status | grep -q -v "RUNNING\|STOPPED\|STOPPING"; do
+    (kill -0 $SUPERVISORD_PID 2> /dev/null) || (echo "Supervisord died unexpectedly"; exit 1)
+    sleep 5
+done
+
+wait $SUPERVISORD_PID || :
+supervisorctl shutdown
+wait $SUPERVISORD_PID || :

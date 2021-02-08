@@ -1,8 +1,4 @@
-on:
-  push:
-    paths:
-      - 'server*'
-      - 'proto*'
+on: [ push ]
 
 
 name: server_tests
@@ -11,10 +7,25 @@ jobs:
   test:
     name: Server units
     runs-on: ubuntu-latest
+    container:
+      image: python:3.9
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@master
-      - name: Add postgres repo
-        run: sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-      - name: Install postgres
-        run: sudo apt-get update && sudo apt-get -y install postgresql-12
-      # todo: install python, deps, run tests
+      - name: Install deps
+        run: server/tests/helpers/prepare_env.sh
+      - name: Run tests
+        run: python3 -m pytest server/tests/*py
+        env:
+          DB_URL: postgresql+asyncpg:///postgres?host=postgres&port=5432&user=postgres&password=postgres

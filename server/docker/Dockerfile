@@ -1,15 +1,18 @@
 FROM ubuntu:20.04
 
 COPY install /
-COPY
+COPY tmp /
 
 RUN apt update && \
  apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages \
- python3 \
- python3-pip
+ python3.9-minimal \
+ python3-pip \
+ vim \
+ telnet
 
-RUN pip install supervisor
+RUN python3 -m pip install -r /usr/lib/qms/server/app/requirenments.txt
+RUN python3 -m pip install supervisor
 
-EXPOSE 80
+EXPOSE 80 443 22
 
-CMD /etc/runner/run.sh
+CMD [ "/bin/bash", "/etc/runner/run.sh" ]
