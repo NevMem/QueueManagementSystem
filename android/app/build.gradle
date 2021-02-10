@@ -75,6 +75,7 @@ dependencies {
     implementation project(':knownfeatures')
     implementation project(':logger')
     implementation project(':network')
+    implementation project(':notifications')
     implementation project(':permissions')
     implementation project(':protos')
     implementation project(':recycler')
