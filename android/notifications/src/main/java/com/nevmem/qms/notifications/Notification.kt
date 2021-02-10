@@ -1,9 +1,9 @@
 package com.nevmem.qms.notifications
 
-import androidx.annotation.IdRes
+import androidx.annotation.DrawableRes
 
 data class Notification(
-    @IdRes val iconResourceId: Int,
+    @DrawableRes val iconResourceId: Int,
     val title: String,
     val content: String
 )

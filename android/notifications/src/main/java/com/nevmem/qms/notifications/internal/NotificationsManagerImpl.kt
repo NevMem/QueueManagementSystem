@@ -29,6 +29,9 @@ internal class NotificationsManagerImpl(
 
         val id = nextIdForChannel(channel)
         with(NotificationManagerCompat.from(context)) {
+            if (id > 0) {
+                cancel(id - 1)
+            }
             notify(id, builder.build())
         }
     }

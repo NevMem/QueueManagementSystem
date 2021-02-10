@@ -1,11 +1,10 @@
 package com.nevmem.qms.status.internal
 
 import com.nevmem.qms.network.NetworkManager
+import com.nevmem.qms.notifications.Channel
+import com.nevmem.qms.notifications.Notification
 import com.nevmem.qms.notifications.NotificationsManager
-import com.nevmem.qms.status.FetchStatus
-import com.nevmem.qms.status.JoinStatus
-import com.nevmem.qms.status.QueueStatus
-import com.nevmem.qms.status.StatusProvider
+import com.nevmem.qms.status.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -17,7 +16,7 @@ import kotlin.math.abs
 
 internal class StatusProviderImpl(
     private val networkManager: NetworkManager,
-    private val nootificationsManager: NotificationsManager
+    private val notificationsManager: NotificationsManager
 ) : StatusProvider {
     override var queueStatus: QueueStatus? = null
         set(value) {
@@ -28,9 +27,17 @@ internal class StatusProviderImpl(
             notifyChanged()
         }
 
+    private val channel = Channel(
+        "status-channel",
+        "Status",
+        "Time to appointment"
+    )
+
     private val listeners = mutableSetOf<StatusProvider.Listener>()
 
     init {
+        notificationsManager.registerChannelIfNeeded(channel)
+
         GlobalScope.launch(Dispatchers.Main) {
             while (true) {
                 queueStatus = null
@@ -49,6 +56,13 @@ internal class StatusProviderImpl(
                     delay(1000)
                     numberInLine -= 1
                     queueStatus = QueueStatus(numberInLine, ticket, numberInLine * avgTime, "")
+                    if (numberInLine * avgTime < 5 * 60) {
+                        notificationsManager.showNotificationInChannel(channel.id, Notification(
+                            R.drawable.icon_status_notification,
+                            "Time to your appointment",
+                            "${(numberInLine * avgTime + 59) / 60} min"
+                        ))
+                    }
                 }
             }
         }
