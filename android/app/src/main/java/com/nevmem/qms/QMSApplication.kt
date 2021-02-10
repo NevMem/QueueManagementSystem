@@ -8,6 +8,7 @@ import com.nevmem.qms.fragments.dev_settings.DeveloperSettingsFragmentViewModel
 import com.nevmem.qms.fragments.login.LoginPageViewModel
 import com.nevmem.qms.fragments.profile.ProfileFragmentViewModel
 import com.nevmem.qms.fragments.registration.RegistrationPageViewModel
+import com.nevmem.qms.fragments.status.StatusFragmentViewModel
 import com.nevmem.qms.keyvalue.createKeyValueStorage
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.logger.LoggerImpl
@@ -57,6 +58,7 @@ class QMSApplication : Application() {
         viewModel { ProfileFragmentViewModel(get(), get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
         viewModel { DeveloperSettingsFragmentViewModel(get()) }
+        viewModel { StatusFragmentViewModel(get()) }
     }
 
     override fun onCreate() {
