@@ -1,45 +1,31 @@
 package com.nevmem.qms.fragments.status
 
+import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.nevmem.qms.R
 import com.nevmem.qms.status.QueueStatus
-import com.nevmem.qms.status.StatusProvider
 import kotlinx.android.synthetic.main.fragment_queue_status.*
-import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
-class StatusFragment : Fragment(R.layout.fragment_queue_status), StatusProvider.Listener {
+class StatusFragment : Fragment(R.layout.fragment_queue_status) {
 
-    private val statusProvider: StatusProvider by inject()
+    private val model: StatusFragmentViewModel by viewModel()
 
-    private var queueStatus: QueueStatus? = null
-        set(value) {
-            if (field == value) {
-                return
-            }
-            field = value
-            updateUi()
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onResume() {
-        super.onResume()
-        statusProvider.addListener(this)
-        onStatusChanged()
+        model.queueStatus.observe(viewLifecycleOwner, Observer {
+            updateUi(it)
+        })
     }
 
-    override fun onPause() {
-        super.onPause()
-        statusProvider.removeListener(this)
-    }
-
-    override fun onStatusChanged() {
-        queueStatus = statusProvider.queueStatus
-    }
-
-    private fun updateUi() {
+    private fun updateUi(queueStatus: QueueStatus) {
         queueStatus?.let {
             numberInLine.text = "Вы ${it.numberInLine}-ый в очереди"
             ticketNumber.text = it.ticket
-            eta.text = "~${(it.etaInSeconds + 59) / 60} минут"
+            eta.text = "~${(it.etaInSeconds ?: 0 + 59) / 60} минут"
         }
     }
 }

@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.abs
 
-internal class DebugStatusProvider(private val networkManager: NetworkManager) : StatusProvider {
+internal class StatusProviderImpl(private val networkManager: NetworkManager) : StatusProvider {
     override var queueStatus: QueueStatus? = null
         set(value) {
             if (field == value) {
