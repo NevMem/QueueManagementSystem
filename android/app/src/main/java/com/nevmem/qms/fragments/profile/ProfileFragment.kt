@@ -9,10 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.nevmem.qms.R
 import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.features.FeatureManager
+import com.nevmem.qms.features.isFeatureEnabled
+import com.nevmem.qms.knownfeatures.KnownFeatures
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.toast.manager.ShowToastManager
 import com.nevmem.qms.utils.livedata.mergeLatest
+import com.nevmem.qms.utils.livedata.mergeLatestWithEmpty
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -32,7 +35,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         recycler.layoutManager = LinearLayoutManager(context)
 
-        mergeLatest(model.profile, model.visited).observe(viewLifecycleOwner, Observer { list ->
+        mergeLatestWithEmpty(model.profile, model.visited).observe(viewLifecycleOwner, Observer { list ->
             recycler.adapter = BaseRecyclerAdapter(
                 listOf(HeaderStub) + list,
                 ProfileAvatarFactory(requireContext()),
@@ -43,7 +46,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 ProfileVisitedFactory(requireContext(), featureManager),
                 ProfileDocumentFactory(requireContext()),
                 ProfileAddDocumentFactory(requireContext(), showToastManager),
-                HeaderFactory(findNavController(), requireContext(), authManager))
+                HeaderFactory(findNavController(), requireContext(), authManager),
+                useAnimation = featureManager.isFeatureEnabled(KnownFeatures.UseAnimationsOnProfilePage.value))
         })
     }
 }

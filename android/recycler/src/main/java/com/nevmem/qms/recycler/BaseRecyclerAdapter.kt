@@ -1,11 +1,13 @@
 package com.nevmem.qms.recycler
 
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 
 class BaseRecyclerAdapter(
     private val list: List<RVItem>,
-    vararg factories: RVItemFactory
+    vararg factories: RVItemFactory,
+    private val useAnimation: Boolean = false
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val itemFactories: List<RVItemFactory> = factories.toList()
@@ -26,5 +28,8 @@ class BaseRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder as RVHolder
         holder.onBind(list[position])
+        if (useAnimation) {
+            holder.itemView.startAnimation(AnimationUtils.loadAnimation(holder.itemView.context, R.anim.cascade_items_recycler_animation))
+        }
     }
 }

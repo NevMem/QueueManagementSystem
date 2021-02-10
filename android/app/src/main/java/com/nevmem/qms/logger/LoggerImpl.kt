@@ -1,6 +1,6 @@
 package com.nevmem.qms.logger
 
-import com.nevmem.qms.BuildConfig
+import com.nevmem.qms.utils.ifDebug
 import com.yandex.metrica.YandexMetrica
 
 class LoggerImpl : Logger {
@@ -13,7 +13,7 @@ class LoggerImpl : Logger {
     }
 
     override fun debugLog(value: String) {
-        if (BuildConfig.DEBUG) {
+        ifDebug {
             println("debug_output: $value")
         }
     }

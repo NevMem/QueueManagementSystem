@@ -5,6 +5,7 @@ import android.content.Context
 import com.nevmem.qms.auth.createAuthManager
 import com.nevmem.qms.auth.createDebugAuthManager
 import com.nevmem.qms.features.createFeatureManager
+import com.nevmem.qms.fragments.dev_settings.DeveloperSettingsFragmentViewModel
 import com.nevmem.qms.fragments.login.LoginPageViewModel
 import com.nevmem.qms.fragments.profile.ProfileFragmentViewModel
 import com.nevmem.qms.fragments.registration.RegistrationPageViewModel
@@ -38,17 +39,26 @@ class QMSApplication : Application() {
         single<ToastManager> { createToastManager() }
         single<ShowToastManager> { get<ToastManager>() }
         single<ToastProvider> { get<ToastManager>() }
-        single<NetworkManager> { createNetworkManager() }
+        single<NetworkManager> { createNetworkManager(get()) }
         single<StatusProvider> { createDebugStatusProvider(get()) }
-        single { createFeatureManager(get(), createKeyValueStorage(getSharedPreferences(FEATURES_PREFS_NAME, Context.MODE_PRIVATE))) }
+        single {
+            createFeatureManager(
+                get(),
+                createKeyValueStorage(getSharedPreferences(FEATURES_PREFS_NAME, Context.MODE_PRIVATE)),
+                get())
+        }
         single { createPermissionsManager() }
         single {
-            createAuthManager(createKeyValueStorage(getSharedPreferences(AUTH_PREFS_NAME, Context.MODE_PRIVATE)), get(), get())
+            createAuthManager(
+                createKeyValueStorage(getSharedPreferences(AUTH_PREFS_NAME, Context.MODE_PRIVATE)),
+                get(),
+                get())
         }
         single<Logger> { LoggerImpl() }
         viewModel { LoginPageViewModel(get()) }
-        viewModel { ProfileFragmentViewModel() }
+        viewModel { ProfileFragmentViewModel(get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
+        viewModel { DeveloperSettingsFragmentViewModel(get()) }
     }
 
     override fun onCreate() {

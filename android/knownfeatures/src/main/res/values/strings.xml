@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="qr_code_feature">QR code scanning enabled</string>
+    <string name="visited_tags_visible_features">Visited places tags visible</string>
+    <string name="profile_page_use_animations">Use animations on profile page</string>
+</resources>

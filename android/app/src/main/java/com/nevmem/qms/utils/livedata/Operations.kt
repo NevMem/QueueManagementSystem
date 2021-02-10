@@ -46,3 +46,23 @@ fun<A: Any> mergeLatest(first: LiveData<List<A>>, second: LiveData<List<A>>): Li
         }
     }
 }
+
+fun<A : Any> mergeLatestWithEmpty(first: LiveData<List<A>>, second: LiveData<List<A>>): LiveData<List<A>> {
+    return MediatorLiveData<List<A>>().apply {
+        var lastFromFirst: List<A>? = null
+        var lastFromSecond: List<A>? = null
+
+        val process = {
+            postValue((lastFromFirst?.toMutableList() ?: emptyList<A>()) + (lastFromSecond?.toMutableList() ?: emptyList<A>()))
+        }
+
+        addSource(first) {
+            lastFromFirst = it
+            process()
+        }
+        addSource(second) {
+            lastFromSecond = it
+            process()
+        }
+    }
+}
