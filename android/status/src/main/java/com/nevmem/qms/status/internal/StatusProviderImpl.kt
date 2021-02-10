@@ -1,6 +1,7 @@
 package com.nevmem.qms.status.internal
 
 import com.nevmem.qms.network.NetworkManager
+import com.nevmem.qms.notifications.NotificationsManager
 import com.nevmem.qms.status.FetchStatus
 import com.nevmem.qms.status.JoinStatus
 import com.nevmem.qms.status.QueueStatus
@@ -14,7 +15,10 @@ import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.abs
 
-internal class StatusProviderImpl(private val networkManager: NetworkManager) : StatusProvider {
+internal class StatusProviderImpl(
+    private val networkManager: NetworkManager,
+    private val nootificationsManager: NotificationsManager
+) : StatusProvider {
     override var queueStatus: QueueStatus? = null
         set(value) {
             if (field == value) {

@@ -14,9 +14,10 @@ import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.logger.LoggerImpl
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.createNetworkManager
+import com.nevmem.qms.notifications.createNotificationsManager
 import com.nevmem.qms.permissions.createPermissionsManager
 import com.nevmem.qms.status.StatusProvider
-import com.nevmem.qms.status.createDebugStatusProvider
+import com.nevmem.qms.status.createStatusProvider
 import com.nevmem.qms.toast.manager.ShowToastManager
 import com.nevmem.qms.toast.manager.ToastManager
 import com.nevmem.qms.toast.manager.ToastProvider
@@ -39,7 +40,7 @@ class QMSApplication : Application() {
         single<ShowToastManager> { get<ToastManager>() }
         single<ToastProvider> { get<ToastManager>() }
         single<NetworkManager> { createNetworkManager(get()) }
-        single<StatusProvider> { createDebugStatusProvider(get()) }
+        single<StatusProvider> { createStatusProvider(get(), get()) }
         single {
             createFeatureManager(
                 get(),
@@ -54,6 +55,7 @@ class QMSApplication : Application() {
                 get())
         }
         single<Logger> { LoggerImpl() }
+        single { createNotificationsManager(this@QMSApplication) }
         viewModel { LoginPageViewModel(get()) }
         viewModel { ProfileFragmentViewModel(get(), get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
