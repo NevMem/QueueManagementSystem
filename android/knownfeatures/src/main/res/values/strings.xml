@@ -3,4 +3,5 @@
     <string name="qr_code_feature">QR code scanning enabled</string>
     <string name="visited_tags_visible_features">Visited places tags visible</string>
     <string name="profile_page_use_animations">Use animations on profile page</string>
+    <string name="profile_page_history">Show history on profile page</string>
 </resources>
