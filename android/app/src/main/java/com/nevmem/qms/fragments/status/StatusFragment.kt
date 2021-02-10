@@ -1,7 +1,5 @@
 package com.nevmem.qms.fragments.status
 
-import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
 import com.nevmem.qms.R
 import com.nevmem.qms.status.QueueStatus

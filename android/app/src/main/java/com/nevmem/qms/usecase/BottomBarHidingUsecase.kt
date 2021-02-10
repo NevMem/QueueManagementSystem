@@ -9,7 +9,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 private const val bottomBarTransitionDelay = 300L
 
 class BottomBarHidingUsecase(
-    private val lifecycleOwner: LifecycleOwner,
+    lifecycleOwner: LifecycleOwner,
     private val bottomNavigationView: BottomNavigationView,
     private val listVisibleDestinations: List<Int>
 ): LifecycleObserver {

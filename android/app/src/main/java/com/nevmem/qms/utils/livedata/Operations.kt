@@ -53,7 +53,7 @@ fun<A : Any> mergeLatestWithEmpty(first: LiveData<List<A>>, second: LiveData<Lis
         var lastFromSecond: List<A>? = null
 
         val process = {
-            postValue((lastFromFirst?.toMutableList() ?: emptyList<A>()) + (lastFromSecond?.toMutableList() ?: emptyList<A>()))
+            postValue((lastFromFirst?.toMutableList() ?: emptyList<A>()) + (lastFromSecond?.toMutableList() ?: emptyList()))
         }
 
         addSource(first) {

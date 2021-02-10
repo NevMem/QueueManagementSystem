@@ -7,7 +7,6 @@ import androidx.core.view.doOnAttach
 import androidx.core.view.doOnDetach
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.nevmem.qms.R
 import com.nevmem.qms.features.FeatureManager
@@ -25,7 +24,6 @@ import com.yandex.metrica.YandexMetrica
 import kotlinx.android.synthetic.main.fragment_step_invite.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject

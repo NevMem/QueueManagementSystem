@@ -3,7 +3,6 @@ package com.nevmem.qms
 import android.app.Application
 import android.content.Context
 import com.nevmem.qms.auth.createAuthManager
-import com.nevmem.qms.auth.createDebugAuthManager
 import com.nevmem.qms.features.createFeatureManager
 import com.nevmem.qms.fragments.dev_settings.DeveloperSettingsFragmentViewModel
 import com.nevmem.qms.fragments.login.LoginPageViewModel
@@ -13,7 +12,6 @@ import com.nevmem.qms.keyvalue.createKeyValueStorage
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.logger.LoggerImpl
 import com.nevmem.qms.network.NetworkManager
-import com.nevmem.qms.network.createDebugNetworkManager
 import com.nevmem.qms.network.createNetworkManager
 import com.nevmem.qms.permissions.createPermissionsManager
 import com.nevmem.qms.status.StatusProvider
