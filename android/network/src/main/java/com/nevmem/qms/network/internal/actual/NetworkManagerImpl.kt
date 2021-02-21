@@ -17,7 +17,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import kotlin.coroutines.suspendCoroutine
 
-class NetworkManagerImpl(
+internal class NetworkManagerImpl(
     private val logger: Logger
 ) : NetworkManager {
 

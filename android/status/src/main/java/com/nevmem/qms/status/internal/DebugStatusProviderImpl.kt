@@ -1,5 +1,6 @@
 package com.nevmem.qms.status.internal
 
+import com.nevmem.qms.QueueProto
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.notifications.Channel
 import com.nevmem.qms.notifications.Notification
@@ -14,8 +15,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.abs
 
-internal class StatusProviderImpl(
-    private val networkManager: NetworkManager,
+internal class DebugStatusProviderImpl(
     private val notificationsManager: NotificationsManager
 ) : StatusProvider {
     override var queueStatus: QueueStatus? = null
@@ -69,16 +69,10 @@ internal class StatusProviderImpl(
     }
 
     override fun fetchDataForInvite(invite: String): Flow<FetchStatus> = flow {
-        emit(FetchStatus.Pending)
-        try {
-            val result = networkManager.fetchDataForInvite(invite)
-            emit(FetchStatus.Success(result))
-        } catch (ex: Exception) {
-            emit(FetchStatus.Error(ex.message ?: "Unknown error"))
-        }
+
     }
 
-    override fun join(invite: String): Flow<JoinStatus> {
+    override fun join(queue: QueueProto.Queue): Flow<JoinStatus> {
         TODO("Not yet implemented")
     }
 
