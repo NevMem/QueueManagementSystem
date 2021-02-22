@@ -6,15 +6,18 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.nevmem.qms.R
+import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.status.QueueStatus
 import com.nevmem.qms.suggests.Suggest
 import kotlinx.android.synthetic.main.fragment_queue_status.*
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class StatusFragment : Fragment(R.layout.fragment_queue_status) {
 
     private val model: StatusFragmentViewModel by viewModel()
+    private val featureManager: FeatureManager by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,7 +40,7 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
         suggestsView.adapter = BaseRecyclerAdapter(
             listOf(HeaderItem) + suggests.map { SuggestItem(it) },
             HeaderFactory(requireContext()),
-            SuggestsFactory(requireContext())
+            SuggestsFactory(requireContext(), featureManager)
         )
     }
 

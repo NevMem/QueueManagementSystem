@@ -4,4 +4,5 @@
     <string name="visited_tags_visible_features">Visited places tags visible</string>
     <string name="profile_page_use_animations">Use animations on profile page</string>
     <string name="profile_page_history">Show history on profile page</string>
+    <string name="use_cards_for_suggests_on_status_page">Use cards for suggests on status page</string>
 </resources>

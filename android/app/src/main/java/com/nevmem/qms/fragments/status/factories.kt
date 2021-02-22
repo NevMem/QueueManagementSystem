@@ -5,7 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.nevmem.qms.R
+import com.nevmem.qms.features.FeatureManager
+import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.inflate
+import com.nevmem.qms.knownfeatures.KnownFeatures
 import com.nevmem.qms.recycler.RVHolder
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.recycler.RVItemFactory
@@ -25,7 +28,10 @@ class HeaderFactory(private val context: Context) : RVItemFactory {
         = Holder(context.inflate(R.layout.status_suggests_header, root))
 }
 
-class SuggestsFactory(private val context: Context) : RVItemFactory {
+class SuggestsFactory(
+    private val context: Context,
+    private val featureManager: FeatureManager
+) : RVItemFactory {
     inner class Holder(view: View) : RVHolder(view) {
         override fun onBind(item: RVItem) {
             item as SuggestItem
@@ -42,5 +48,11 @@ class SuggestsFactory(private val context: Context) : RVItemFactory {
 
     override fun isAppropriateType(item: RVItem): Boolean = item is SuggestItem
     override fun createHolder(root: ViewGroup): RVHolder
-        = Holder(context.inflate(R.layout.status_suggest_view, root))
+        = Holder(context.inflate(layoutResId(), root))
+
+    private fun layoutResId(): Int
+        = if (featureManager.isFeatureEnabled(KnownFeatures.UseCardsForSuggestsOnStatusPage.value))
+            R.layout.status_suggest_view_with_card
+        else
+            R.layout.status_suggest_view
 }
