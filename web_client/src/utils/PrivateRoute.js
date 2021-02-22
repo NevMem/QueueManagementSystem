@@ -1,5 +1,4 @@
-import { Component } from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import authAdapter from '../adapters/AuthAdapter'
 
 export const PrivateRoute = ({ component: Component, roles, ...rest }) => (

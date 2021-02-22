@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography'
 import logo from '../images/connection.svg'
 import useInput from '../utils/useInput'
 import authAdapter from '../adapters/AuthAdapter'
+import { Redirect } from 'react-router-dom'
 
 const useStyles = makeStyles({
     authCard: {
@@ -32,13 +33,14 @@ function LoginSection() {
     const { value: login, bind: bindLogin, reset: resetLogin } = useInput('')
     const { value: password, bind: bindPassword, reset: resetPassword } = useInput('')
     const [ error, setError ] = useState(undefined)
+    const [ redirect, initRedirection ] = useState(undefined)
 
     const handleSubmit = () => {
-        console.log(authAdapter)
         authAdapter.login(login, password)
             .then(() => {
                 resetLogin()
                 resetPassword()
+                initRedirection('/')
             })
             .catch(err => {
                 setError(err)
@@ -51,6 +53,7 @@ function LoginSection() {
                 <CardContent>
                     <Typography variant="h4">Login or register to moderate your queues</Typography>
                     { error && <Typography variant="h6">{error}</Typography> }
+                    { redirect && <Redirect to={redirect} /> }
                     <TextField style={{width: '100%', marginTop: '48px'}} variant="outlined" label="Login" {...bindLogin} />
                     <TextField style={{width: '100%', marginTop: '16px'}} variant="outlined" label="Password" {...bindPassword} />
                     <Button className={classes.buttons} size="large" variant="contained" color="primary" onClick={handleSubmit}>

@@ -22,22 +22,23 @@ class AuthAdapter {
     login(login, password) {
         return new Promise((res, rej) => {
             processLogin(login, password)
-            .then(data => {
-                const token = data.headers['session']
-                this.tokem = token
-                return loadUser(token)
-            })
-            .then(resp => {
-                const { email, name, surname } = resp.data
-                if (resp.code === 200) {
-                    this.user = new User(name, surname, email, this.token)
-                } else {
-                    throw(new Error('Response code isn\'t 200'))
-                }
-            })
-            .catch(err => {
-                rej(err.message)
-            })
+                .then(data => {
+                    const token = data.headers['session']
+                    this.token = token
+                    return loadUser(token)
+                })
+                .then(resp => {
+                    const { email, name, surname } = resp.data
+                    if (resp.code === 200) {
+                        this.user = new User(name, surname, email, this.token)
+                        res()
+                    } else {
+                        throw(new Error('Response code isn\'t 200'))
+                    }
+                })
+                .catch(err => {
+                    rej(err.message)
+                })
         })
     }
 }
