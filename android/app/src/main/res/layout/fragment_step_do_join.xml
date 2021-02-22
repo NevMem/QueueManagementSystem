@@ -58,7 +58,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/indent"
                     android:fontFamily="@font/medium"
-                    android:text="@string/join_string" />
+                    android:text="@string/join_string"
+                    android:enabled="false" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

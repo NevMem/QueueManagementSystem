@@ -105,6 +105,9 @@
         <deepLink
             android:id="@+id/deepLinkInvite"
             app:uri="nevmem.com/invite/?invite_id={invite_id}" />
+        <action
+            android:id="@+id/moveToStatusPage"
+            app:destination="@id/navigation_status" />
     </fragment>
 
     <fragment
