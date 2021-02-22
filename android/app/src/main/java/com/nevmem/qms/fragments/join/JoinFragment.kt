@@ -1,14 +1,19 @@
 package com.nevmem.qms.fragments.join
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
+import androidx.core.animation.addListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.nevmem.qms.R
+import com.nevmem.qms.features.FeatureManager
+import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.fragments.join.step.DoJoinStep
 import com.nevmem.qms.fragments.join.step.InviteStep
+import com.nevmem.qms.fragments.join.transformers.ZoomOutPageTransformer
+import com.nevmem.qms.knownfeatures.KnownFeatures
 import com.nevmem.qms.status.FetchStatus
 import kotlinx.android.synthetic.main.fragment_join.*
 import org.koin.android.ext.android.inject
@@ -18,6 +23,12 @@ import org.koin.dsl.module
 
 class JoinFragment : Fragment(R.layout.fragment_join), JoinUsecase {
     private val steps: List<JoinStep> = listOf(InviteStep(), DoJoinStep())
+
+    private val featureManager: FeatureManager by inject()
+
+    private val useAnimations: Boolean by lazy {
+        featureManager.isFeatureEnabled(KnownFeatures.UseAnimationsOnJoinPage.value)
+    }
 
     private val joinModules = module {
         single<JoinUsecase> { this@JoinFragment }
@@ -51,6 +62,9 @@ class JoinFragment : Fragment(R.layout.fragment_join), JoinUsecase {
 
         pager.adapter = JoinPagerAdapter(this, steps)
         pager.isUserInputEnabled = false
+        if (useAnimations) {
+            pager.setPageTransformer(ZoomOutPageTransformer())
+        }
 
         arguments?.getString("invite_id")?.let { invite_id ->
             invite.postValue(invite_id)
@@ -58,7 +72,24 @@ class JoinFragment : Fragment(R.layout.fragment_join), JoinUsecase {
     }
 
     private fun moveToSecondStep() {
-        pager.currentItem = 1
+        if (useAnimations) {
+            pager.beginFakeDrag()
+            val width = -requireView().width.toFloat()
+            ValueAnimator.ofFloat(0f, 1f).apply {
+                var prevValue = 0f
+                addUpdateListener { animator ->
+                    pager.fakeDragBy(-width * (prevValue - (animator.animatedValue as Float)))
+                    prevValue = animator.animatedValue as Float
+                }
+                addListener(onEnd = {
+                    pager.endFakeDrag()
+                })
+                duration = 500L
+                start()
+            }
+        } else {
+            pager.currentItem = 1
+        }
     }
 
     private inner class JoinPagerAdapter(fragment: Fragment, private val steps: List<JoinStep>) : FragmentStateAdapter(fragment) {

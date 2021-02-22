@@ -59,9 +59,7 @@ dependencies {
     implementation "androidx.core:core-ktx:$versions.coreKtx"
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
     implementation "androidx.navigation:navigation-fragment-ktx:$versions.navigationFragmentKtx"
-    implementation "androidx.navigation:navigation-fragment:$versions.navigationFragment"
     implementation "androidx.navigation:navigation-ui-ktx:$versions.navigationUIKtx"
-    implementation "androidx.navigation:navigation-ui:$versions.navigationUI"
     implementation "com.github.bumptech.glide:glide:$versions.glide"
     implementation "com.google.android.material:material:$versions.material"
     implementation "com.yandex.android:mobmetricalib:$versions.metrica"
@@ -77,12 +75,14 @@ dependencies {
     implementation project(':knownfeatures')
     implementation project(':logger')
     implementation project(':network')
+    implementation project(':notifications')
     implementation project(':permissions')
     implementation project(':protos')
     implementation project(':recycler')
     implementation project(':scanner')
     implementation project(':statemachine')
     implementation project(':status')
+    implementation project(':suggests')
     implementation project(':tags')
     implementation project(':toast')
 

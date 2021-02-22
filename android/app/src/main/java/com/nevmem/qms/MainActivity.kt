@@ -87,12 +87,16 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
         if (requestCode == ACTIVITY_PERMISSIONS_REQUEST_CODE && currentPermissionsRequest != null) {
             val partitioned = currentPermissionsRequest!!.permissions.map { permission ->
                 val index = permissions.indexOfFirst { it == permission.androidPermission }
-                if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
-                    PartitionedPermissionsResponse(permission, PermissionStatus.GRANTED)
-                } else if (shouldShowRequestPermissionRationale(permission.androidPermission)) {
-                    PartitionedPermissionsResponse(permission, PermissionStatus.DENIED)
-                } else {
-                    PartitionedPermissionsResponse(permission, PermissionStatus.DENIED_AND_CANNOT_RETRY)
+                when {
+                    grantResults[index] == PackageManager.PERMISSION_GRANTED -> {
+                        PartitionedPermissionsResponse(permission, PermissionStatus.GRANTED)
+                    }
+                    shouldShowRequestPermissionRationale(permission.androidPermission) -> {
+                        PartitionedPermissionsResponse(permission, PermissionStatus.DENIED)
+                    }
+                    else -> {
+                        PartitionedPermissionsResponse(permission, PermissionStatus.DENIED_AND_CANNOT_RETRY)
+                    }
                 }
             }
             val response = PermissionsResponse(partitioned)

@@ -14,6 +14,15 @@
         android:layout_centerVertical="true"
         tools:text="Some feature name" />
 
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:id="@+id/clearOverriddenValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/featureSwitch"
+        android:layout_marginEnd="@dimen/indent_double"
+        android:text="@string/to_exp_string" />
+
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/featureSwitch"
         android:layout_width="wrap_content"

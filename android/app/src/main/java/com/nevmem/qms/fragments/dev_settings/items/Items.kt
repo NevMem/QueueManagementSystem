@@ -25,6 +25,9 @@ class FeatureItemsFactory(
             itemView.featureSwitch.setOnCheckedChangeListener { _, newValue ->
                 featureManager.overrideFeature(item.name, if (newValue) "enabled" else "disabled")
             }
+            itemView.clearOverriddenValue.setOnClickListener {
+                featureManager.overrideFeature(item.name, null)
+            }
         }
     }
 

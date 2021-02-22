@@ -3,9 +3,9 @@ package com.nevmem.qms.fieldschecks
 import com.nevmem.qms.fragments.registration.checks.Check
 import com.nevmem.qms.fragments.registration.checks.SimplePasswordCheck
 import com.nevmem.qms.fragments.registration.checks.TooShortCheck
-import com.nevmem.qms.fragments.registration.checks.VerificationUsecase
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After

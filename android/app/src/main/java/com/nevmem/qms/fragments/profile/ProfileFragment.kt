@@ -14,7 +14,6 @@ import com.nevmem.qms.knownfeatures.KnownFeatures
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.toast.manager.ShowToastManager
-import com.nevmem.qms.utils.livedata.mergeLatest
 import com.nevmem.qms.utils.livedata.mergeLatestWithEmpty
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.android.ext.android.inject

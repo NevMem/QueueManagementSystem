@@ -17,7 +17,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import kotlin.coroutines.suspendCoroutine
 
-class NetworkManagerImpl(
+internal class NetworkManagerImpl(
     private val logger: Logger
 ) : NetworkManager {
 
@@ -37,7 +37,7 @@ class NetworkManagerImpl(
     }
 
     interface FeaturesService {
-        @GET("/config/1674cd24-ee20-41be-aea8-ded02649e8c3")
+        @GET("/config/56cf679c-beb3-4f64-ac63-b8d3697b9cc2")
         fun loadFeatures(): Call<Map<String, String>>
     }
 

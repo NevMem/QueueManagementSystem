@@ -3,21 +3,22 @@ package com.nevmem.qms
 import android.app.Application
 import android.content.Context
 import com.nevmem.qms.auth.createAuthManager
-import com.nevmem.qms.auth.createDebugAuthManager
 import com.nevmem.qms.features.createFeatureManager
 import com.nevmem.qms.fragments.dev_settings.DeveloperSettingsFragmentViewModel
 import com.nevmem.qms.fragments.login.LoginPageViewModel
 import com.nevmem.qms.fragments.profile.ProfileFragmentViewModel
 import com.nevmem.qms.fragments.registration.RegistrationPageViewModel
+import com.nevmem.qms.fragments.status.StatusFragmentViewModel
 import com.nevmem.qms.keyvalue.createKeyValueStorage
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.logger.LoggerImpl
 import com.nevmem.qms.network.NetworkManager
-import com.nevmem.qms.network.createDebugNetworkManager
 import com.nevmem.qms.network.createNetworkManager
+import com.nevmem.qms.notifications.createNotificationsManager
 import com.nevmem.qms.permissions.createPermissionsManager
 import com.nevmem.qms.status.StatusProvider
 import com.nevmem.qms.status.createDebugStatusProvider
+import com.nevmem.qms.suggests.createDebugSuggestsManager
 import com.nevmem.qms.toast.manager.ShowToastManager
 import com.nevmem.qms.toast.manager.ToastManager
 import com.nevmem.qms.toast.manager.ToastProvider
@@ -40,7 +41,7 @@ class QMSApplication : Application() {
         single<ShowToastManager> { get<ToastManager>() }
         single<ToastProvider> { get<ToastManager>() }
         single<NetworkManager> { createNetworkManager(get()) }
-        single<StatusProvider> { createDebugStatusProvider(get()) }
+        single<StatusProvider> { createDebugStatusProvider(get(), get()) }
         single {
             createFeatureManager(
                 get(),
@@ -55,10 +56,13 @@ class QMSApplication : Application() {
                 get())
         }
         single<Logger> { LoggerImpl() }
+        single { createDebugSuggestsManager() }
+        single { createNotificationsManager(this@QMSApplication) }
         viewModel { LoginPageViewModel(get()) }
-        viewModel { ProfileFragmentViewModel(get(), get()) }
+        viewModel { ProfileFragmentViewModel(get(), get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
         viewModel { DeveloperSettingsFragmentViewModel(get()) }
+        viewModel { StatusFragmentViewModel(get(), get()) }
     }
 
     override fun onCreate() {
