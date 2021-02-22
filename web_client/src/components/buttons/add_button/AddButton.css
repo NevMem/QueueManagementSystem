@@ -1,0 +1,17 @@
+.addButton {
+    background-color: #FFC107;
+    border-radius: 8px;
+    box-shadow: 3px 6px 4px #00000026;
+    padding: 11px;
+    display: flex;
+    flex-direction: row;
+}
+
+.addButtonSecondary {
+    background-color: #FFC107;
+    border-radius: 8px;
+    box-shadow: 3px 6px 4px #0084AD3B;
+    padding: 11px;
+    display: flex;
+    flex-direction: row;
+}
