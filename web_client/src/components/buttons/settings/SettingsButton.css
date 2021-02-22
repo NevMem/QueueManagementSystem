@@ -1,0 +1,7 @@
+.headerSettingsButton {
+    transition: all linear 0.2s;
+}
+
+.headerSettingsButton:hover {
+    transform: rotate(180deg);
+}

@@ -1,7 +1,16 @@
+body {
+    background-color: #1E2434;
+}
+
 .intro_section {
-    background-color: #0741ff10;
+    background-color: #1E2434;
 }
 
 .logo {
     width: 200px;
+}
+
+.login_section {
+    background-color: #70707010;
+    border-left: 1px solid #707070;
 }

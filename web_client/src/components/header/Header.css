@@ -1,0 +1,27 @@
+.header {
+    border-bottom: 1px solid #707070;
+    height: 80px;
+    display: block;
+}
+
+.headerAppName {
+    font-size: 28px;
+    color: #AAAAAA;
+    display: inline-block;
+    margin-left: 35px;
+    padding-top: 23px;
+}
+
+.headerAvatar {
+    margin-top: 20px;
+    float: right;
+    margin-right: 22px;
+    cursor: pointer;
+}
+
+.headerSettingsButton {
+    float: right;
+    margin-top: 28px;
+    margin-right: 21px;
+    cursor: pointer;
+}
