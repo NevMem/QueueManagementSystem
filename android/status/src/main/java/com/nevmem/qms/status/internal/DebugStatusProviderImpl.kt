@@ -82,6 +82,9 @@ internal class DebugStatusProviderImpl(
                             "${(numberInLine * avgTime + 59) / 60} min"
                     ))
                 }
+                if (numberInLine == 0) {
+                    queueStatus = null
+                }
             }
         }
     }
