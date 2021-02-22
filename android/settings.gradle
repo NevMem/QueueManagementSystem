@@ -1,3 +1,4 @@
+include ':suggests'
 include ':app'
 include ':auth'
 include ':common-ui'

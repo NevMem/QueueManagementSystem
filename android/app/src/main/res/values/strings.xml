@@ -33,4 +33,6 @@
     <string name="password_hint_string">Password</string>
 
     <string name="registration_page_title">Create your account</string>
+
+    <string name="status_suggests_header">You have zero appointments, here is list for you:</string>
 </resources>

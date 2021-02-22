@@ -18,6 +18,7 @@ import com.nevmem.qms.notifications.createNotificationsManager
 import com.nevmem.qms.permissions.createPermissionsManager
 import com.nevmem.qms.status.StatusProvider
 import com.nevmem.qms.status.createDebugStatusProvider
+import com.nevmem.qms.suggests.createDebugSuggestsManager
 import com.nevmem.qms.toast.manager.ShowToastManager
 import com.nevmem.qms.toast.manager.ToastManager
 import com.nevmem.qms.toast.manager.ToastProvider
@@ -55,12 +56,13 @@ class QMSApplication : Application() {
                 get())
         }
         single<Logger> { LoggerImpl() }
+        single { createDebugSuggestsManager() }
         single { createNotificationsManager(this@QMSApplication) }
         viewModel { LoginPageViewModel(get()) }
         viewModel { ProfileFragmentViewModel(get(), get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
         viewModel { DeveloperSettingsFragmentViewModel(get()) }
-        viewModel { StatusFragmentViewModel(get()) }
+        viewModel { StatusFragmentViewModel(get(), get()) }
     }
 
     override fun onCreate() {

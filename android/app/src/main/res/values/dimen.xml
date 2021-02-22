@@ -27,4 +27,8 @@
     <dimen name="documentNumberTextSize">16sp</dimen>
 
     <dimen name="join_action_text_size">30sp</dimen>
+
+    <dimen name="suggest_header_text_size">24sp</dimen>
+    <dimen name="suggest_title_text_size">22sp</dimen>
+    <dimen name="suggest_description_text_size">18sp</dimen>
 </resources>

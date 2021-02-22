@@ -82,6 +82,7 @@ dependencies {
     implementation project(':scanner')
     implementation project(':statemachine')
     implementation project(':status')
+    implementation project(':suggests')
     implementation project(':tags')
     implementation project(':toast')
 
