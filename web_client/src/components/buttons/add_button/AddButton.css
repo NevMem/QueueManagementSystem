@@ -5,6 +5,7 @@
     padding: 11px;
     display: flex;
     flex-direction: row;
+    cursor: pointer;
 }
 
 .addButtonSecondary {
@@ -14,4 +15,5 @@
     padding: 11px;
     display: flex;
     flex-direction: row;
+    cursor: pointer;
 }
