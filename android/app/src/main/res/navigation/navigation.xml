@@ -107,7 +107,11 @@
             app:uri="nevmem.com/invite/?invite_id={invite_id}" />
         <action
             android:id="@+id/moveToStatusPage"
-            app:destination="@id/navigation_status" />
+            app:destination="@id/navigation_status"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
     </fragment>
 
     <fragment
