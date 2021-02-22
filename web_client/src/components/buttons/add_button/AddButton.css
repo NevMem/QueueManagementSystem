@@ -1,11 +1,16 @@
 .addButton {
     background-color: #FFC107;
     border-radius: 8px;
-    box-shadow: 3px 6px 4px #00000026;
     padding: 11px;
     display: flex;
     flex-direction: row;
     cursor: pointer;
+    transition: all ease-in 0.2s;
+    box-shadow: 3px 6px 4px #00000026;
+}
+
+.addButton:hover {
+    background-color: #ffc107ab;
 }
 
 .addButtonSecondary {
