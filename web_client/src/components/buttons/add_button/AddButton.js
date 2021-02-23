@@ -13,10 +13,25 @@ export default function AddButton({isPrimaryButton, text, ...props}) {
         imageSrc = iconWhite
     }
 
+    var fontColor = '#000000'
+    if (!isPrimaryButton) {
+        fontColor = '#ffffff'
+    }
+
     return (
         <div className={className}>
             <img alt='add image' src={imageSrc} style={{display: 'inline-block'}} />
-            <div style={{fontSize: '16px', marginLeft: '5px', display: 'inline-block'}}>{text}</div>
+            <div
+                style={{
+                    fontSize: '16px',
+                    marginLeft: '5px',
+                    display: 'inline-block',
+                    color: fontColor,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden'
+                }}>
+                    {text}
+            </div>
         </div>
     )
 }

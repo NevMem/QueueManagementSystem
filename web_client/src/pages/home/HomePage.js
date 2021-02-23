@@ -3,6 +3,7 @@ import Header from '../../components/header/Header'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import AddButton from '../../components/buttons/add_button/AddButton'
+import OrganizationCard from '../../components/organization/OrganizationCard'
 
 export default class HomePage extends Component {
     constructor(prps) {
@@ -15,13 +16,15 @@ export default class HomePage extends Component {
             <Fragment>
                 <Header />
                 <Grid container justify='center'>
-                    <Grid item xs={10}>
-                        <Grid container justify='space-evenly' style={{marginTop: '16px'}}>
+                    <Grid item xs={8}>
+                        <Grid container justify='space-between' style={{marginTop: '16px'}}>
                             <Typography style={{color: '#a0a0a0', fontSize: '26px'}} variant='body2'>
                                 Ваши организации
                             </Typography>
                             <AddButton isPrimaryButton={true} text='Новая организация' />
                         </Grid>
+                        <OrganizationCard style={{marginTop: '20px'}} />
+                        <OrganizationCard style={{marginTop: '20px'}} />
                     </Grid>
                 </Grid>
             </Fragment>
