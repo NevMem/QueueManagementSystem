@@ -12,7 +12,7 @@ message Queue {
     string image_url = 3;
     string description = 4;
 
-    string organisation_id = 5;
+    string service_id = 5;
 }
 
 message QueueUserInfo {

@@ -18,10 +18,10 @@ class UserAttachments(BaseModel):
 class Queue(BaseModel):
     __tablename__ = 'Queues'
 
-    id = sqlalchemy.Column(UUID(), primary_key=True, default=uuid.uuid4)
+    id = sqlalchemy.Column(types.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(types.Text)
 
-    organisation_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Organisations.id'))
+    service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Services.id'))
 
     image_url = sqlalchemy.Column(types.Text)
     description = sqlalchemy.Column(types.Text)
@@ -29,17 +29,29 @@ class Queue(BaseModel):
     # todo: other fields
 
 
+class Service(BaseModel):
+    __tablename__ = 'Services'
+
+    id = sqlalchemy.Column(UUID(), primary_key=True, default=uuid.uuid4)
+    name = sqlalchemy.Column(types.Text, nullable=False)
+    organisation_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Organisations.id'))
+
+    queues = relationship(Queue, cascade='all, delete-orphan')
+
+    name = sqlalchemy.Column(types.Text, nullable=False)
+    data = sqlalchemy.Column(types.JSON, default={})
+
+
 class Organisation(BaseModel):
     __tablename__ = 'Organisations'
 
     id = sqlalchemy.Column(UUID(), primary_key=True, default=uuid.uuid4)
-    queues = relationship(Queue, cascade='all, delete-orphan')
+    services = relationship(Service, cascade='all, delete-orphan')
 
     name = sqlalchemy.Column(types.Text, nullable=False)
-
-    image_url = sqlalchemy.Column(types.Text)
     admins = relationship('Permission', cascade='all, delete-orphan')
-    # todo: other fields
+
+    data = sqlalchemy.Column(types.JSON, default={})
 
 
 class Permission(BaseModel):
@@ -49,7 +61,7 @@ class Permission(BaseModel):
 
     user_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Users.id'), index=True)
     organisation_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey(Organisation.id))
-    queue_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Queues.id'))
+    queue_id = sqlalchemy.Column(types.Integer, sqlalchemy.ForeignKey('Queues.id'))
 
     permission_type = sqlalchemy.Column(types.Text)
 
@@ -64,7 +76,7 @@ class QueueItem(BaseModel):
     __tablename__ = 'QueueItems'
 
     user_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Users.id'), primary_key=True)
-    queue_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Queues.id'), index=True)
+    queue_id = sqlalchemy.Column(types.Integer, sqlalchemy.ForeignKey('Queues.id'), index=True)
 
 
 class User(BaseModel):

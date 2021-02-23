@@ -68,6 +68,16 @@ Response:  proto.organisation.OrganisationList
 
 Возвращает список редактируемых организаций для авторизованного пользователя
 
+#### Создать сервис
+
+POST `admin/create_service`
+
+Request: proto.service.ServiceInfo
+
+Response: google.protobuf.Empty
+
+В случае, если сервис с таким названием уже есть - возвращаем 409
+
 #### Создать очередь
 
 POST `admin/create_queue`

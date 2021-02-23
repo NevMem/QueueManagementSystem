@@ -5,7 +5,7 @@ from sqlalchemy.sql import select
 from starlette.authentication import requires
 from starlette.exceptions import HTTPException
 
-from proto import user_pb2, permissions_pb2, organization_pb2, queue_pb2
+from proto import user_pb2, permissions_pb2, organization_pb2, queue_pb2, service_pb2
 from server.app.middleware import middleware
 from server.app import model
 from server.app.utils import sha_hash
@@ -120,7 +120,7 @@ async def create_organisation(request: Request):
     return ProtobufResponse(empty_pb2.Empty())
 
 
-@route('/admin/get_organisations_list', methods=['POST', 'GET'], request_type=organization_pb2.OrganizationInfo)
+@route('/admin/get_organisations_list', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
 @requires('authenticated')
 async def get_organisations_list(request: Request):
     query = (
@@ -143,13 +143,27 @@ async def get_organisations_list(request: Request):
     return ProtobufResponse(organization_pb2.OrganisationList(organisations=result))
 
 
+@route('/admin/create_service', methods=['POST'], request_type=service_pb2.ServiceInfo)
+@requires('authenticated')
+async def create_service(request: Request):
+    new_service = model.Service(
+        name=request.parsed.name,
+        organisation_id=request.parsed.organisation_id,
+        data=request.parsed.data,
+    )
+
+    request.connection.add(new_service)
+
+    return ProtobufResponse(empty_pb2.Empty())
+
+
 @route('/admin/create_queue', methods=['POST'], request_type=queue_pb2.Queue)
 @requires('authenticated')
 async def create_queue(request: Request):
     new_queue = model.Queue(
         name=request.parsed.name,
         image_url=request.parsed.image_url,
-        organisation_id=request.parsed.organisation_id,
+        service_id=request.parsed.service_id,
     )
 
     new_permission = model.Permission(
@@ -177,6 +191,7 @@ async def enter_queue(request: Request):
 
 @route('/client/get_current_queue_info', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
 async def get_current_queue_info(request: Request):
+    # fixme: plug
     return ProtobufResponse(queue_pb2.QueueUserInfo(
         user_count=2,
         user_queue_position=1,
