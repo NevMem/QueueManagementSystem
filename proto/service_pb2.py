@@ -11,7 +11,6 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-from google.protobuf import any_pb2 as google_dot_protobuf_dot_any__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -20,9 +19,8 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\014ServiceProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x13proto/service.proto\x12\x03qms\x1a\x19google/protobuf/any.proto\"\x94\x01\n\x0bServiceInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12(\n\x04\x64\x61ta\x18\x03 \x03(\x0b\x32\x1a.qms.ServiceInfo.DataEntry\x1a\x41\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12#\n\x05value\x18\x02 \x01(\x0b\x32\x14.google.protobuf.Any:\x02\x38\x01\"1\n\x0bServiceList\x12\"\n\x08services\x18\x01 \x03(\x0b\x32\x10.qms.ServiceInfoB\x1e\n\x0e\x63om.nevmem.qmsB\x0cServiceProtob\x06proto3'
-  ,
-  dependencies=[google_dot_protobuf_dot_any__pb2.DESCRIPTOR,])
+  serialized_pb=b'\n\x13proto/service.proto\x12\x03qms\"\x98\x01\n\x0bServiceInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x18\n\x10organisations_id\x18\x04 \x01(\t\x12(\n\x04\x64\x61ta\x18\x03 \x03(\x0b\x32\x1a.qms.ServiceInfo.DataEntry\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"1\n\x0bServiceList\x12\"\n\x08services\x18\x01 \x03(\x0b\x32\x10.qms.ServiceInfoB\x1e\n\x0e\x63om.nevmem.qmsB\x0cServiceProtob\x06proto3'
+)
 
 
 
@@ -44,8 +42,8 @@ _SERVICEINFO_DATAENTRY = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='value', full_name='qms.ServiceInfo.DataEntry.value', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -61,8 +59,8 @@ _SERVICEINFO_DATAENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=139,
-  serialized_end=204,
+  serialized_start=138,
+  serialized_end=181,
 )
 
 _SERVICEINFO = _descriptor.Descriptor(
@@ -88,7 +86,14 @@ _SERVICEINFO = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='data', full_name='qms.ServiceInfo.data', index=2,
+      name='organisations_id', full_name='qms.ServiceInfo.organisations_id', index=2,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='data', full_name='qms.ServiceInfo.data', index=3,
       number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -106,8 +111,8 @@ _SERVICEINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=56,
-  serialized_end=204,
+  serialized_start=29,
+  serialized_end=181,
 )
 
 
@@ -138,11 +143,10 @@ _SERVICELIST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=206,
-  serialized_end=255,
+  serialized_start=183,
+  serialized_end=232,
 )
 
-_SERVICEINFO_DATAENTRY.fields_by_name['value'].message_type = google_dot_protobuf_dot_any__pb2._ANY
 _SERVICEINFO_DATAENTRY.containing_type = _SERVICEINFO
 _SERVICEINFO.fields_by_name['data'].message_type = _SERVICEINFO_DATAENTRY
 _SERVICELIST.fields_by_name['services'].message_type = _SERVICEINFO
