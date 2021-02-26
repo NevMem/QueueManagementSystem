@@ -12,10 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: "Login to registry"
-        run: echo $SECRET | docker login \
-          --username json_key \
-          --password-stdin \
-          cr.yandex
+        run: echo $SECRET | docker login --username json_key --password-stdin cr.yandex
         env:
           $SECRET: ${{ secrets.REGISTRY_SECRET }}
       - name: "Build docker"
