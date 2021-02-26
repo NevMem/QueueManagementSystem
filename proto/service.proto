@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package qms;
+
+option java_package = "com.nevmem.qms";
+option java_outer_classname = "ServiceProto";
+
+
+message ServiceInfo {
+  string id = 1;
+  string name = 2;
+  string organisations_id = 4;
+
+  map<string, string> data = 3;
+}
+
+message ServiceList {
+  repeated ServiceInfo services = 1;
+}

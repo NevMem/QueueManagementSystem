@@ -4,6 +4,7 @@ import json
 from google.protobuf.json_format import ParseDict
 from itsdangerous.exc import BadTimeSignature, SignatureExpired
 from sqlalchemy.sql import select
+from sqlalchemy.orm import selectinload
 
 from starlette.datastructures import MutableHeaders
 from starlette.middleware import Middleware
@@ -24,7 +25,7 @@ class BasicAuthBackend(AuthenticationBackend):
         if 'user' not in request.session:
             return
 
-        query = select(model.User).where(model.User.email == request.session['user'])
+        query = select(model.User).where(model.User.email == request.session['user']).options(selectinload(model.User.permissions))
         result = await request.scope['_connection'].execute(query)
         user = result.scalar()
 

@@ -5,9 +5,18 @@ package qms;
 option java_package = "com.nevmem.qms";
 option java_outer_classname = "QueueProto";
 
+
 message Queue {
     string id = 1;
     string name = 2;
-    string imageUrl = 3;
+    string image_url = 3;
     string description = 4;
+
+    string service_id = 5;
+}
+
+message QueueUserInfo {
+    uint32 user_count = 1;
+    uint32 user_queue_position = 2;
+    double approximate_time = 3;
 }

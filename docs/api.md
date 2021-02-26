@@ -1,33 +1,91 @@
-#### POST `client/register`
+#### Регистрация пользователя 
+POST `client/register`
 
-Request: proto.client.RegisterRequest
+Request: proto.user.RegisterRequest
 
-Response: Empty
+Response: google.protobuf.Empty
 
 Регистрация нового пользователя(не администратора). Необходима уникальность логина.
 При конфликте возвращается http код 409
 
-#### POST `client/login`
+#### Авторизация
+POST `client/login` 
 
-Request: proto.client.ClientIdentity 
-Response: proto.client.LoginResponse
+Request: proto.user.UserIdentity 
 
-#### POST `client/enqueue`
+Response: google.protobuf.Empty
 
-Request: proto.client.EnqueueRequest
+В случае успешного входа возвращает хедер `session`
+Иначе 401.
 
-Response: proto.client.EnqueueResponse
+#### Получение информации о пользователе
 
-#### POST `admin/update_queue`
+POST/GET `client/get_user` 
 
-Обновить очередь. При пустом поле id создается новая очередь
+Request: google.protobuf.Empty
 
-#### POST `admin/next_client?queue_id=<id очереди>`
+Response: proto.user.User 
 
-Request: None
+Возвращает информацию об авторизованном пользоватеел
 
-Response: proto.user.User
+#### Проверка уникальности пользователя
 
-#### POST `admin/update_organization`
+POST/GET `client/check_unique_user` 
 
-Обновить информацию об организации
+Request: google.protobuf.UserIdentity
+
+Response: proto.user.CheckUniqueUserResponse 
+
+Возвращает информацию об авторизованном пользоватеел
+
+#### Встать в очередь
+
+POST `client/enter_queue`
+
+Request: proto.queue.Queue
+
+Response: google.protobuf.Empty
+
+В случае, если уже стоим в какой-то очереди возвращает 409
+
+#### Создать организацию
+
+POST `admin/create_organisation`
+
+Request: proto.organisation.OrganisationInfo
+
+Response: google.protobuf.Empty
+
+В случае, если организация с таким названием уже есть - возвращаем 409
+
+#### Список редактируемых организаций
+
+POST/GET `admin/get_organisations_list`
+
+Request:  google.protobuf.Empty
+
+Response:  proto.organisation.OrganisationList
+
+Возвращает список редактируемых организаций для авторизованного пользователя
+
+#### Создать сервис
+
+POST `admin/create_service`
+
+Request: proto.service.ServiceInfo
+
+Response: google.protobuf.Empty
+
+В случае, если сервис с таким названием уже есть - возвращаем 409
+
+#### Создать очередь
+
+POST `admin/create_queue`
+
+Request:  proto.queue.Queue
+
+Response:  google.protobuf.Empty
+
+Создает очередь в выбранной организации
+
+
