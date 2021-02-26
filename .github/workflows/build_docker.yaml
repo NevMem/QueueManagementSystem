@@ -1,0 +1,24 @@
+name: build_docker
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: "Build and push docker"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: "Login to registry"
+        run: echo $SECRET | docker login \
+          --username json_key \
+          --password-stdin \
+          cr.yandex
+        env:
+          $SECRET: ${{ secrets.REGISTRY_SECRET }}
+      - name: "Build docker"
+        run: server/docker/build.sh
+      - name: "Push"
+        run: docker push cr.yandex/crp59su1rb652ia7ojk8/init:$(git rev-parse HEAD)
