@@ -1,9 +1,6 @@
 name: build_docker
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 jobs:
   build:
@@ -12,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: "Login to registry"
-        run: echo $SECRET | docker login --username json_key --password-stdin cr.yandex
+        run: docker login --username json_key --password $SECRET cr.yandex
         env:
           $SECRET: ${{ secrets.REGISTRY_SECRET }}
       - name: "Build docker"
