@@ -13,6 +13,6 @@ RUN apt update && \
 RUN python3 -m pip install -r /usr/lib/qms/server/app/requirenments.txt
 RUN python3 -m pip install supervisor
 
-EXPOSE 80 443 22
+EXPOSE 8080
 
 CMD [ "/bin/bash", "/etc/runner/run.sh" ]
