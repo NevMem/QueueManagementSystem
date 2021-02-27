@@ -5,15 +5,24 @@ package qms;
 option java_package = "com.nevmem.qms";
 option java_outer_classname = "ServiceProto";
 
+import "proto/queue.proto";
+
 
 message ServiceInfo {
   string id = 1;
   string name = 2;
-  string organisations_id = 4;
+  string organisation_id = 4;
 
   map<string, string> data = 3;
 }
 
-message ServiceList {
+message ServiceInfoList {
   repeated ServiceInfo services = 1;
 }
+
+message Service {
+  ServiceInfo info = 1;
+
+  repeated Queue queues = 2;
+}
+

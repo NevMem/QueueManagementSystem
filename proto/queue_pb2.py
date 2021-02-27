@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\nQueueProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x11proto/queue.proto\x12\x03qms\"]\n\x05Queue\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x11\n\timage_url\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x12\n\nservice_id\x18\x05 \x01(\t\"Z\n\rQueueUserInfo\x12\x12\n\nuser_count\x18\x01 \x01(\r\x12\x1b\n\x13user_queue_position\x18\x02 \x01(\r\x12\x18\n\x10\x61pproximate_time\x18\x03 \x01(\x01\x42\x1c\n\x0e\x63om.nevmem.qmsB\nQueueProtob\x06proto3'
+  serialized_pb=b'\n\x11proto/queue.proto\x12\x03qms\"]\n\x05Queue\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x11\n\timage_url\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x12\n\nservice_id\x18\x05 \x01(\t\"m\n\rQueueUserInfo\x12\x12\n\nuser_count\x18\x01 \x01(\r\x12\x1b\n\x13user_queue_position\x18\x02 \x01(\r\x12\x18\n\x10\x61pproximate_time\x18\x03 \x01(\x01\x12\x11\n\tticket_id\x18\x05 \x01(\tB\x1c\n\x0e\x63om.nevmem.qmsB\nQueueProtob\x06proto3'
 )
 
 
@@ -114,6 +114,13 @@ _QUEUEUSERINFO = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='ticket_id', full_name='qms.QueueUserInfo.ticket_id', index=3,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -127,7 +134,7 @@ _QUEUEUSERINFO = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=121,
-  serialized_end=211,
+  serialized_end=230,
 )
 
 DESCRIPTOR.message_types_by_name['Queue'] = _QUEUE

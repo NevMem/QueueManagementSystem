@@ -5,6 +5,9 @@ package qms;
 option java_package = "com.nevmem.qms";
 option java_outer_classname = "OrganizitionProto";
 
+import "proto/service.proto";
+
+
 message OrganizationInfo {
   string id = 1;
   string name = 2;
@@ -12,6 +15,18 @@ message OrganizationInfo {
 }
 
 
-message OrganisationList {
+message Organisation {
+  OrganizationInfo info = 1;
+
+  repeated Service services = 2;
+}
+
+
+message OrganisationInfoList {
   repeated OrganizationInfo organisations = 1;
+}
+
+
+message OrganisationList {
+  repeated Organisation organisations = 1;
 }

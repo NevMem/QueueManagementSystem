@@ -11,6 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+from proto import queue_pb2 as proto_dot_queue__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -19,8 +20,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\014ServiceProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x13proto/service.proto\x12\x03qms\"\x98\x01\n\x0bServiceInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x18\n\x10organisations_id\x18\x04 \x01(\t\x12(\n\x04\x64\x61ta\x18\x03 \x03(\x0b\x32\x1a.qms.ServiceInfo.DataEntry\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"1\n\x0bServiceList\x12\"\n\x08services\x18\x01 \x03(\x0b\x32\x10.qms.ServiceInfoB\x1e\n\x0e\x63om.nevmem.qmsB\x0cServiceProtob\x06proto3'
-)
+  serialized_pb=b'\n\x13proto/service.proto\x12\x03qms\x1a\x11proto/queue.proto\"\x97\x01\n\x0bServiceInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x17\n\x0forganisation_id\x18\x04 \x01(\t\x12(\n\x04\x64\x61ta\x18\x03 \x03(\x0b\x32\x1a.qms.ServiceInfo.DataEntry\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"5\n\x0fServiceInfoList\x12\"\n\x08services\x18\x01 \x03(\x0b\x32\x10.qms.ServiceInfo\"E\n\x07Service\x12\x1e\n\x04info\x18\x01 \x01(\x0b\x32\x10.qms.ServiceInfo\x12\x1a\n\x06queues\x18\x02 \x03(\x0b\x32\n.qms.QueueB\x1e\n\x0e\x63om.nevmem.qmsB\x0cServiceProtob\x06proto3'
+  ,
+  dependencies=[proto_dot_queue__pb2.DESCRIPTOR,])
 
 
 
@@ -59,8 +61,8 @@ _SERVICEINFO_DATAENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=138,
-  serialized_end=181,
+  serialized_start=156,
+  serialized_end=199,
 )
 
 _SERVICEINFO = _descriptor.Descriptor(
@@ -86,7 +88,7 @@ _SERVICEINFO = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='organisations_id', full_name='qms.ServiceInfo.organisations_id', index=2,
+      name='organisation_id', full_name='qms.ServiceInfo.organisation_id', index=2,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -111,21 +113,21 @@ _SERVICEINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=29,
-  serialized_end=181,
+  serialized_start=48,
+  serialized_end=199,
 )
 
 
-_SERVICELIST = _descriptor.Descriptor(
-  name='ServiceList',
-  full_name='qms.ServiceList',
+_SERVICEINFOLIST = _descriptor.Descriptor(
+  name='ServiceInfoList',
+  full_name='qms.ServiceInfoList',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='services', full_name='qms.ServiceList.services', index=0,
+      name='services', full_name='qms.ServiceInfoList.services', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -143,15 +145,57 @@ _SERVICELIST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=183,
-  serialized_end=232,
+  serialized_start=201,
+  serialized_end=254,
+)
+
+
+_SERVICE = _descriptor.Descriptor(
+  name='Service',
+  full_name='qms.Service',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='info', full_name='qms.Service.info', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='queues', full_name='qms.Service.queues', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=256,
+  serialized_end=325,
 )
 
 _SERVICEINFO_DATAENTRY.containing_type = _SERVICEINFO
 _SERVICEINFO.fields_by_name['data'].message_type = _SERVICEINFO_DATAENTRY
-_SERVICELIST.fields_by_name['services'].message_type = _SERVICEINFO
+_SERVICEINFOLIST.fields_by_name['services'].message_type = _SERVICEINFO
+_SERVICE.fields_by_name['info'].message_type = _SERVICEINFO
+_SERVICE.fields_by_name['queues'].message_type = proto_dot_queue__pb2._QUEUE
 DESCRIPTOR.message_types_by_name['ServiceInfo'] = _SERVICEINFO
-DESCRIPTOR.message_types_by_name['ServiceList'] = _SERVICELIST
+DESCRIPTOR.message_types_by_name['ServiceInfoList'] = _SERVICEINFOLIST
+DESCRIPTOR.message_types_by_name['Service'] = _SERVICE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 ServiceInfo = _reflection.GeneratedProtocolMessageType('ServiceInfo', (_message.Message,), {
@@ -169,12 +213,19 @@ ServiceInfo = _reflection.GeneratedProtocolMessageType('ServiceInfo', (_message.
 _sym_db.RegisterMessage(ServiceInfo)
 _sym_db.RegisterMessage(ServiceInfo.DataEntry)
 
-ServiceList = _reflection.GeneratedProtocolMessageType('ServiceList', (_message.Message,), {
-  'DESCRIPTOR' : _SERVICELIST,
+ServiceInfoList = _reflection.GeneratedProtocolMessageType('ServiceInfoList', (_message.Message,), {
+  'DESCRIPTOR' : _SERVICEINFOLIST,
   '__module__' : 'proto.service_pb2'
-  # @@protoc_insertion_point(class_scope:qms.ServiceList)
+  # @@protoc_insertion_point(class_scope:qms.ServiceInfoList)
   })
-_sym_db.RegisterMessage(ServiceList)
+_sym_db.RegisterMessage(ServiceInfoList)
+
+Service = _reflection.GeneratedProtocolMessageType('Service', (_message.Message,), {
+  'DESCRIPTOR' : _SERVICE,
+  '__module__' : 'proto.service_pb2'
+  # @@protoc_insertion_point(class_scope:qms.Service)
+  })
+_sym_db.RegisterMessage(Service)
 
 
 DESCRIPTOR._options = None

@@ -1,7 +1,12 @@
+import random
+import string
 import sys
 import traceback
 
 from Crypto.Hash import SHA256
+
+
+uuid_letters = string.ascii_letters + string.digits
 
 
 def get_traceback_string(exception):
@@ -28,3 +33,19 @@ def format_exception(e, with_traceback=False):
 
 def sha_hash(s: str) -> str:
     return SHA256.new(s.encode()).hexdigest()
+
+
+def fixed_uuid(length=6) -> str:
+    return ''.join(random.choice(uuid_letters) for i in range(length))
+
+
+def generate_next_ticket(previous_ticket: str) -> str:
+    letter = previous_ticket[0]
+    number = int(previous_ticket[1:])
+
+    number += 1
+    if number == 100:
+        number = 1
+        letter = string.ascii_uppercase[(string.ascii_uppercase.index(letter) + 1) % len(string.ascii_uppercase)]
+
+    return f'{letter}{number:02d}'

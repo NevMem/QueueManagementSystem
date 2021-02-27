@@ -1,6 +1,7 @@
 
 from google.protobuf import empty_pb2
 from sqlalchemy.sql import select
+from sqlalchemy.orm import selectinload
 
 from starlette.authentication import requires
 from starlette.exceptions import HTTPException
@@ -8,7 +9,7 @@ from starlette.exceptions import HTTPException
 from proto import user_pb2, permissions_pb2, organization_pb2, queue_pb2, service_pb2
 from server.app.middleware import middleware
 from server.app import model
-from server.app.utils import sha_hash
+from server.app.utils import sha_hash, generate_next_ticket
 from server.app.utils.db_utils import prepare_db
 from server.app.utils.web import route, prepare_app, Request, ProtobufResponse
 
@@ -128,6 +129,7 @@ async def get_organisations_list(request: Request):
         .where(model.User.id == request.user.id)
         .join(model.Permission, model.Permission.organisation_id == model.Organisation.id)
         .join(model.User, model.User.id == model.Permission.user_id)
+        .options(selectinload(model.Organisation.services), selectinload(model.Organisation.services, model.Service.queues))
     )
 
     result = await request.connection.execute(query)
@@ -135,10 +137,31 @@ async def get_organisations_list(request: Request):
 
     result = []
     for organisation in organisations:
-        result.append(organization_pb2.OrganizationInfo(
-            id=str(organisation.id),
-            name=organisation.name,
-        ))
+        result.append(
+            organization_pb2.Organisation(
+                info=organization_pb2.OrganizationInfo(
+                    id=str(organisation.id),
+                    name=organisation.name,
+                ),
+                services=[
+                    service_pb2.Service(
+                        info=service_pb2.ServiceInfo(
+                            id=str(service.id),
+                            name=service.name,
+                        ),
+                        queues=[
+                            queue_pb2.Queue(
+                                id=queue.id,
+                                name=queue.name,
+                                image_url=queue.image_url,
+                            )
+                            for queue in service.queues
+                        ]
+                    )
+                    for service in organisation.services
+                ]
+            )
+        )
 
     return ProtobufResponse(organization_pb2.OrganisationList(organisations=result))
 
@@ -149,9 +172,15 @@ async def create_service(request: Request):
     new_service = model.Service(
         name=request.parsed.name,
         organisation_id=request.parsed.organisation_id,
-        data=request.parsed.data,
+        data=dict(request.parsed.data),
     )
 
+    new_permission = model.Permission(
+        user_id=request.user.id,
+        permission_type='Owner',
+    )
+
+    new_service.admins.append(new_permission)
     request.connection.add(new_service)
 
     return ProtobufResponse(empty_pb2.Empty())
@@ -180,13 +209,42 @@ async def create_queue(request: Request):
 @route('/client/enter_queue', methods=['POST'], request_type=queue_pb2.Queue)
 @requires('authenticated')
 async def enter_queue(request: Request):
+    query = (
+        select(model.QueueItem)
+        .where(model.Queue.id == request.parsed.id)
+        .join(model.Queue, model.Queue.id == model.QueueItem.queue_id)
+        .order_by(model.QueueItem.enqueue_at.desc())
+        .limit(1)
+    )
+
+    result = await request.connection.execute(query)
+    last_queue_item = result.scalars().first()
+
+    if last_queue_item is None:
+        last_ticket_id = 'A00'
+    else:
+        last_ticket_id = last_queue_item.ticket_id
+
+    query = (
+        select(model.QueueItem)
+        .where(model.QueueItem.user_id == request.user.id)
+        .order_by(model.QueueItem.enqueue_at.desc())
+        .limit(1)
+    )
+
+    result = await request.connection.execute(query)
+    has_entered_queue = not result.scalars().first().processed
+    if has_entered_queue:
+        raise HTTPException(409)
+
     new_queue_item = model.QueueItem(
         user_id=request.user.id,
         queue_id=request.parsed.id,
+        ticket_id=generate_next_ticket(last_ticket_id),
     )
 
     request.connection.add(new_queue_item)
-    return ProtobufResponse(empty_pb2.Empty())
+    return ProtobufResponse(queue_pb2.QueueUserInfo(ticket_id=new_queue_item.ticket_id))
 
 
 @route('/client/get_current_queue_info', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
