@@ -15,6 +15,6 @@ jobs:
           username: json_key
           password: ${{ secrets.REGISTRY_SECRET }}
       - name: "Build docker"
-        run: server/docker/build.sh
+        run: cd server/docker/ && server/docker/build.sh
       - name: "Push"
         run: docker push cr.yandex/crp59su1rb652ia7ojk8/init:$(git rev-parse HEAD)
