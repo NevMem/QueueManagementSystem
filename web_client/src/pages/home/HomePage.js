@@ -4,11 +4,24 @@ import Header from '../../components/header/Header'
 import OrganizationCard from '../../components/organization/OrganizationCard'
 import React, { Component, Fragment } from 'react'
 import Typography from '@material-ui/core/Typography'
+import AddOrganizationDialog from '../../components/dialogs/AddOrganizationDialog'
 
 export default class HomePage extends Component {
     constructor(prps) {
         super(prps)
-        this.state = {}
+        this.state = {
+            open: false
+        }
+        this.openDialog = this.openDialog.bind(this)
+        this.closeDialog = this.closeDialog.bind(this)
+    }
+
+    openDialog() {
+        this.setState(state => { return {...state, open: true} })
+    }
+
+    closeDialog() {
+        this.setState(state => { return {...state, open: false} })
     }
     
     render() {
@@ -111,10 +124,9 @@ export default class HomePage extends Component {
                             <Typography style={{color: '#a0a0a0', fontSize: '26px'}} variant='body2'>
                                 Ваши организации
                             </Typography>
-                            <AddButton isPrimaryButton={true} text='Новая организация' />
+                            <AddButton isPrimaryButton={true} text='Новая организация' onClick={this.openDialog} />
+                            <AddOrganizationDialog open={this.state.open} onClose={this.closeDialog} />
                         </Grid>
-                        {/* <OrganizationCard style={{marginTop: '20px'}}  /> */}
-                        {/* <OrganizationCard style={{marginTop: '20px'}} /> */}
                         { organizationsData.map((elem) => {
                             return <OrganizationCard key={elem.id} organizationData={elem} style={{marginTop: '20px'}}  />
                         }) }
