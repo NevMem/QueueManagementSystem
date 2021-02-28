@@ -9,6 +9,7 @@ import MuiAccordionDetails from '@material-ui/core/AccordionDetails'
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary'
 import Typography from '@material-ui/core/Typography'
 import AddServiceDialog from '../dialogs/AddServiceDialog'
+import AddQueueDialog from '../dialogs/AddQueueDialog'
 
 const Accordion = withStyles({
     root: {
@@ -49,14 +50,14 @@ const AccordionSummary = withStyles({
 const AccordionDetails = withStyles((theme) => ({
     root: {
         padding: theme.spacing(2),
-        display: 'block'
+        flexDirection: 'column'
     },
 }))(MuiAccordionDetails)
 
 const QueueRow = ({ queueData }) => {
     const { name, waiting, avgServiceTime } = queueData
     return (
-        <Grid container style={{paddingLeft: '16px', marginTop: '16px', flexBasis: '100%'}}>
+        <Grid container style={{paddingLeft: '16px', marginTop: '16px'}}>
             <Grid item xs={2}>
                 <Typography style={{color: '#a0a0a0', fontSize: '20px'}} variant='body2'>
                     {name}
@@ -72,6 +73,28 @@ const QueueRow = ({ queueData }) => {
                     {avgServiceTime}
                 </Typography>
             </Grid>
+        </Grid>
+    )
+}
+
+const AddQueueGroup = ({service, ...rest}) => {
+    const [open, setOpen] = useState(false)
+    const handleOpen = () => { setOpen(true) }
+    const handleClose = () => { setOpen(false) }
+    return (
+        <Fragment>
+            <AddButton onClick={handleOpen} isPrimaryButton={false} text='Новая очередь' {...rest} />
+            <AddQueueDialog open={open} onClose={handleClose} service={service} />
+        </Fragment>
+    )
+}
+
+const AddQueueRow = ({service, ...rest}) => {
+    return (
+        <Grid container style={{paddingLeft: '16px', marginTop: '16px'}} justify='center' {...rest}>
+            {/* <Grid item xs={4}> */}
+                <AddQueueGroup service={service} style={{display: 'inline-block'}} />
+            {/* </Grid> */}
         </Grid>
     )
 }
@@ -112,6 +135,7 @@ const ServiceRow = ({ serviceData }) => {
                     {serviceData.queues && serviceData.queues.map(queue => {                    
                         return <QueueRow key={queue.id} queueData={queue} />
                     })}
+                    <AddQueueRow service={serviceData} />
                 </AccordionDetails>
             </Accordion>
         </Fragment>
