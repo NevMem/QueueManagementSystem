@@ -15,6 +15,40 @@ export default class HomePage extends Component {
 
         const organizationsData = [
             {
+                id: 'sber-1',
+                name: 'Sber #1',
+                services: [
+                    {
+                        id: 'sber-service-1',
+                        name: 'Кредиты',
+                        avgServiceTime: '~1:30 мин/чел',
+                        waiting: '10 человек ожидают',
+                        rating: '4.0',
+                        isWorking: true,
+                        queues: [
+                            {
+                                id: 'sber-service-1-queue-1',
+                                name: 'Окно 1',
+                                waiting: '3 человека',
+                                avgServiceTime: '~2:10 мин/чел',
+                            },
+                            {
+                                id: 'sber-service-1-queue-2',
+                                name: 'Окно 2',
+                                waiting: '4 человека',
+                                avgServiceTime: '~1:20 мин/чел',
+                            },
+                            {
+                                id: 'sber-service-1-queue-3',
+                                name: 'Окно 3',
+                                waiting: '3 человека',
+                                avgServiceTime: '~0:30 мин/чел',
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 id: 'some-id-1',
                 name: 'Аптека на Тверской',
                 services: [

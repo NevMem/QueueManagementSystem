@@ -2,6 +2,13 @@ import './OrganizationCard.css'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import AddButton from '../../components/buttons/add_button/AddButton'
+import Accordion from '@material-ui/core/Accordion'
+import AccordionDetails from '@material-ui/core/AccordionDetails'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
+
+const QueueRow = ({ queueData }) => {
+    return null
+}
 
 const ServiceRow = ({ serviceData }) => {
     return (
@@ -47,7 +54,8 @@ export default function OrganizationCard({organizationData, ...props}) {
             <Grid container style={{marginTop: '20px', marginBottom: '20px'}}>
                 <Grid item>
                     <Typography style={{color: '#a0a0a0', fontSize: '24px'}} variant='body2'>
-                        Сервисы:
+                        {services.length > 0 && 'Сервисы:'}
+                        {services.length === 0 && 'У вас нет сервисов в данной организации'}
                     </Typography>
                 </Grid>
             </Grid>
