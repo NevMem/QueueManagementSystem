@@ -92,9 +92,7 @@ const AddQueueGroup = ({service, ...rest}) => {
 const AddQueueRow = ({service, ...rest}) => {
     return (
         <Grid container style={{paddingLeft: '16px', marginTop: '16px'}} justify='center' {...rest}>
-            {/* <Grid item xs={4}> */}
-                <AddQueueGroup service={service} style={{display: 'inline-block'}} />
-            {/* </Grid> */}
+            <AddQueueGroup service={service} style={{display: 'inline-block'}} />
         </Grid>
     )
 }
