@@ -32,9 +32,7 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
 
     const { value: serviceName, bind: bindServiceName } = useInput('')
 
-    const handleCancel = () => {
-        onClose()
-    }
+    const handleCancel = () => { onClose() }
 
     const handleOk = () => {
         onClose()
