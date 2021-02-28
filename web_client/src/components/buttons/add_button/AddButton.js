@@ -19,7 +19,7 @@ export default function AddButton({isPrimaryButton, text, ...props}) {
     }
 
     return (
-        <div className={className}>
+        <div className={className} {...props}>
             <img alt='add image' src={imageSrc} style={{display: 'inline-block'}} />
             <div
                 style={{

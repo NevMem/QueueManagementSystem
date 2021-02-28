@@ -1,5 +1,5 @@
 import './OrganizationCard.css'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import AddButton from '../../components/buttons/add_button/AddButton'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
@@ -8,6 +8,7 @@ import MuiAccordion from '@material-ui/core/Accordion'
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails'
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary'
 import Typography from '@material-ui/core/Typography'
+import AddServiceDialog from '../dialogs/AddServiceDialog'
 
 const Accordion = withStyles({
     root: {
@@ -119,6 +120,17 @@ const ServiceRow = ({ serviceData }) => {
 
 export default function OrganizationCard({organizationData, ...props}) {
     const { name, services } = organizationData
+
+    const [open, setOpen] = useState(false)
+
+    const handleOpen = () => {
+        setOpen(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
     return (
         <div className = 'organizationCard' {...props}>
             <Grid container justify='space-between'>
@@ -128,7 +140,8 @@ export default function OrganizationCard({organizationData, ...props}) {
                     </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                    <AddButton isPrimaryButton={false} text='Новый сервис' />
+                    <AddButton onClick={handleOpen} isPrimaryButton={false} text='Новый сервис' />
+                    <AddServiceDialog open={open} onClose={handleClose} organization={organizationData} />
                 </Grid>
             </Grid>
             <Grid container style={{marginTop: '20px', marginBottom: '20px'}}>
