@@ -1,13 +1,13 @@
 import './OrganizationCard.css'
+import { Fragment } from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
 import AddButton from '../../components/buttons/add_button/AddButton'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import Grid from '@material-ui/core/Grid'
 import MuiAccordion from '@material-ui/core/Accordion'
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails'
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import { Fragment } from 'react'
+import Typography from '@material-ui/core/Typography'
 
 const Accordion = withStyles({
     root: {

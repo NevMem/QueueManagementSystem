@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react'
-import Header from '../../components/header/Header'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
 import AddButton from '../../components/buttons/add_button/AddButton'
+import Grid from '@material-ui/core/Grid'
+import Header from '../../components/header/Header'
 import OrganizationCard from '../../components/organization/OrganizationCard'
+import React, { Component, Fragment } from 'react'
+import Typography from '@material-ui/core/Typography'
 
 export default class HomePage extends Component {
     constructor(prps) {

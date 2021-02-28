@@ -1,6 +1,6 @@
-import iconWhite from './add_icon_white.svg'
-import iconBlack from './add_icon_black.svg'
 import './AddButton.css'
+import iconBlack from './add_icon_black.svg'
+import iconWhite from './add_icon_white.svg'
 
 export default function AddButton({isPrimaryButton, text, ...props}) {
     var className = 'addButton'

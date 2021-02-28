@@ -1,16 +1,16 @@
 import './StartPage.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { React, Component, useState } from 'react'
+import { Redirect } from 'react-router-dom'
+import authAdapter from '../adapters/AuthAdapter'
 import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Grid from '@material-ui/core/Grid'
+import logo from '../images/connection.svg'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import logo from '../images/connection.svg'
 import useInput from '../utils/useInput'
-import authAdapter from '../adapters/AuthAdapter'
-import { Redirect } from 'react-router-dom'
 
 const useStyles = makeStyles({
     authCard: {
