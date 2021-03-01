@@ -10,13 +10,13 @@ import Grid from '@material-ui/core/Grid'
 import logo from '../images/connection.svg'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
+import localizedString from '../localization/localizedString'
 import useInput from '../utils/useInput'
 
 const useStyles = makeStyles({
     authCard: {
         minWidth: '350px',
         margin: 'auto 64px',
-        // boxShadow: '0px 3px 6px #1E2434',
         padding: '16px',
         backgroundColor: 'rgba(0, 0, 0, 0)',
         borderWidth: '2px',
@@ -51,16 +51,24 @@ function LoginSection() {
         <div style={{height: '100vh', display: 'flex', justifyContent: 'center'}} className="login_section">
             <Card variant="outlined" className={classes.authCard}>
                 <CardContent>
-                    <Typography variant="h4">Login or register to moderate your queues</Typography>
+                    <Typography variant="h4">{localizedString('login_form_title')}</Typography>
                     { error && <Typography variant="h6">{error}</Typography> }
                     { redirect && <Redirect to={redirect} /> }
-                    <TextField style={{width: '100%', marginTop: '48px'}} variant="outlined" label="Login" {...bindLogin} />
-                    <TextField style={{width: '100%', marginTop: '16px'}} variant="outlined" label="Password" {...bindPassword} />
+                    <TextField
+                        style={{width: '100%', marginTop: '48px'}}
+                        variant="outlined"
+                        label={localizedString('login_label')}
+                        {...bindLogin} />
+                    <TextField
+                        style={{width: '100%', marginTop: '16px'}}
+                        variant="outlined"
+                        label={localizedString('password_label')}
+                        {...bindPassword} />
                     <Button className={classes.buttons} size="large" variant="contained" color="primary" onClick={handleSubmit}>
-                        Login
+                        {localizedString('login')}
                     </Button>
                     <Button className={classes.buttons} size="large" variant="outlined" color="secondary">
-                        Register
+                        {localizedString('register')}
                     </Button>
                 </CardContent>
             </Card>
