@@ -30,7 +30,7 @@ class LocalizationService {
 
         for (const lang of this.availableLanguages) {
             if (lang.id === localStorage.getItem(currentLangStorageKey)) {
-                this.setCurrentLanguage(lang)
+                this.curLanguage = lang
             }
         }
     }
@@ -44,8 +44,11 @@ class LocalizationService {
     }
 
     setCurrentLanguage(language) {
-        this.curLanguage = language
-        localStorage.setItem(currentLangStorageKey, this.curLanguage.id)
+        if (this.curLanguage != language) {
+            this.curLanguage = language
+            localStorage.setItem(currentLangStorageKey, this.curLanguage.id)
+            window.location.reload()
+        }
     }
 
     addLocalization(lang, dict) {

@@ -7,10 +7,11 @@ import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Grid from '@material-ui/core/Grid'
+import LocalizationGroup from '../components/localization-group/LocalizationGroup'
+import localizedString from '../localization/localizedString'
 import logo from '../images/connection.svg'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import localizedString from '../localization/localizedString'
 import useInput from '../utils/useInput'
 
 const useStyles = makeStyles({
@@ -22,7 +23,6 @@ const useStyles = makeStyles({
         borderWidth: '2px',
     },
     buttons: {
-        marginTop: '48px',
         marginRight: '16px',
     }
 })
@@ -64,12 +64,15 @@ function LoginSection() {
                         variant="outlined"
                         label={localizedString('password_label')}
                         {...bindPassword} />
-                    <Button className={classes.buttons} size="large" variant="contained" color="primary" onClick={handleSubmit}>
-                        {localizedString('login')}
-                    </Button>
-                    <Button className={classes.buttons} size="large" variant="outlined" color="secondary">
-                        {localizedString('register')}
-                    </Button>
+                    <div style={{display: 'flex', flexDirection: 'row', marginTop: '48px', justifyContent: 'left'}}>
+                        <Button className={classes.buttons} size="large" variant="contained" color="primary" onClick={handleSubmit}>
+                            {localizedString('login')}
+                        </Button>
+                        <Button className={classes.buttons} size="large" variant="outlined" color="secondary">
+                            {localizedString('register')}
+                        </Button>
+                        <LocalizationGroup style={{height: '30px', padding: '7px', cursor: 'pointer'}} />
+                    </div>
                 </CardContent>
             </Card>
         </div>
