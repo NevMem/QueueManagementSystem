@@ -5,8 +5,8 @@
     display: flex;
     flex-direction: row;
     cursor: pointer;
-    transition: all ease-in 0.2s;
     box-shadow: 3px 6px 4px #00000026;
+    transition: all ease-in 0.2s;
 }
 
 .addButton:hover {
@@ -14,11 +14,11 @@
 }
 
 .addButtonSecondary {
-    background-color: #FFC107;
+    background: rgba(0, 132, 173, 0.23);
     border-radius: 8px;
-    box-shadow: 3px 6px 4px #0084AD3B;
     padding: 11px;
     display: flex;
     flex-direction: row;
     cursor: pointer;
+    box-shadow: 3px 6px 4px rgba(0, 0, 0, 0.15);
 }

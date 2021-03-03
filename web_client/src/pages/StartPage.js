@@ -1,28 +1,28 @@
 import './StartPage.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { React, Component, useState } from 'react'
+import { Redirect } from 'react-router-dom'
+import authAdapter from '../adapters/AuthAdapter'
 import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Grid from '@material-ui/core/Grid'
+import LocalizationGroup from '../components/localization-group/LocalizationGroup'
+import localizedString from '../localization/localizedString'
+import logo from '../images/connection.svg'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import logo from '../images/connection.svg'
 import useInput from '../utils/useInput'
-import authAdapter from '../adapters/AuthAdapter'
-import { Redirect } from 'react-router-dom'
 
 const useStyles = makeStyles({
     authCard: {
         minWidth: '350px',
         margin: 'auto 64px',
-        // boxShadow: '0px 3px 6px #1E2434',
         padding: '16px',
         backgroundColor: 'rgba(0, 0, 0, 0)',
         borderWidth: '2px',
     },
     buttons: {
-        marginTop: '48px',
         marginRight: '16px',
     }
 })
@@ -51,17 +51,28 @@ function LoginSection() {
         <div style={{height: '100vh', display: 'flex', justifyContent: 'center'}} className="login_section">
             <Card variant="outlined" className={classes.authCard}>
                 <CardContent>
-                    <Typography variant="h4">Login or register to moderate your queues</Typography>
+                    <Typography variant="h4">{localizedString('login_form_title')}</Typography>
                     { error && <Typography variant="h6">{error}</Typography> }
                     { redirect && <Redirect to={redirect} /> }
-                    <TextField style={{width: '100%', marginTop: '48px'}} variant="outlined" label="Login" {...bindLogin} />
-                    <TextField style={{width: '100%', marginTop: '16px'}} variant="outlined" label="Password" {...bindPassword} />
-                    <Button className={classes.buttons} size="large" variant="contained" color="primary" onClick={handleSubmit}>
-                        Login
-                    </Button>
-                    <Button className={classes.buttons} size="large" variant="outlined" color="secondary">
-                        Register
-                    </Button>
+                    <TextField
+                        style={{width: '100%', marginTop: '48px'}}
+                        variant="outlined"
+                        label={localizedString('login_label')}
+                        {...bindLogin} />
+                    <TextField
+                        style={{width: '100%', marginTop: '16px'}}
+                        variant="outlined"
+                        label={localizedString('password_label')}
+                        {...bindPassword} />
+                    <div style={{display: 'flex', flexDirection: 'row', marginTop: '48px', justifyContent: 'left'}}>
+                        <Button className={classes.buttons} size="large" variant="contained" color="primary" onClick={handleSubmit}>
+                            {localizedString('login')}
+                        </Button>
+                        <Button className={classes.buttons} size="large" variant="outlined" color="secondary">
+                            {localizedString('register')}
+                        </Button>
+                        <LocalizationGroup style={{height: '30px', padding: '7px', cursor: 'pointer'}} />
+                    </div>
                 </CardContent>
             </Card>
         </div>
@@ -77,7 +88,7 @@ export default class StartPage extends Component {
                         <div style={{margin: 'auto auto', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
                             <img src={logo} alt="logo" style={{margin: '0 auto'}} className="logo"/>
                             <Typography variant="h4" style={{maxWidth: '500px', textAlign: 'center', color: '#ccc'}}>
-                                QMS - сервис для организации электронных очередей
+                                {localizedString('app_intro_text')}
                             </Typography>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
-import axios from 'axios'
-import backendUrl from './backendUrl'
-import { defaultRequestWrapper } from './wrappers'
+// import { defaultRequestWrapper } from './wrappers'
+// import axios from 'axios'
+// import backendUrl from './backendUrl'
 
 export const processLogin = (login, password) => {
     // return defaultRequestWrapper(axios.post(backendUrl + '/client/login', { email: login, password: password }))
