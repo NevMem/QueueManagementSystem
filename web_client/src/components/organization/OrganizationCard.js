@@ -28,7 +28,7 @@ export default function OrganizationCard({organizationData, ...props}) {
                         {name}
                     </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item>
                     <AddButton
                         onClick={handleOpen}
                         isPrimaryButton={false}
