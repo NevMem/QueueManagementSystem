@@ -7,6 +7,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import TextField from '@material-ui/core/TextField'
 import useInput from '../../utils/useInput'
 import { green } from '@material-ui/core/colors'
+import localizedString from '../../localization/localizedString'
 
 const Dialog = withStyles({
     root: {
@@ -40,9 +41,16 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
 
     return (
         <Dialog {...rest} open={open} onClose={onClose} aria-labelledby={"add-service-dialog-" + organization.id}>
-            <DialogTitle id={"add-service-dialog" + organization.id}>Добавляем новый сервис в организацию</DialogTitle>
+            <DialogTitle id={"add-service-dialog" + organization.id}>
+                {localizedString('add_new_service_dialog_title')}
+            </DialogTitle>
             <DialogContent>
-                <TextField style={{width: '100%'}} color="primary" variant="outlined" label="Имя нового сервиса" {...bindServiceName} />
+                <TextField
+                    style={{width: '100%'}}
+                    color="primary"
+                    variant="outlined"
+                    label={localizedString('add_new_service_dialog_label')}
+                    {...bindServiceName} />
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleCancel} color="default">

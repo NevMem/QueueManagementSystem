@@ -13,6 +13,7 @@ const dictionary = {
     'login_label': 'Логин',
     'login': 'Войти',
     'new_organization': 'Новая организация',
+    'new_queue': 'Новая очередь',
     'new_service': 'Новый сервис',
     'ok': 'Ок',
     'password_label': 'Пароль',

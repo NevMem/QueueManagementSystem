@@ -1,12 +1,13 @@
+import { green } from '@material-ui/core/colors'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import MuiDialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import localizedString from '../../localization/localizedString'
+import MuiDialog from '@material-ui/core/Dialog'
 import TextField from '@material-ui/core/TextField'
 import useInput from '../../utils/useInput'
-import { green } from '@material-ui/core/colors'
 
 const Dialog = withStyles({
     root: {
@@ -42,9 +43,14 @@ export default function AddQueueDialog({ service, open, onClose, ...rest }) {
 
     return (
         <Dialog {...rest} open={open} onClose={onClose} aria-labelledby={"add-queue-dialog-" + service.id}>
-            <DialogTitle id={"add-queue-dialog" + service.id}>Добавляем новую очередь</DialogTitle>
+            <DialogTitle id={"add-queue-dialog" + service.id}>{localizedString('add_new_queue_dialog_title')}</DialogTitle>
             <DialogContent>
-                <TextField style={{width: '100%'}} color="primary" variant="outlined" label="Имя новой очереди" {...bindQueueName} />
+                <TextField
+                    style={{width: '100%'}}
+                    color="primary"
+                    variant="outlined"
+                    label={localizedString('add_new_queue_dialog_label')}
+                    {...bindQueueName} />
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleCancel} color="default">

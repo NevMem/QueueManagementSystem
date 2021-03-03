@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react'
 import AddButton from '../../components/buttons/add_button/AddButton'
 import AddQueueDialog from '../dialogs/AddQueueDialog'
 import Grid from '@material-ui/core/Grid'
+import localizedString from '../../localization/localizedString'
 
 const AddQueueGroup = ({service, ...rest}) => {
     const [open, setOpen] = useState(false)
@@ -9,7 +10,7 @@ const AddQueueGroup = ({service, ...rest}) => {
     const handleClose = () => { setOpen(false) }
     return (
         <Fragment>
-            <AddButton onClick={handleOpen} isPrimaryButton={false} text='Новая очередь' {...rest} />
+            <AddButton onClick={handleOpen} isPrimaryButton={false} text={localizedString('new_queue')} {...rest} />
             <AddQueueDialog open={open} onClose={handleClose} service={service} />
         </Fragment>
     )
