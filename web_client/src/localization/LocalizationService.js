@@ -44,7 +44,7 @@ class LocalizationService {
     }
 
     setCurrentLanguage(language) {
-        if (this.curLanguage != language) {
+        if (this.curLanguage !== language) {
             this.curLanguage = language
             localStorage.setItem(currentLangStorageKey, this.curLanguage.id)
             window.location.reload()

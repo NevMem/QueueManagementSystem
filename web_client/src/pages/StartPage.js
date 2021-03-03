@@ -88,7 +88,7 @@ export default class StartPage extends Component {
                         <div style={{margin: 'auto auto', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
                             <img src={logo} alt="logo" style={{margin: '0 auto'}} className="logo"/>
                             <Typography variant="h4" style={{maxWidth: '500px', textAlign: 'center', color: '#ccc'}}>
-                                QMS - сервис для организации электронных очередей
+                                {localizedString('app_intro_text')}
                             </Typography>
                         </div>
                     </div>
