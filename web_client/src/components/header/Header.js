@@ -1,8 +1,8 @@
-import React from 'react'
 import './Header.css'
 import Avatar from '../avatar/Avatar'
-import SettingsButton from '../buttons/settings/SettingsButton'
 import LocalizationGroup from '../localization-group/LocalizationGroup'
+import React from 'react'
+import SettingsButton from '../buttons/settings/SettingsButton'
 
 export default function Header() {
     return (
