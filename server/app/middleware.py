@@ -102,9 +102,9 @@ class DBSessionMiddleware(BaseHTTPMiddleware):
 
 
 middleware = [
+    Middleware(CORSMiddleware, allow_origins=['*'], allow_methods=['*'], allow_headers=['*']),
     Middleware(DBSessionMiddleware),
     Middleware(SessionMiddleware, secret_key=Config.SECRET_KEY),
     Middleware(AuthenticationMiddleware, backend=BasicAuthBackend()),
     Middleware(Proto2JsonMiddleware),
-    Middleware(CORSMiddleware, allow_origins=['*']),
 ]
