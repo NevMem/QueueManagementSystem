@@ -25,6 +25,8 @@ class AuthAdapter {
                 .then(data => {
                     const token = data.headers['session']
                     this.token = token
+                    console.log(data.headers)
+                    console.log(data)
                     return loadUser(token)
                 })
                 .then(resp => {
