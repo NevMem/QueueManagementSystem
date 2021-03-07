@@ -29,7 +29,8 @@ const LocalizationGroup = ({ ...props }) => {
                         return (
                             <div
                                 style={{display: 'flex', flexDirection: 'row', cursor: 'pointer'}}
-                                onClick={setLang.bind(this, elem)}>
+                                onClick={setLang.bind(this, elem)}
+                                key={elem.name}>
                                 <img src={elem.icon} style={{height: '30px', padding: '7px'}} />
                                 <Typography
                                     style={{color: '#a0a0a0', fontSize: '20px', marginLeft: '10px', marginTop: '7px'}}
