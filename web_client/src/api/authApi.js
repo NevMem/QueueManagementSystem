@@ -1,4 +1,4 @@
-import { defaultRequestWrapper } from './wrappers'
+import { defaultRequestWrapper, authorizedRequestWrapper } from './wrappers'
 import axios from 'axios'
 import backendUrl from './backendUrl'
 
@@ -13,4 +13,9 @@ export const loadUser = (token) => {
         backendUrl + '/client/get_user',
         undefined,
         { headers: { session: token } }))
+}
+
+export const checkAuth = (token) => {
+    return authorizedRequestWrapper(
+        axios.post(backendUrl + '/check_auth', undefined, { headers: { session: token } }))
 }

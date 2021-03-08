@@ -1,15 +1,16 @@
+import authAdapter from '../adapters/AuthAdapter'
+
 const logWrapper = (promise) => {
     return promise.then(data => { console.log('Response: ' + JSON.stringify(data)); return data; })
 }
 
 const unauthorizedWrapper = (promise) => {
-    return promise.then(data => {
-        console.log('Unauhtorized')
-        if (data.status == 403) {
-            window.location.reload()
-        }
-        return data
-    })
+    return promise
+        .catch(err => {
+            if (err.response.status == 403) {
+                authAdapter.dropUserData()
+            }
+        })
 }
 
 export const defaultRequestWrapper = (promise) => {

@@ -1,4 +1,4 @@
-import { processLogin, loadUser } from '../api/authApi'
+import { processLogin, loadUser, checkAuth } from '../api/authApi'
 
 class User {
     constructor(name, surname, login, token) {
@@ -24,6 +24,7 @@ class AuthAdapter {
             const jsonUser = JSON.parse(savedUser)
             this.user = new User(jsonUser['name'], jsonUser['surname'], jsonUser['login'], jsonUser['token'])
             console.log('loaded user from local storage')
+            this.checkAuth()
         }
     }
 
@@ -34,6 +35,22 @@ class AuthAdapter {
     saveUser() {
         localStorage.setItem('token', this.token)
         localStorage.setItem('user', JSON.stringify(this.user))
+    }
+
+    checkAuth() {
+        checkAuth(this.token)
+            .then((data) => {
+                if (data) {
+                    console.log('Auth checked')
+                }
+            })
+    }
+
+    dropUserData() {
+        console.log('Dropping user data')
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        window.location.reload()
     }
 
     login(login, password) {
