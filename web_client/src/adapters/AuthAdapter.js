@@ -72,6 +72,7 @@ class AuthAdapter {
                     }
                 })
                 .catch(err => {
+                    console.log(err)
                     rej(err.message)
                 })
         })
