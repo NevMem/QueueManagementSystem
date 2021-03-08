@@ -1,14 +1,6 @@
 import { defaultRequestWrapper, authorizedRequestWrapper } from './wrappers'
 import axios from 'axios'
-import backendUrl from './backendUrl'
-
-const withBackendUrl = (paths) => {
-    for (let key of Object.keys(paths)) {
-        paths[key] = backendUrl + paths[key]
-    }
-    console.log(paths)
-    return paths
-}
+import { withBackendUrl } from './utils'
 
 const paths = withBackendUrl({
     checkAuth: '/check_auth',
