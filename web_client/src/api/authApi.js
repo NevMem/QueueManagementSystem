@@ -9,6 +9,20 @@ const paths = withBackendUrl({
     register: '/client/register',
 })
 
+export const processRegister = (login, password, name, surname) => {
+    return defaultRequestWrapper(axios.post(
+        paths.register,
+        {
+            name: name,
+            surname: surname,
+            identity: {
+                email: login,
+                password: password
+            }
+        }
+    ))
+}
+
 export const processLogin = (login, password) => {
     return defaultRequestWrapper(axios.post(
         paths.login,
