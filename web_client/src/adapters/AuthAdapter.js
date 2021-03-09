@@ -1,4 +1,4 @@
-import { processLogin, loadUser, checkAuth } from '../api/authApi'
+import { processLogin, processRegistration, loadUser, checkAuth } from '../api/authApi'
 
 class User {
     constructor(name, surname, login, token) {
@@ -51,6 +51,21 @@ class AuthAdapter {
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         window.location.reload()
+    }
+
+    register(login, password, name, surname) {
+        return new Promise((res, rej) => {
+            processRegistration(login, password, name, surname)
+                .then(() => {
+                    return this.login(login, password)
+                })
+                .then(() => {
+                    res()
+                })
+                .catch(err => {
+                    rej(err)
+                })
+        })
     }
 
     login(login, password) {
