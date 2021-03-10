@@ -1,13 +1,16 @@
+import { green } from '@material-ui/core/colors'
+import { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import MuiDialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import TextField from '@material-ui/core/TextField'
-import useInput from '../../utils/useInput'
-import { green } from '@material-ui/core/colors'
 import localizedString from '../../localization/localizedString'
+import MuiDialog from '@material-ui/core/Dialog'
+import orgAdapter from '../../adapters/OrgAdapter'
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
+import useInput from '../../utils/useInput'
 
 const Dialog = withStyles({
     root: {
@@ -32,11 +35,22 @@ const Dialog = withStyles({
 export default function AddServiceDialog({ organization, open, onClose, ...rest }) {
 
     const { value: serviceName, bind: bindServiceName } = useInput('')
+    const [ error, setError ] = useState('')
 
     const handleCancel = () => { onClose() }
 
     const handleOk = () => {
-        onClose()
+        orgAdapter.addService(organization.id, serviceName)
+            .then(data => {
+                onClose()
+            })
+            .catch(err => {
+                if (err.message) {
+                    setError(err.message)
+                } else {
+                    setError(JSON.stringify(err))
+                }
+            })
     }
 
     return (
@@ -45,6 +59,7 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
                 {localizedString('add_new_service_dialog_title')}
             </DialogTitle>
             <DialogContent>
+                {error && <Typography style={{color: 'red', marginBottom: '16px'}}>{error}</Typography> }
                 <TextField
                     style={{width: '100%'}}
                     color="primary"

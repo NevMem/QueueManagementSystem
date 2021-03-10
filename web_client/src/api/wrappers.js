@@ -7,8 +7,10 @@ const logWrapper = (promise) => {
 const unauthorizedWrapper = (promise) => {
     return promise
         .catch(err => {
-            if (!err.response || err.response.status === 403) {
+            if (err.response && err.response.status === 403) {
                 authAdapter.dropUserData()
+            } else {
+                throw err
             }
         })
 }

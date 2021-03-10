@@ -1,5 +1,5 @@
 const dictionary = {
-    'add_new_organization_dialog_label': 'Organization name',
+    'add_new_organization_dialog_name_label': 'Organization name',
     'add_new_organization_dialog_title': 'Add new organization',
     'add_new_queue_dialog_label': 'Queue name',
     'add_new_queue_dialog_title': 'Add new queue',
