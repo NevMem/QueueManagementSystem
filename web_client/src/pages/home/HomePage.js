@@ -6,6 +6,7 @@ import localizedString from '../../localization/localizedString'
 import OrganizationCard from '../../components/organization/OrganizationCard'
 import React, { Component, Fragment } from 'react'
 import Typography from '@material-ui/core/Typography'
+import orgAdapter from '../../adapters/OrgAdapter'
 
 export default class HomePage extends Component {
     constructor(prps) {
