@@ -1,17 +1,42 @@
-// import { defaultRequestWrapper } from './wrappers'
-// import axios from 'axios'
-// import backendUrl from './backendUrl'
+import { defaultRequestWrapper, authorizedRequestWrapper } from './wrappers'
+import axios from 'axios'
+import { withBackendUrl } from './utils'
+
+const paths = withBackendUrl({
+    checkAuth: '/check_auth',
+    getUser: '/client/get_user',
+    login: '/client/login',
+    register: '/client/register',
+})
+
+export const processRegistration = (login, password, name, surname) => {
+    return defaultRequestWrapper(axios.post(
+        paths.register,
+        {
+            name: name,
+            surname: surname,
+            identity: {
+                email: login,
+                password: password
+            }
+        }
+    ))
+}
 
 export const processLogin = (login, password) => {
-    // return defaultRequestWrapper(axios.post(backendUrl + '/client/login', { email: login, password: password }))
-    return new Promise((res, rej) => {
-        res({headers: {session: 'some-session'}})
-    })
+    return defaultRequestWrapper(axios.post(
+        paths.login,
+        { email: login, password: password }))
 }
 
 export const loadUser = (token) => {
-    // return defaultRequestWrapper(axios.post(backendUrl + '/client/get_user'), undefined, {headers: {session: token}})
-    return new Promise((res, rej) => {
-        res({data: {email: 'memlolkek@gmail.com', name: 'Name', surname: 'Surname'}, code: 200})
-    })
+    return defaultRequestWrapper(axios.post(
+        paths.getUser,
+        undefined,
+        { headers: { session: token } }))
+}
+
+export const checkAuth = (token) => {
+    return authorizedRequestWrapper(
+        axios.post(paths.checkAuth, undefined, { headers: { session: token } }))
 }

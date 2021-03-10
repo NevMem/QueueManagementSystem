@@ -21,6 +21,7 @@ const LocalizationGroup = ({ ...props }) => {
             <img
                 src={localizationService.currentLanguage().icon}
                 onClick={openDialog}
+                alt='curren lang icon'
                 {...props} />
             <Dialog open={open} onClose={closeDialog} aria-labelledby="change-language-dialog">
                 <DialogTitle style={{minWidth: '300px'}} id="change-language-dialog">Изменить язык</DialogTitle>
@@ -29,8 +30,9 @@ const LocalizationGroup = ({ ...props }) => {
                         return (
                             <div
                                 style={{display: 'flex', flexDirection: 'row', cursor: 'pointer'}}
-                                onClick={setLang.bind(this, elem)}>
-                                <img src={elem.icon} style={{height: '30px', padding: '7px'}} />
+                                onClick={setLang.bind(this, elem)}
+                                key={elem.name}>
+                                <img src={elem.icon} style={{height: '30px', padding: '7px'}} alt='lang icon' />
                                 <Typography
                                     style={{color: '#a0a0a0', fontSize: '20px', marginLeft: '10px', marginTop: '7px'}}
                                     variant='body2'>
