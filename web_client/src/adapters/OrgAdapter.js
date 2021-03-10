@@ -1,4 +1,5 @@
 import { loadOrganizationList, createOrganization } from '../api/orgApi'
+import { makeAutoObservable } from 'mobx'
 import authAdapter from './AuthAdapter'
 import parseOrganizations from '../parsers/parseOrganizations'
 
@@ -7,6 +8,8 @@ class OrgAdapter {
         this.loadOrganizations()
         
         this.organizations = []
+
+        makeAutoObservable(this)
     }
 
     loadOrganizations() {

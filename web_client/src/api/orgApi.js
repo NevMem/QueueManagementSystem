@@ -4,6 +4,7 @@ import axios from 'axios'
 
 const paths = withBackendUrl({
     createOrganization: '/admin/create_organisation',
+    createService: '/admin/createService',
     organizationsList: '/admin/get_organisations_list',
 })
 
