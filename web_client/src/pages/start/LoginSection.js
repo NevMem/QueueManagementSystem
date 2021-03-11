@@ -24,7 +24,7 @@ const useStyles = makeStyles({
     }
 })
 
-export default function LoginSection() {
+export default function LoginSection({ changeMode }) {
     const classes = useStyles()
 
     const { value: login, bind: bindLogin, reset: resetLogin } = useInput('')
@@ -62,10 +62,20 @@ export default function LoginSection() {
                         label={localizedString('password_label')}
                         {...bindPassword} />
                     <div style={{display: 'flex', flexDirection: 'row', marginTop: '48px', justifyContent: 'left'}}>
-                        <Button className={classes.buttons} size="large" variant="contained" color="primary" onClick={handleSubmit}>
+                        <Button
+                            className={classes.buttons}
+                            size="large"
+                            variant="contained"
+                            color="primary"
+                            onClick={handleSubmit}>
                             {localizedString('login')}
                         </Button>
-                        <Button className={classes.buttons} size="large" variant="outlined" color="secondary">
+                        <Button
+                            className={classes.buttons}
+                            size="large"
+                            variant="outlined"
+                            color="secondary"
+                            onClick={changeMode}>
                             {localizedString('register')}
                         </Button>
                         <LocalizationGroup style={{height: '30px', padding: '7px', cursor: 'pointer'}} />
