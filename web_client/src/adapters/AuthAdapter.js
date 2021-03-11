@@ -46,6 +46,10 @@ class AuthAdapter {
             })
     }
 
+    logout() {
+        this.dropUserData()
+    }
+
     dropUserData() {
         console.log('Dropping user data')
         localStorage.removeItem('token')
