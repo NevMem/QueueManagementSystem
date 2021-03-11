@@ -19,6 +19,8 @@ const dictionary = {
     'password_label': 'Пароль',
     'register': 'Регистрация',
     'your_organizations': 'Ваши организации',
+    'zero_organizations_card_desc': 'Нажмите на кнопку выше чтобы создать!',
+    'zero_organizations_card_title': 'У вас пока нет ни одной организации',
 }
 
 export default dictionary

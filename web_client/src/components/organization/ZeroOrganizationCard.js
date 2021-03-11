@@ -9,7 +9,12 @@ export default function ZeroOrganizationCard({ ...props }) {
             <Grid container justify='space-around'>
                 <Grid item>
                     <Typography style={{color: '#c0c0c0', fontSize: '24px'}} variant='body2'>
-                        {localizedString('zero_organizations_card')}
+                        {localizedString('zero_organizations_card_title')}
+                    </Typography>
+                </Grid>
+                <Grid item style={{marginTop: '16px'}}>
+                    <Typography style={{color: '#a0a0a0', fontSize: '20px'}} variant='body2'>
+                        {localizedString('zero_organizations_card_desc')}
                     </Typography>
                 </Grid>
             </Grid>
