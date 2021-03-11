@@ -28,8 +28,8 @@ export default function StartPage() {
             </Grid>
             <Grid item xs={12} md={5}>
                 { mode === 'login'
-                    ? <LoginSection changeMode={changeMode.bind('register')} />
-                    : <RegisterSection changeMode={changeMode.bind('login')} /> }
+                    ? <LoginSection changeMode={() => changeMode('register')} />
+                    : <RegisterSection changeMode={() => changeMode('login')} /> }
             </Grid>
         </Grid>
     )
