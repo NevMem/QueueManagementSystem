@@ -4,7 +4,7 @@ import { PrivateRoute } from './utils/PrivateRoute'
 import DemoPage from './pages/DemoPage'
 import HomePage from './pages/home/HomePage'
 import SettingsPage from './pages/settings/SettingsPage'
-import StartPage from './pages/StartPage'
+import StartPage from './pages/start/StartPage'
 
 const theme = createMuiTheme({
     palette: {
