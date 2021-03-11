@@ -1,9 +1,10 @@
-import { HashRouter as Router, Switch, Route } from 'react-router-dom'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
-import StartPage from './pages/StartPage'
+import { HashRouter as Router, Switch, Route } from 'react-router-dom'
+import { PrivateRoute } from './utils/PrivateRoute'
 import DemoPage from './pages/DemoPage'
 import HomePage from './pages/home/HomePage'
-import { PrivateRoute } from './utils/PrivateRoute'
+import SettingsPage from './pages/settings/SettingsPage'
+import StartPage from './pages/StartPage'
 
 const theme = createMuiTheme({
     palette: {
@@ -16,11 +17,12 @@ function App() {
         <ThemeProvider theme={theme}>
             <Router>
                 <Switch>
-                    <Route path="/login" exact>
+                    <Route path='/login' exact>
                         <StartPage />
                     </Route>
-                    <PrivateRoute path="/" component={HomePage} />
-                    <PrivateRoute path="/demo" component={DemoPage} />
+                    <PrivateRoute path='/demo' component={DemoPage} />
+                    <PrivateRoute path='/settings' component={SettingsPage} />
+                    <PrivateRoute path='/' component={HomePage} />
                 </Switch>
             </Router>
         </ThemeProvider>
