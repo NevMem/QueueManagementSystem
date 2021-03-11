@@ -9,6 +9,8 @@ class OrgAdapter {
         
         this.organizations = []
 
+        this.isLoading = false
+
         autorun(() => {
             if (authAdapter.token) {
                 this.loadOrganizations()
@@ -18,13 +20,22 @@ class OrgAdapter {
         makeAutoObservable(this)
     }
 
+    get loading() {
+        return this.isLoading
+    }
+
     loadOrganizations() {
-        if (authAdapter.token) {
+        if (authAdapter.token && !this.isLoading) {
+            this.isLoading = true
             loadOrganizationList(authAdapter.token)
                 .then((data) => {
                     if (data.status === 200) {
                         this.setOrganizations(parseOrganizations(data.data))
                     }
+                    this.isLoading = false
+                })
+                .catch(err => {
+                    this.isLoading = false
                 })
         }
     }
