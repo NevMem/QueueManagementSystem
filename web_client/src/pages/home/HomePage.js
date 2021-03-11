@@ -1,13 +1,13 @@
+import { observer } from 'mobx-react'
 import AddButton from '../../components/buttons/add_button/AddButton'
 import AddOrganizationDialog from '../../components/dialogs/AddOrganizationDialog'
 import Grid from '@material-ui/core/Grid'
 import Header from '../../components/header/Header'
 import localizedString from '../../localization/localizedString'
+import orgAdapter from '../../adapters/OrgAdapter'
 import OrganizationCard from '../../components/organization/OrganizationCard'
 import React, { Component, Fragment } from 'react'
 import Typography from '@material-ui/core/Typography'
-import { observer } from 'mobx-react'
-import orgAdapter from '../../adapters/OrgAdapter'
 
 const OrganizationCardsBlock = ({ organizationsData }) => {
     return (
