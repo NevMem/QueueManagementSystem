@@ -1,3 +1,4 @@
+import { makeAutoObservable } from 'mobx'
 import { processLogin, processRegistration, loadUser, checkAuth } from '../api/authApi'
 
 class User {
@@ -15,6 +16,8 @@ class AuthAdapter {
         this.user = undefined
 
         this.loadFromStorage()
+
+        makeAutoObservable(this)
     }
 
     loadFromStorage() {

@@ -1,5 +1,5 @@
 import { loadOrganizationList, createOrganization, createService } from '../api/orgApi'
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, autorun } from 'mobx'
 import authAdapter from './AuthAdapter'
 import parseOrganizations from '../parsers/parseOrganizations'
 
@@ -8,6 +8,12 @@ class OrgAdapter {
         this.loadOrganizations()
         
         this.organizations = []
+
+        autorun(() => {
+            if (authAdapter.token) {
+                this.loadOrganizations()
+            }
+        })
 
         makeAutoObservable(this)
     }
