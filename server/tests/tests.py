@@ -20,7 +20,7 @@ def test_create_organization(server):
     assert resp.status_code == 200
     resp = server.login(email='mail@mail', password='password')
     assert resp.status_code == 200
-    token = resp.json().get("token")
+    token = resp.headers['session']
     resp = server.create_organization(token, name='Organization')
     assert resp.status_code == 200, resp.content
     resp = server.get_organizations(token)
