@@ -1,26 +1,29 @@
+import { observer } from 'mobx-react'
 import AddButton from '../../components/buttons/add_button/AddButton'
 import AddOrganizationDialog from '../../components/dialogs/AddOrganizationDialog'
 import Grid from '@material-ui/core/Grid'
 import Header from '../../components/header/Header'
 import localizedString from '../../localization/localizedString'
+import orgAdapter from '../../adapters/OrgAdapter'
 import OrganizationCard from '../../components/organization/OrganizationCard'
 import React, { Component, Fragment } from 'react'
 import Typography from '@material-ui/core/Typography'
-import { observer } from 'mobx-react'
-import orgAdapter from '../../adapters/OrgAdapter'
+import ZeroOrganizationCard from '../../components/organization/ZeroOrganizationCard'
 
-const OrganizationCardsBlock = ({ organizationsData }) => {
+const OrganizationCardsBlock = ({ organizationsData, loading }) => {
     return (
         <Fragment>
             { organizationsData.map((elem) => {
                 return <OrganizationCard key={elem.id} organizationData={elem} style={{marginTop: '20px'}}  />
             }) }
+            { !loading && organizationsData.length === 0 && <ZeroOrganizationCard style={{marginTop: '20px'}} /> }
+            {loading && <div style={{color: '#d0d0d0', fontSize: '20px', marginTop: '20px'}}>[TODO] Loading...</div>}
         </Fragment>
     )
 }
 
 const WrappedOrganizationCardsBlock = observer(({ orgAdapter }) => {
-    return <OrganizationCardsBlock organizationsData={orgAdapter.getOrganizations()} />
+    return <OrganizationCardsBlock organizationsData={orgAdapter.getOrganizations()} loading={orgAdapter.loading} />
 })
 
 export default class HomePage extends Component {
