@@ -16,14 +16,11 @@ def test_check_unique_user(server):
 
 
 def test_create_organization(server):
-    resp = server.register_user(email='mail@mail', password='password')
-    assert resp.status_code == 200
-    resp = server.login(email='mail@mail', password='password')
-    assert resp.status_code == 200
-    token = resp.headers['session']
-    resp = server.create_organization(token, name='Organization')
-    assert resp.status_code == 200, resp.content
+    server.register_user(email='mail@mail', password='password')
+    token = server.login(email='mail@mail', password='password').headers['session']
+    server.create_organization(token, name='Organization')
     resp = server.get_organizations(token)
-    resp = resp.json()
-    assert len(resp['organizations']) == 1
-    assert resp['organizations'][0]['info']['name'] == 'Organization'
+    assert len(resp.organizations) == 1
+    org = resp.organizations[0]
+    assert len(org.services) == 0
+    assert org.info.name == 'Organization'
