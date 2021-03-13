@@ -6,6 +6,7 @@ from server.app.utils.db_utils import drop_db, prepare_db
 
 from proto.organization_pb2 import OrganizationList
 from proto.service_pb2 import ServiceInfo
+from proto.queue_pb2 import Queue
 
 
 @pytest.fixture(scope='function')
@@ -59,9 +60,14 @@ class Server(TestClient):
         res.ParseFromString(resp.content)
         return res
 
-    def create_service(self, token, name: str, organization_id: str, **kwargs):
+    def create_service(self, token: str, name: str, organization_id: str, **kwargs):
         req = ServiceInfo(name=name, organization_id=organization_id, data=kwargs)
         return self.post('/admin/create_service', headers={'session': token, 'content-type': 'application/protobuf'}, data=req.SerializeToString())
 
-    def remove_service(self, token, id: str):
+    def remove_service(self, token: str, id: str):
         return self.post('/admin/remove_service', headers={'session': token}, json={'id': id})
+
+    def create_queue(self, token: str, **kwargs):
+        req = Queue(**kwargs)
+        return self.post('/admin/create_queue', headers={'session': token, 'content-type': 'application/protobuf'},
+                         data=req.SerializeToString())

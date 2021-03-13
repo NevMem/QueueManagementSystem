@@ -24,7 +24,7 @@ class Queue(BaseModel):
     id = sqlalchemy.Column(types.String, primary_key=True, default=fixed_uuid)
     name = sqlalchemy.Column(types.Text)
 
-    service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Services.id'))
+    service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Services.id', ondelete="CASCADE"))
 
     image_url = sqlalchemy.Column(types.Text)
     description = sqlalchemy.Column(types.Text)
