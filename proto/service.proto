@@ -11,7 +11,7 @@ import "proto/queue.proto";
 message ServiceInfo {
   string id = 1;
   string name = 2;
-  string organisation_id = 4;
+  string organization_id = 4;
 
   map<string, string> data = 3;
 }

@@ -15,18 +15,18 @@ message OrganizationInfo {
 }
 
 
-message Organisation {
+message Organization {
   OrganizationInfo info = 1;
 
   repeated Service services = 2;
 }
 
 
-message OrganisationInfoList {
-  repeated OrganizationInfo organisations = 1;
+message OrganizationInfoList {
+  repeated OrganizationInfo organizations = 1;
 }
 
 
-message OrganisationList {
-  repeated Organisation organisations = 1;
+message OrganizationList {
+  repeated Organization organizations = 1;
 }

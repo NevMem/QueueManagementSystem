@@ -9,7 +9,7 @@ option java_outer_classname = "PermissionsProto";
 message Permission {
     string id = 1;
     string user_id = 2;
-    string organisation_id = 3;
+    string organization_id = 3;
     string queue_id = 4;
     string permission_type = 5;
 }

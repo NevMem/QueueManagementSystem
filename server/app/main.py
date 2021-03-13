@@ -36,7 +36,7 @@ async def get_user(request: Request):
         permissions=[
             permissions_pb2.Permission(
                 id=str(permission.id),
-                organisation_id=str(permission.organisation_id) if permission.organisation_id else None,
+                organization_id=str(permission.organization_id) if permission.organization_id else None,
                 queue_id=str(permission.queue_id) if permission.queue_id else None,
                 permission_type=permission.permission_type,
             )
@@ -103,10 +103,10 @@ async def check_unique_user(request: Request):
     return ProtobufResponse(user_pb2.CheckUniqueUserResponse(is_unique=False))
 
 
-@route('/admin/create_organisation', methods=['POST'], request_type=organization_pb2.OrganizationInfo)
+@route('/admin/create_organization', methods=['POST'], request_type=organization_pb2.OrganizationInfo)
 @requires('authenticated')
-async def create_organisation(request: Request):
-    new_organisation = model.Organisation(
+async def create_organization(request: Request):
+    new_organization = model.Organization(
         name=request.parsed.name,
     )
 
@@ -115,33 +115,33 @@ async def create_organisation(request: Request):
         permission_type='Owner',
     )
 
-    new_organisation.admins.append(new_permission)
-    request.connection.add(new_organisation)
+    new_organization.admins.append(new_permission)
+    request.connection.add(new_organization)
 
     return ProtobufResponse(empty_pb2.Empty())
 
 
-@route('/admin/get_organisations_list', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
+@route('/admin/get_organizations_list', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
 @requires('authenticated')
-async def get_organisations_list(request: Request):
+async def get_organizations_list(request: Request):
     query = (
-        select(model.Organisation)
+        select(model.Organization)
         .where(model.User.id == request.user.id)
-        .join(model.Permission, model.Permission.organisation_id == model.Organisation.id)
+        .join(model.Permission, model.Permission.organization_id == model.Organization.id)
         .join(model.User, model.User.id == model.Permission.user_id)
-        .options(selectinload(model.Organisation.services), selectinload(model.Organisation.services, model.Service.queues))
+        .options(selectinload(model.Organization.services), selectinload(model.Organization.services, model.Service.queues))
     )
 
     result = await request.connection.execute(query)
-    organisations = result.scalars().all()
+    organizations = result.scalars().all()
 
     result = []
-    for organisation in organisations:
+    for organization in organizations:
         result.append(
-            organization_pb2.Organisation(
+            organization_pb2.Organization(
                 info=organization_pb2.OrganizationInfo(
-                    id=str(organisation.id),
-                    name=organisation.name,
+                    id=str(organization.id),
+                    name=organization.name,
                 ),
                 services=[
                     service_pb2.Service(
@@ -158,12 +158,12 @@ async def get_organisations_list(request: Request):
                             for queue in service.queues
                         ]
                     )
-                    for service in organisation.services
+                    for service in organization.services
                 ]
             )
         )
 
-    return ProtobufResponse(organization_pb2.OrganisationList(organisations=result))
+    return ProtobufResponse(organization_pb2.OrganizationList(organizations=result))
 
 
 @route('/admin/create_service', methods=['POST'], request_type=service_pb2.ServiceInfo)
@@ -171,7 +171,7 @@ async def get_organisations_list(request: Request):
 async def create_service(request: Request):
     new_service = model.Service(
         name=request.parsed.name,
-        organisation_id=request.parsed.organisation_id,
+        organization_id=request.parsed.organization_id,
         data=dict(request.parsed.data),
     )
 

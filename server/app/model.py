@@ -37,7 +37,7 @@ class Service(BaseModel):
 
     id = sqlalchemy.Column(UUID(), primary_key=True, default=uuid.uuid4)
     name = sqlalchemy.Column(types.Text, nullable=False)
-    organisation_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Organisations.id'))
+    organization_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Organizations.id'))
 
     queues = relationship(Queue, cascade='all, delete-orphan')
     admins = relationship('Permission', cascade='all, delete-orphan')
@@ -45,8 +45,8 @@ class Service(BaseModel):
     data = sqlalchemy.Column(postgresql.JSONB, default={})
 
 
-class Organisation(BaseModel):
-    __tablename__ = 'Organisations'
+class Organization(BaseModel):
+    __tablename__ = 'Organizations'
 
     id = sqlalchemy.Column(UUID(), primary_key=True, default=uuid.uuid4)
     services = relationship(Service, cascade='all, delete-orphan')
@@ -63,7 +63,7 @@ class Permission(BaseModel):
     id = sqlalchemy.Column(UUID(), primary_key=True, default=uuid.uuid4)
 
     user_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Users.id'), index=True)
-    organisation_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey(Organisation.id))
+    organization_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey(Organization.id))
     service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey(Service.id))
     queue_id = sqlalchemy.Column(types.String, sqlalchemy.ForeignKey('Queues.id'))
 
