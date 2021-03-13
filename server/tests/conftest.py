@@ -33,3 +33,9 @@ class Server(TestClient):
 
     def register_user(self, email: str, password: str, name: str = '', surname: str = ''):
         return self.post('/client/register', json={'identity': {'email': email, 'password': password}, 'name': name, 'surname': surname})
+
+    def login(self, email: str, password: str):
+        return self.post('/client/login', json={'email': email, 'password': password})
+
+    def create_organization(self, token: str, **kwargs):
+        return self.post('/admin/create_organization', json=kwargs, headers={'session': token})
