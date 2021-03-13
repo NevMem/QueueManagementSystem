@@ -13,6 +13,8 @@ const dictionary = {
     'login_form_title': 'Войдите чтобы управлять своими очередями',
     'login_label': 'Логин',
     'login': 'Войти',
+    'logout_button': 'Выйти',
+    'logout': 'Выйти',
     'new_organization': 'Новая организация',
     'new_queue': 'Новая очередь',
     'new_service': 'Новый сервис',
