@@ -24,7 +24,7 @@ class Queue(BaseModel):
     id = sqlalchemy.Column(types.String, primary_key=True, default=fixed_uuid)
     name = sqlalchemy.Column(types.Text)
 
-    service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Services.id'))
+    service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Services.id', ondelete="CASCADE"))
 
     image_url = sqlalchemy.Column(types.Text)
     description = sqlalchemy.Column(types.Text)
@@ -63,9 +63,9 @@ class Permission(BaseModel):
     id = sqlalchemy.Column(UUID(), primary_key=True, default=uuid.uuid4)
 
     user_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Users.id'), index=True)
-    organization_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey(Organization.id))
-    service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey(Service.id))
-    queue_id = sqlalchemy.Column(types.String, sqlalchemy.ForeignKey('Queues.id'))
+    organization_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey(Organization.id, ondelete="CASCADE"))
+    service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey(Service.id, ondelete="CASCADE"))
+    queue_id = sqlalchemy.Column(types.String, sqlalchemy.ForeignKey('Queues.id', ondelete="CASCADE"))
 
     permission_type = sqlalchemy.Column(types.Text)
 

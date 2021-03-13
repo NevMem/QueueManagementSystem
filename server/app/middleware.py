@@ -38,7 +38,8 @@ class Proto2JsonMiddleware(BaseHTTPMiddleware):
         signature = get_signature(request.url.path)
 
         if content_type == 'application/protobuf':
-            request.scope['_parsed'] = signature[0]().ParseFromString(await request.body())
+            request.scope['_parsed'] = signature[0]()
+            request.scope['_parsed'].ParseFromString(await request.body())
         else:
             body = await request.body()
             if not body:

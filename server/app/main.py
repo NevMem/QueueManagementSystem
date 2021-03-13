@@ -1,6 +1,6 @@
 
 from google.protobuf import empty_pb2
-from sqlalchemy.sql import select
+from sqlalchemy.sql import select, and_, delete
 from sqlalchemy.orm import selectinload
 
 from starlette.authentication import requires
@@ -183,6 +183,26 @@ async def create_service(request: Request):
     new_service.admins.append(new_permission)
     request.connection.add(new_service)
 
+    return ProtobufResponse(empty_pb2.Empty())
+
+
+@route('/admin/remove_service', methods=['POST'], request_type=service_pb2.ServiceInfo)
+@requires('authenticated')
+async def remove_service(request: Request):
+    auth_query = (
+        select(model.Permission)
+        .where(and_(model.Permission.user_id == request.user.id,
+                    model.Permission.service_id == request.parsed.id))
+        .limit(1)
+    )
+    if len([await request.connection.execute(auth_query)]) == 0:
+        raise HTTPException(403)
+
+    delete_query = (
+        delete(model.Service)
+        .where(model.Service.id == request.parsed.id)
+    )
+    await request.connection.execute(delete_query)
     return ProtobufResponse(empty_pb2.Empty())
 
 
