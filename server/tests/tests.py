@@ -17,8 +17,13 @@ def test_check_unique_user(server):
 
 def test_create_organization(server):
     resp = server.register_user(email='mail@mail', password='password')
-    assert resp.status_code == 2000
+    assert resp.status_code == 200
     resp = server.login(email='mail@mail', password='password')
     assert resp.status_code == 200
     token = resp.json().get("token")
     resp = server.create_organization(token, name='Organization')
+    assert resp.status_code == 200, resp.content
+    resp = server.get_organizations(token)
+    resp = resp.json()
+    assert len(resp['organizations']) == 1
+    assert resp['organizations'][0]['info']['name'] == 'Organization'
