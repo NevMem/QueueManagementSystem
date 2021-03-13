@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\021OrganizitionProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x18proto/organization.proto\x12\x03qms\x1a\x13proto/service.proto\"=\n\x10OrganizationInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0f\n\x07\x61\x64\x64ress\x18\x03 \x01(\t\"S\n\x0cOrganisation\x12#\n\x04info\x18\x01 \x01(\x0b\x32\x15.qms.OrganizationInfo\x12\x1e\n\x08services\x18\x02 \x03(\x0b\x32\x0c.qms.Service\"D\n\x14OrganisationInfoList\x12,\n\rorganisations\x18\x01 \x03(\x0b\x32\x15.qms.OrganizationInfo\"<\n\x10OrganisationList\x12(\n\rorganisations\x18\x01 \x03(\x0b\x32\x11.qms.OrganisationB#\n\x0e\x63om.nevmem.qmsB\x11OrganizitionProtob\x06proto3'
+  serialized_pb=b'\n\x18proto/organization.proto\x12\x03qms\x1a\x13proto/service.proto\"=\n\x10OrganizationInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0f\n\x07\x61\x64\x64ress\x18\x03 \x01(\t\"S\n\x0cOrganization\x12#\n\x04info\x18\x01 \x01(\x0b\x32\x15.qms.OrganizationInfo\x12\x1e\n\x08services\x18\x02 \x03(\x0b\x32\x0c.qms.Service\"D\n\x14OrganizationInfoList\x12,\n\rorganizations\x18\x01 \x03(\x0b\x32\x15.qms.OrganizationInfo\"<\n\x10OrganizationList\x12(\n\rorganizations\x18\x01 \x03(\x0b\x32\x11.qms.OrganizationB#\n\x0e\x63om.nevmem.qmsB\x11OrganizitionProtob\x06proto3'
   ,
   dependencies=[proto_dot_service__pb2.DESCRIPTOR,])
 
@@ -73,23 +73,23 @@ _ORGANIZATIONINFO = _descriptor.Descriptor(
 )
 
 
-_ORGANISATION = _descriptor.Descriptor(
-  name='Organisation',
-  full_name='qms.Organisation',
+_ORGANIZATION = _descriptor.Descriptor(
+  name='Organization',
+  full_name='qms.Organization',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='info', full_name='qms.Organisation.info', index=0,
+      name='info', full_name='qms.Organization.info', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='services', full_name='qms.Organisation.services', index=1,
+      name='services', full_name='qms.Organization.services', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -112,16 +112,16 @@ _ORGANISATION = _descriptor.Descriptor(
 )
 
 
-_ORGANISATIONINFOLIST = _descriptor.Descriptor(
-  name='OrganisationInfoList',
-  full_name='qms.OrganisationInfoList',
+_ORGANIZATIONINFOLIST = _descriptor.Descriptor(
+  name='OrganizationInfoList',
+  full_name='qms.OrganizationInfoList',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='organisations', full_name='qms.OrganisationInfoList.organisations', index=0,
+      name='organizations', full_name='qms.OrganizationInfoList.organizations', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -144,16 +144,16 @@ _ORGANISATIONINFOLIST = _descriptor.Descriptor(
 )
 
 
-_ORGANISATIONLIST = _descriptor.Descriptor(
-  name='OrganisationList',
-  full_name='qms.OrganisationList',
+_ORGANIZATIONLIST = _descriptor.Descriptor(
+  name='OrganizationList',
+  full_name='qms.OrganizationList',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='organisations', full_name='qms.OrganisationList.organisations', index=0,
+      name='organizations', full_name='qms.OrganizationList.organizations', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -175,14 +175,14 @@ _ORGANISATIONLIST = _descriptor.Descriptor(
   serialized_end=332,
 )
 
-_ORGANISATION.fields_by_name['info'].message_type = _ORGANIZATIONINFO
-_ORGANISATION.fields_by_name['services'].message_type = proto_dot_service__pb2._SERVICE
-_ORGANISATIONINFOLIST.fields_by_name['organisations'].message_type = _ORGANIZATIONINFO
-_ORGANISATIONLIST.fields_by_name['organisations'].message_type = _ORGANISATION
+_ORGANIZATION.fields_by_name['info'].message_type = _ORGANIZATIONINFO
+_ORGANIZATION.fields_by_name['services'].message_type = proto_dot_service__pb2._SERVICE
+_ORGANIZATIONINFOLIST.fields_by_name['organizations'].message_type = _ORGANIZATIONINFO
+_ORGANIZATIONLIST.fields_by_name['organizations'].message_type = _ORGANIZATION
 DESCRIPTOR.message_types_by_name['OrganizationInfo'] = _ORGANIZATIONINFO
-DESCRIPTOR.message_types_by_name['Organisation'] = _ORGANISATION
-DESCRIPTOR.message_types_by_name['OrganisationInfoList'] = _ORGANISATIONINFOLIST
-DESCRIPTOR.message_types_by_name['OrganisationList'] = _ORGANISATIONLIST
+DESCRIPTOR.message_types_by_name['Organization'] = _ORGANIZATION
+DESCRIPTOR.message_types_by_name['OrganizationInfoList'] = _ORGANIZATIONINFOLIST
+DESCRIPTOR.message_types_by_name['OrganizationList'] = _ORGANIZATIONLIST
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 OrganizationInfo = _reflection.GeneratedProtocolMessageType('OrganizationInfo', (_message.Message,), {
@@ -192,26 +192,26 @@ OrganizationInfo = _reflection.GeneratedProtocolMessageType('OrganizationInfo', 
   })
 _sym_db.RegisterMessage(OrganizationInfo)
 
-Organisation = _reflection.GeneratedProtocolMessageType('Organisation', (_message.Message,), {
-  'DESCRIPTOR' : _ORGANISATION,
+Organization = _reflection.GeneratedProtocolMessageType('Organization', (_message.Message,), {
+  'DESCRIPTOR' : _ORGANIZATION,
   '__module__' : 'proto.organization_pb2'
-  # @@protoc_insertion_point(class_scope:qms.Organisation)
+  # @@protoc_insertion_point(class_scope:qms.Organization)
   })
-_sym_db.RegisterMessage(Organisation)
+_sym_db.RegisterMessage(Organization)
 
-OrganisationInfoList = _reflection.GeneratedProtocolMessageType('OrganisationInfoList', (_message.Message,), {
-  'DESCRIPTOR' : _ORGANISATIONINFOLIST,
+OrganizationInfoList = _reflection.GeneratedProtocolMessageType('OrganizationInfoList', (_message.Message,), {
+  'DESCRIPTOR' : _ORGANIZATIONINFOLIST,
   '__module__' : 'proto.organization_pb2'
-  # @@protoc_insertion_point(class_scope:qms.OrganisationInfoList)
+  # @@protoc_insertion_point(class_scope:qms.OrganizationInfoList)
   })
-_sym_db.RegisterMessage(OrganisationInfoList)
+_sym_db.RegisterMessage(OrganizationInfoList)
 
-OrganisationList = _reflection.GeneratedProtocolMessageType('OrganisationList', (_message.Message,), {
-  'DESCRIPTOR' : _ORGANISATIONLIST,
+OrganizationList = _reflection.GeneratedProtocolMessageType('OrganizationList', (_message.Message,), {
+  'DESCRIPTOR' : _ORGANIZATIONLIST,
   '__module__' : 'proto.organization_pb2'
-  # @@protoc_insertion_point(class_scope:qms.OrganisationList)
+  # @@protoc_insertion_point(class_scope:qms.OrganizationList)
   })
-_sym_db.RegisterMessage(OrganisationList)
+_sym_db.RegisterMessage(OrganizationList)
 
 
 DESCRIPTOR._options = None
