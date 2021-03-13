@@ -5,6 +5,7 @@ from starlette.testclient import TestClient
 from server.app.utils.db_utils import drop_db, prepare_db
 
 from proto.organization_pb2 import OrganizationList
+from proto.service_pb2 import ServiceInfo
 
 
 @pytest.fixture(scope='function')
@@ -57,3 +58,10 @@ class Server(TestClient):
         res = OrganizationList()
         res.ParseFromString(resp.content)
         return res
+
+    def create_service(self, token, name: str, organization_id: str, **kwargs):
+        req = ServiceInfo(name=name, organization_id=organization_id, data=kwargs)
+        return self.post('/admin/create_service', headers={'session': token, 'content-type': 'application/protobuf'}, data=req.SerializeToString())
+
+    def remove_service(self, token, id: str):
+        return self.post('/admin/remove_service', headers={'session': token}, json={'id': id})

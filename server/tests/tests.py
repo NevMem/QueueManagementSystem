@@ -15,7 +15,7 @@ def test_check_unique_user(server):
     assert not response.json().get('isUnique', False)  # proto defaults
 
 
-def test_create_organization(server):
+def test_configure_organization(server):
     server.register_user(email='mail@mail', password='password')
     token = server.login(email='mail@mail', password='password').headers['session']
     server.create_organization(token, name='Organization')
@@ -24,3 +24,16 @@ def test_create_organization(server):
     org = resp.organizations[0]
     assert len(org.services) == 0
     assert org.info.name == 'Organization'
+    server.create_service(token, 'Service', organization_id=org.info.id)
+    resp = server.get_organizations(token)
+    assert len(resp.organizations) == 1
+    org = resp.organizations[0]
+    assert len(org.services) == 1
+    service = org.services[0]
+    assert len(service.queues) == 0
+    assert service.info.name == 'Service'
+    server.remove_service(token, service.info.id)
+    resp = server.get_organizations(token)
+    assert len(resp.organizations) == 1
+    org = resp.organizations[0]
+    assert len(org.services) == 0
