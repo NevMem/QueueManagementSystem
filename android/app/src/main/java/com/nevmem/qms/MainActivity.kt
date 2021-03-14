@@ -1,5 +1,6 @@
 package com.nevmem.qms
 
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,7 +10,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.nevmem.qms.common.PUSH_BROADCAST
+import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.permissions.*
+import com.nevmem.qms.push.broadcast.PushBroadcastReceiver
 import com.nevmem.qms.toast.manager.ToastProvider
 import com.nevmem.qms.toast.ui.ToastContainer
 import com.nevmem.qms.usecase.BottomBarHidingUsecase
@@ -25,6 +29,9 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
 
     private val toastProvider: ToastProvider by inject()
     private val permissionsManager: PermissionsManager by inject()
+    private val logger: Logger by inject()
+
+    private val pushBroadcast = PushBroadcastReceiver(logger, ::onPushData)
 
     private var currentPermissionsRequest: PermissionsRequest? = null
         set(value) {
@@ -41,6 +48,8 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        processStartIntent()
 
         window.statusBarColor = resources.getColor(R.color.backgroundColor, theme)
 
@@ -66,12 +75,14 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
     override fun onResume() {
         super.onResume()
         permissionsManager.registerDelegate(this)
+        registerReceiver(pushBroadcast, IntentFilter(PUSH_BROADCAST))
         checkPermissionsRequests()
     }
 
     override fun onPause() {
         super.onPause()
         permissionsManager.removeDelegate(this)
+        unregisterReceiver(pushBroadcast)
     }
 
     override fun onHasNewPermissionsRequest() {
@@ -107,6 +118,16 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
 
     override fun hasPermission(permission: Permission): Boolean =
         ContextCompat.checkSelfPermission(this, permission.androidPermission) == PackageManager.PERMISSION_GRANTED
+
+    private fun processStartIntent() {
+        intent?.let { nonNullIntent ->
+            println("cur_deb ${nonNullIntent.action}")
+        }
+    }
+
+    private fun onPushData(data: Map<String, String>) {
+        println("cur_deb got push data, map size: ${data.size}")
+    }
 
     private fun checkPermissionsRequests() {
         if (!permissionsManager.hasRequests && currentPermissionsRequest == null) {

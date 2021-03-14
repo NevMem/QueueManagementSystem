@@ -73,6 +73,7 @@ dependencies {
     implementation "org.koin:koin-android:$versions.koin"
 
     implementation project(':auth')
+    implementation project(':common')
     implementation project(':common-ui')
     implementation project(':features')
     implementation project(':keyvalue')
