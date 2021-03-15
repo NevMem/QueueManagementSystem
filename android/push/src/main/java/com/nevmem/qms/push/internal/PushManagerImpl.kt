@@ -6,7 +6,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
-import com.nevmem.qms.common.PUSH_BROADCAST
+import com.nevmem.qms.common.NEW_PUSH_BROADCAST
+import com.nevmem.qms.common.NEW_PUSH_TOKEN_BROADCAST
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.push.PushManager
 import com.nevmem.qms.push.PushProcessor
@@ -28,7 +29,10 @@ internal class PushManagerImpl(
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onResume() {
-        context.registerReceiver(receiver, IntentFilter(PUSH_BROADCAST))
+        context.registerReceiver(receiver, IntentFilter().apply {
+            addAction(NEW_PUSH_BROADCAST)
+            addAction(NEW_PUSH_TOKEN_BROADCAST)
+        })
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)

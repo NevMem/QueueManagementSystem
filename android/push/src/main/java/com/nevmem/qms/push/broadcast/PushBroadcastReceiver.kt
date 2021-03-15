@@ -3,13 +3,15 @@ package com.nevmem.qms.push.broadcast
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.nevmem.qms.common.PUSH_BROADCAST
+import com.nevmem.qms.common.NEW_PUSH_BROADCAST
+import com.nevmem.qms.common.NEW_PUSH_TOKEN_BROADCAST
 import com.nevmem.qms.common.utils.runOnUi
 import com.nevmem.qms.logger.Logger
 
 internal class PushBroadcastReceiver(
     private val logger: Logger,
-    private val listener: (Map<String, String>) -> Unit
+    private val listener: (Map<String, String>) -> Unit,
+    private val onNewToken: (String) -> Unit
 ) : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -17,7 +19,7 @@ internal class PushBroadcastReceiver(
             "type" to "got-intent"
         ))
         intent?.let {
-            if (it.action == PUSH_BROADCAST) {
+            if (it.action == NEW_PUSH_BROADCAST) {
                 val payload = it.getStringExtra("payload")
                 if (payload == null) {
                     logError("null payload")
@@ -32,6 +34,12 @@ internal class PushBroadcastReceiver(
                     split[0] to split[1]
                 }.toMap()
                 runOnUi { listener(data) }
+            } else if (it.action == NEW_PUSH_TOKEN_BROADCAST) {
+                runOnUi {
+                    it.getStringExtra("token")?.let { token ->
+                        onNewToken(token)
+                    }
+                }
             }
         }
     }
