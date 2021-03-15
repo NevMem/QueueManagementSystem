@@ -44,6 +44,10 @@ internal class PushManagerImpl(
         processors -= processor
     }
 
+    override fun processDataFromIntent(data: Map<String, String>) {
+        onPushData(data)
+    }
+
     private fun onPushData(data: Map<String, String>) {
         processors.forEach { processor -> processor.onPushData(data) }
     }

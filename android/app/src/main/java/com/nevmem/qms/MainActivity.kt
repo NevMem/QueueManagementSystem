@@ -13,7 +13,6 @@ import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.permissions.*
 import com.nevmem.qms.push.PushProcessor
 import com.nevmem.qms.push.createPushManager
-import com.nevmem.qms.toast.manager.ShowToastManager
 import com.nevmem.qms.toast.manager.ToastProvider
 import com.nevmem.qms.toast.ui.ToastContainer
 import com.nevmem.qms.usecase.BottomBarHidingUsecase
@@ -30,7 +29,6 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
 
     private val toastProvider: ToastProvider by inject()
     private val permissionsManager: PermissionsManager by inject()
-    private val showToastManager: ShowToastManager by inject()
     private val logger: Logger by inject()
 
     private val pushManager = createPushManager(this, this, logger)
@@ -127,14 +125,14 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
 
     private fun processStartIntent() {
         intent?.let { nonNullIntent ->
-            println("cur_deb ${nonNullIntent.action}")
-        }
-    }
-
-    private fun onPushData(data: Map<String, String>) {
-        println("cur_deb got push data, map size: ${data.size}")
-        if (data.containsKey("message")) {
-            showToastManager.success(data.getValue("message"))
+            val data = nonNullIntent.extras?.keySet()?.mapNotNull { key ->
+                try {
+                    key to nonNullIntent.extras!!.getString(key)!!
+                } catch (_: Exception) {
+                    null
+                }
+            }?.toMap() ?: mapOf()
+            pushManager.processDataFromIntent(data)
         }
     }
 
