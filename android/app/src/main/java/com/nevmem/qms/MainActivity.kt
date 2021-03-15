@@ -14,6 +14,7 @@ import com.nevmem.qms.common.PUSH_BROADCAST
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.permissions.*
 import com.nevmem.qms.push.broadcast.PushBroadcastReceiver
+import com.nevmem.qms.toast.manager.ShowToastManager
 import com.nevmem.qms.toast.manager.ToastProvider
 import com.nevmem.qms.toast.ui.ToastContainer
 import com.nevmem.qms.usecase.BottomBarHidingUsecase
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
     private val toastProvider: ToastProvider by inject()
     private val permissionsManager: PermissionsManager by inject()
     private val logger: Logger by inject()
+    private val showToastManager: ShowToastManager by inject()
 
     private val pushBroadcast = PushBroadcastReceiver(logger, ::onPushData)
 
@@ -127,6 +129,9 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
 
     private fun onPushData(data: Map<String, String>) {
         println("cur_deb got push data, map size: ${data.size}")
+        if (data.containsKey("message")) {
+            showToastManager.success(data.getValue("message"))
+        }
     }
 
     private fun checkPermissionsRequests() {

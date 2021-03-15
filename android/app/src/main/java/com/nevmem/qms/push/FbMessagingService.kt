@@ -21,7 +21,7 @@ class FbMessagingService : FirebaseMessagingService() {
 
     private fun sendToBroadcastReceiver(data: Map<String, String>) {
         sendBroadcast(Intent(PUSH_BROADCAST).apply {
-            putExtra("payload", data.map { "{$it.key}=${it.value}" }.joinToString(","))
+            putExtra("payload", data.map { "${it.key}=${it.value}" }.joinToString(","))
         })
     }
 }

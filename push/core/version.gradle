@@ -1,0 +1,16 @@
+def versionProperties() {
+    Properties properties = new Properties()
+
+    new File("${project.projectDir}/version.number")
+        .withInputStream { properties.load(it) }
+
+    for (property in properties) {
+        property.value = Integer.parseInt(property.value)
+    }
+    return properties
+}
+
+ext.buildVersion = {
+    def versionProps = versionProperties()
+    return "${versionProps['major']}.${versionProps['minor']}.${versionProps['patch']}-${System.currentTimeMillis()}"
+}
