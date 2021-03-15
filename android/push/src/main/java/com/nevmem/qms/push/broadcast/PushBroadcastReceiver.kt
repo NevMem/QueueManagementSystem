@@ -7,7 +7,7 @@ import com.nevmem.qms.common.PUSH_BROADCAST
 import com.nevmem.qms.common.utils.runOnUi
 import com.nevmem.qms.logger.Logger
 
-class PushBroadcastReceiver(
+internal class PushBroadcastReceiver(
     private val logger: Logger,
     private val listener: (Map<String, String>) -> Unit
 ) : BroadcastReceiver() {

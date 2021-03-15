@@ -1,0 +1,50 @@
+package com.nevmem.qms.push.internal
+
+import android.content.Context
+import android.content.IntentFilter
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
+import com.nevmem.qms.common.PUSH_BROADCAST
+import com.nevmem.qms.logger.Logger
+import com.nevmem.qms.push.PushManager
+import com.nevmem.qms.push.PushProcessor
+import com.nevmem.qms.push.broadcast.PushBroadcastReceiver
+
+internal class PushManagerImpl(
+    lifecycleOwner: LifecycleOwner,
+    private val context: Context,
+    private val logger: Logger
+) : PushManager, LifecycleObserver {
+
+    private val processors = mutableSetOf<PushProcessor>()
+
+    private val receiver = PushBroadcastReceiver(logger, ::onPushData)
+
+    init {
+        lifecycleOwner.lifecycle.addObserver(this)
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun onResume() {
+        context.registerReceiver(receiver, IntentFilter(PUSH_BROADCAST))
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    fun onPause() {
+        context.unregisterReceiver(receiver)
+    }
+
+    override fun addPushProcessor(processor: PushProcessor) {
+        processors += processor
+    }
+
+    override fun removePushProcessor(processor: PushProcessor) {
+        processors -= processor
+    }
+
+    private fun onPushData(data: Map<String, String>) {
+        processors.forEach { processor -> processor.onPushData(data) }
+    }
+}
