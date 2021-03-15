@@ -32,4 +32,9 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    implementation platform("com.google.firebase:firebase-bom:$versions.firebaseBom")
+    implementation 'com.google.firebase:firebase-messaging'
+
+    implementation project(':common')
+    implementation project(':logger')
 }

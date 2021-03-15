@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.nevmem.qms.common.PUSH_BROADCAST
+import com.nevmem.qms.common.utils.runOnUi
 import com.nevmem.qms.logger.Logger
-import com.nevmem.qms.utils.runOnUi
 
 class PushBroadcastReceiver(
     private val logger: Logger,

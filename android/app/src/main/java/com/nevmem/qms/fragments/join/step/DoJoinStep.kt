@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.nevmem.qms.R
+import com.nevmem.qms.common.utils.runOnUi
 import com.nevmem.qms.fragments.join.JoinFragmentDirections
 import com.nevmem.qms.fragments.join.JoinStep
 import com.nevmem.qms.fragments.join.JoinUsecase
@@ -14,7 +15,6 @@ import com.nevmem.qms.status.FetchStatus
 import com.nevmem.qms.status.JoinStatus
 import com.nevmem.qms.status.StatusProvider
 import com.nevmem.qms.toast.manager.ShowToastManager
-import com.nevmem.qms.utils.runOnUi
 import kotlinx.android.synthetic.main.fragment_step_do_join.*
 import kotlinx.coroutines.flow.collect
 import org.koin.android.ext.android.inject

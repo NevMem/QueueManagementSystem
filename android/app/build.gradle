@@ -65,7 +65,6 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$versions.glide"
     implementation "com.google.android.material:material:$versions.material"
     implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-messaging'
     implementation "com.yandex.android:mobmetricalib:$versions.metrica"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.koin:koin-android-scope:$versions.koin"
