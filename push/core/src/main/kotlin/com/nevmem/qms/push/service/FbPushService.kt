@@ -30,6 +30,5 @@ class FbPushService {
             .build()
 
         val response = FirebaseMessaging.getInstance().sendMulticast(message)
-        println(response)
     }
 }
