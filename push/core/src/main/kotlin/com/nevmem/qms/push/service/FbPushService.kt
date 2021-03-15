@@ -6,6 +6,7 @@ import com.google.firebase.FirebaseOptions
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.Message
 import com.google.firebase.messaging.MulticastMessage
+import com.google.firebase.messaging.Notification
 import org.springframework.stereotype.Service
 import java.io.FileInputStream
 
@@ -26,6 +27,10 @@ class FbPushService {
     fun broadcast(tokens: List<String>, messageString: String) {
         val message = MulticastMessage.builder()
             .putData("message", messageString)
+            .setNotification(Notification.builder()
+                .setTitle("New push")
+                .setBody("Open to proceed")
+                .build())
             .addAllTokens(tokens)
             .build()
 

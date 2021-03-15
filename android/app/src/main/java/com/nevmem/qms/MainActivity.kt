@@ -1,6 +1,5 @@
 package com.nevmem.qms
 
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,10 +9,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.shape.MaterialShapeDrawable
-import com.nevmem.qms.common.PUSH_BROADCAST
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.permissions.*
-import com.nevmem.qms.push.broadcast.PushBroadcastReceiver
+import com.nevmem.qms.push.PushProcessor
+import com.nevmem.qms.push.createPushManager
 import com.nevmem.qms.toast.manager.ShowToastManager
 import com.nevmem.qms.toast.manager.ToastProvider
 import com.nevmem.qms.toast.ui.ToastContainer
@@ -21,6 +20,7 @@ import com.nevmem.qms.usecase.BottomBarHidingUsecase
 import com.yandex.metrica.YandexMetrica
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
+import org.koin.core.qualifier.named
 
 private const val ACTIVITY_PERMISSIONS_REQUEST_CODE = 123
 
@@ -30,10 +30,16 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
 
     private val toastProvider: ToastProvider by inject()
     private val permissionsManager: PermissionsManager by inject()
-    private val logger: Logger by inject()
     private val showToastManager: ShowToastManager by inject()
+    private val logger: Logger by inject()
 
-    private val pushBroadcast = PushBroadcastReceiver(logger, ::onPushData)
+    private val pushManager = createPushManager(this, this, logger)
+
+    private val processors = listOf(
+        inject<PushProcessor>(named("toast-push-processor"))
+    ).apply {
+        forEach { pushManager.addPushProcessor(it.value) }
+    }
 
     private var currentPermissionsRequest: PermissionsRequest? = null
         set(value) {
@@ -77,14 +83,12 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
     override fun onResume() {
         super.onResume()
         permissionsManager.registerDelegate(this)
-        registerReceiver(pushBroadcast, IntentFilter(PUSH_BROADCAST))
         checkPermissionsRequests()
     }
 
     override fun onPause() {
         super.onPause()
         permissionsManager.removeDelegate(this)
-        unregisterReceiver(pushBroadcast)
     }
 
     override fun onHasNewPermissionsRequest() {

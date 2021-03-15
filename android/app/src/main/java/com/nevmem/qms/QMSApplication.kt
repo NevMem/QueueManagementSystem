@@ -16,6 +16,9 @@ import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.createNetworkManager
 import com.nevmem.qms.notifications.createNotificationsManager
 import com.nevmem.qms.permissions.createPermissionsManager
+import com.nevmem.qms.push.PushProcessor
+import com.nevmem.qms.push.ToastPushProcessor
+import com.nevmem.qms.push.createPushManager
 import com.nevmem.qms.status.StatusProvider
 import com.nevmem.qms.status.createDebugStatusProvider
 import com.nevmem.qms.suggests.createDebugSuggestsManager
@@ -29,6 +32,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 private const val AUTH_PREFS_NAME = "auth-prefs"
@@ -58,6 +62,9 @@ class QMSApplication : Application() {
         single<Logger> { LoggerImpl() }
         single { createDebugSuggestsManager() }
         single { createNotificationsManager(this@QMSApplication) }
+        single<PushProcessor>(named("toast-push-processor")) {
+            ToastPushProcessor(get())
+        }
         viewModel { LoginPageViewModel(get()) }
         viewModel { ProfileFragmentViewModel(get(), get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
