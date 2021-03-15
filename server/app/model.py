@@ -54,6 +54,7 @@ class Organization(BaseModel):
     name = sqlalchemy.Column(types.Text, nullable=False)
     admins = relationship('Permission', cascade='all, delete-orphan')
 
+    address = sqlalchemy.Column(types.Text)
     data = sqlalchemy.Column(types.JSON, default={})
 
 

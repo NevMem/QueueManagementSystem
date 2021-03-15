@@ -20,12 +20,50 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\021OrganizitionProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x18proto/organization.proto\x12\x03qms\x1a\x13proto/service.proto\"=\n\x10OrganizationInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0f\n\x07\x61\x64\x64ress\x18\x03 \x01(\t\"S\n\x0cOrganization\x12#\n\x04info\x18\x01 \x01(\x0b\x32\x15.qms.OrganizationInfo\x12\x1e\n\x08services\x18\x02 \x03(\x0b\x32\x0c.qms.Service\"D\n\x14OrganizationInfoList\x12,\n\rorganizations\x18\x01 \x03(\x0b\x32\x15.qms.OrganizationInfo\"<\n\x10OrganizationList\x12(\n\rorganizations\x18\x01 \x03(\x0b\x32\x11.qms.OrganizationB#\n\x0e\x63om.nevmem.qmsB\x11OrganizitionProtob\x06proto3'
+  serialized_pb=b'\n\x18proto/organization.proto\x12\x03qms\x1a\x13proto/service.proto\"\x99\x01\n\x10OrganizationInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0f\n\x07\x61\x64\x64ress\x18\x03 \x01(\t\x12-\n\x04\x64\x61ta\x18\x04 \x03(\x0b\x32\x1f.qms.OrganizationInfo.DataEntry\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"S\n\x0cOrganization\x12#\n\x04info\x18\x01 \x01(\x0b\x32\x15.qms.OrganizationInfo\x12\x1e\n\x08services\x18\x02 \x03(\x0b\x32\x0c.qms.Service\"D\n\x14OrganizationInfoList\x12,\n\rorganizations\x18\x01 \x03(\x0b\x32\x15.qms.OrganizationInfo\"<\n\x10OrganizationList\x12(\n\rorganizations\x18\x01 \x03(\x0b\x32\x11.qms.OrganizationB#\n\x0e\x63om.nevmem.qmsB\x11OrganizitionProtob\x06proto3'
   ,
   dependencies=[proto_dot_service__pb2.DESCRIPTOR,])
 
 
 
+
+_ORGANIZATIONINFO_DATAENTRY = _descriptor.Descriptor(
+  name='DataEntry',
+  full_name='qms.OrganizationInfo.DataEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='qms.OrganizationInfo.DataEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='qms.OrganizationInfo.DataEntry.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=b'8\001',
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=165,
+  serialized_end=208,
+)
 
 _ORGANIZATIONINFO = _descriptor.Descriptor(
   name='OrganizationInfo',
@@ -56,10 +94,17 @@ _ORGANIZATIONINFO = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='data', full_name='qms.OrganizationInfo.data', index=3,
+      number=4, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_ORGANIZATIONINFO_DATAENTRY, ],
   enum_types=[
   ],
   serialized_options=None,
@@ -68,8 +113,8 @@ _ORGANIZATIONINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=54,
-  serialized_end=115,
+  serialized_start=55,
+  serialized_end=208,
 )
 
 
@@ -107,8 +152,8 @@ _ORGANIZATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=117,
-  serialized_end=200,
+  serialized_start=210,
+  serialized_end=293,
 )
 
 
@@ -139,8 +184,8 @@ _ORGANIZATIONINFOLIST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=202,
-  serialized_end=270,
+  serialized_start=295,
+  serialized_end=363,
 )
 
 
@@ -171,10 +216,12 @@ _ORGANIZATIONLIST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=272,
-  serialized_end=332,
+  serialized_start=365,
+  serialized_end=425,
 )
 
+_ORGANIZATIONINFO_DATAENTRY.containing_type = _ORGANIZATIONINFO
+_ORGANIZATIONINFO.fields_by_name['data'].message_type = _ORGANIZATIONINFO_DATAENTRY
 _ORGANIZATION.fields_by_name['info'].message_type = _ORGANIZATIONINFO
 _ORGANIZATION.fields_by_name['services'].message_type = proto_dot_service__pb2._SERVICE
 _ORGANIZATIONINFOLIST.fields_by_name['organizations'].message_type = _ORGANIZATIONINFO
@@ -186,11 +233,19 @@ DESCRIPTOR.message_types_by_name['OrganizationList'] = _ORGANIZATIONLIST
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 OrganizationInfo = _reflection.GeneratedProtocolMessageType('OrganizationInfo', (_message.Message,), {
+
+  'DataEntry' : _reflection.GeneratedProtocolMessageType('DataEntry', (_message.Message,), {
+    'DESCRIPTOR' : _ORGANIZATIONINFO_DATAENTRY,
+    '__module__' : 'proto.organization_pb2'
+    # @@protoc_insertion_point(class_scope:qms.OrganizationInfo.DataEntry)
+    })
+  ,
   'DESCRIPTOR' : _ORGANIZATIONINFO,
   '__module__' : 'proto.organization_pb2'
   # @@protoc_insertion_point(class_scope:qms.OrganizationInfo)
   })
 _sym_db.RegisterMessage(OrganizationInfo)
+_sym_db.RegisterMessage(OrganizationInfo.DataEntry)
 
 Organization = _reflection.GeneratedProtocolMessageType('Organization', (_message.Message,), {
   'DESCRIPTOR' : _ORGANIZATION,
@@ -215,4 +270,5 @@ _sym_db.RegisterMessage(OrganizationList)
 
 
 DESCRIPTOR._options = None
+_ORGANIZATIONINFO_DATAENTRY._options = None
 # @@protoc_insertion_point(module_scope)
