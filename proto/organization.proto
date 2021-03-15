@@ -12,6 +12,7 @@ message OrganizationInfo {
   string id = 1;
   string name = 2;
   string address = 3;
+  map<string, string> data = 4;
 }
 
 
