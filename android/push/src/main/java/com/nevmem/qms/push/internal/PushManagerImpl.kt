@@ -49,14 +49,16 @@ internal class PushManagerImpl(
     }
 
     override fun processDataFromIntent(data: Map<String, String>) {
+        logger.reportEvent("push-manager.data-from-intent", data)
         onPushData(data)
     }
 
     private fun onPushData(data: Map<String, String>) {
+        logger.reportEvent("push-manager.data-from-receiver", data)
         processors.forEach { processor -> processor.onPushData(data) }
     }
 
     private fun onNewToken(token: String) {
-
+        logger.reportEvent("push-manager.new-token", mapOf("token" to token))
     }
 }
