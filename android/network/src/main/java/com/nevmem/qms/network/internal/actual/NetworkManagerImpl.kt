@@ -2,74 +2,59 @@ package com.nevmem.qms.network.internal.actual
 
 import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.QueueProto
+import com.nevmem.qms.data.NewPushTokenRequest
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.data.RegisterResponse
+import com.nevmem.qms.network.internal.actual.services.*
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
 import kotlin.coroutines.suspendCoroutine
 
 internal class NetworkManagerImpl(
     private val logger: Logger
 ) : NetworkManager {
 
-    data class UserIdentity(val email: String?, val password: String?)
-    data class RegisterRequest(val name: String?, val surname: String?, val identity: UserIdentity?)
-    data class User(val id: String?, val name: String?, val surname: String?, val email: String?)
-
-    interface BackendService {
-        @POST("/client/login")
-        fun login(@Body body: UserIdentity?): Call<ClientApiProto.AuthResponse>
-
-        @POST("/client/register")
-        fun register(@Body body: RegisterRequest?): Call<Any>
-
-        @POST("/client/get_user")
-        fun getUser(@Header("session") session: String): Call<User>
-    }
-
-    interface FeaturesService {
-        @GET("/config/56cf679c-beb3-4f64-ac63-b8d3697b9cc2")
-        fun loadFeatures(): Call<Map<String, String>>
-    }
-
     private val client = OkHttpClient.Builder()
         .addInterceptor {
-            logger.reportEvent("network_request_to",
+            logger.reportEvent("network-manager.request-to",
                 mapOf("url" to it.request().url().toString()))
             val response = it.proceed(it.request())
-            logger.reportEvent("network_response_from",
+            logger.reportEvent("network-manager.from",
                 mapOf("url" to it.request().url().toString(), "code" to response.code()))
             response
         }
         .build()
 
+    private fun createDefaultRetrofitBuilder() = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create())
+        .client(client)
+
     private val retrofit by lazy {
-        Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
+        createDefaultRetrofitBuilder()
             .baseUrl("http://qms.nikitonsky.tk")
-            .client(client)
+            .build()
+    }
+
+    private val pushRetrofit by lazy {
+        createDefaultRetrofitBuilder()
+            .baseUrl("")
             .build()
     }
 
     private val featuresRetrofit by lazy {
-        Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
+        createDefaultRetrofitBuilder()
             .baseUrl("https://nevmem.com")
-            .client(client)
             .build()
     }
 
     private val service by lazy { retrofit.create(BackendService::class.java) }
     private val featuresService by lazy { featuresRetrofit.create(FeaturesService::class.java) }
+    private val pushService by lazy { pushRetrofit.create(PushRegistrationService::class.java) }
 
     override suspend fun fetchDataForInvite(invite: String): QueueProto.Queue {
         TODO("Not yet implemented")
@@ -147,6 +132,22 @@ internal class NetworkManagerImpl(
                     }
                 } else {
                     continuation.resumeWith(Result.failure(IllegalStateException("Response code isn't 200 or body not present")))
+                }
+            }
+        })
+    }
+
+    override suspend fun registerNewPushToken(request: NewPushTokenRequest) = suspendCoroutine<Unit> { continuation ->
+        pushService.registerNewPushToken(request).enqueue(object : Callback<Any> {
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                continuation.resumeWith(Result.failure(t))
+            }
+
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                if (response.isSuccessful && response.code() == 200) {
+                    continuation.resumeWith(Result.success(Unit))
+                } else {
+                    continuation.resumeWith(Result.failure(IllegalStateException("Cannot register new token")))
                 }
             }
         })
