@@ -1,2 +1,2 @@
-const backendUrl = 'http://qms.nikitonsky.tk'
+const backendUrl = 'http://qms-back.nikitonsky.tk'
 export default backendUrl
