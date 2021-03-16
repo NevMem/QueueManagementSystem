@@ -14,7 +14,7 @@ jobs:
       - name: "Build front"
         run: cd web_client && npm install && npm run-script build
       - name: "Push to s3"
-        run: aws --endpoint-url=https://storage.yandexcloud.net s3 cp --recursive build/ s3://qms.nikitonsky.tk
+        run: aws --endpoint-url=https://storage.yandexcloud.net s3 cp --recursive web_client/build/ s3://qms.nikitonsky.tk
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
