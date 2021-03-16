@@ -3,9 +3,9 @@ import { withBackendUrl } from './utils'
 import axios from 'axios'
 
 const paths = withBackendUrl({
-    createOrganization: '/admin/create_organisation',
+    createOrganization: '/admin/create_organization',
     createService: '/admin/create_service',
-    organizationsList: '/admin/get_organisations_list',
+    organizationsList: '/admin/get_organizations_list',
 })
 
 export const loadOrganizationList = (token) => {
