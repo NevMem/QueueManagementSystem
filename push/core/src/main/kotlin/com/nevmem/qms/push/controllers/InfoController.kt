@@ -15,4 +15,9 @@ class InfoController @Autowired constructor(
 
     @RequestMapping("/countTokens")
     fun countTokens(): Int = tokenStorageService.fetchTokens().size
+
+    @RequestMapping("/loadTokens")
+    fun loadTokens(): List<String> = tokenStorageService.fetchTokens().map {
+        it.dropLast(it.length - 10)
+    }
 }
