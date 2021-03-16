@@ -30,7 +30,7 @@ class OrgAdapter {
             loadOrganizationList(authAdapter.token)
                 .then((data) => {
                     if (data.status === 200) {
-                        this.setOrganizations(parseOrganizations(data.data))
+                        this.setOrganizations(parseOrganizations(data.data).reverse())
                     }
                     this.isLoading = false
                 })
