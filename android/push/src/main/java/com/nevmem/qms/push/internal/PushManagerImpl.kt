@@ -25,6 +25,7 @@ internal class PushManagerImpl(
 
     init {
         lifecycleOwner.lifecycle.addObserver(this)
+        onResume()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
