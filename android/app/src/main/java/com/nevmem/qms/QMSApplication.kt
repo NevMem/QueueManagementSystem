@@ -65,6 +65,9 @@ class QMSApplication : Application() {
         single<PushProcessor>(named("toast-push-processor")) {
             ToastPushProcessor(get())
         }
+    }
+
+    private val viewModelsModule = module {
         viewModel { LoginPageViewModel(get()) }
         viewModel { ProfileFragmentViewModel(get(), get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
@@ -84,7 +87,7 @@ class QMSApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(applicationContext)
-            modules(appModule)
+            modules(appModule, viewModelsModule)
         }
     }
 }
