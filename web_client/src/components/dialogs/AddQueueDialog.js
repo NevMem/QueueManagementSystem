@@ -31,7 +31,7 @@ const Dialog = withStyles({
 
 export default function AddQueueDialog({ service, open, onClose, ...rest }) {
 
-    const { value: queueName, bind: bindQueueName } = useInput('')
+    const { bind: bindQueueName } = useInput('')
 
     const handleCancel = () => {
         onClose()
