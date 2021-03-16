@@ -4,12 +4,11 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.Message
 import com.google.firebase.messaging.MulticastMessage
 import com.google.firebase.messaging.Notification
+import com.nevmem.qms.push.data.NotificationConfig
 import org.springframework.stereotype.Service
 import java.io.FileInputStream
-
 
 @Service
 class FbPushService {
@@ -24,16 +23,18 @@ class FbPushService {
         FirebaseApp.initializeApp(options)
     }
 
-    fun broadcast(tokens: List<String>, messageString: String) {
-        val message = MulticastMessage.builder()
-            .putData("message", messageString)
-            .setNotification(Notification.builder()
-                .setTitle("New push")
-                .setBody("Open to proceed")
-                .build())
+    fun broadcast(tokens: List<String>, data: Map<String, String>, notification: NotificationConfig?) {
+        val builder = MulticastMessage.builder()
+            .putAllData(data)
             .addAllTokens(tokens)
-            .build()
 
-        val response = FirebaseMessaging.getInstance().sendMulticast(message)
+        if (notification != null) {
+            builder.setNotification(Notification.builder()
+                .setTitle(notification.title)
+                .setBody(notification.body)
+                .build())
+        }
+
+        val response = FirebaseMessaging.getInstance().sendMulticast(builder.build())
     }
 }
