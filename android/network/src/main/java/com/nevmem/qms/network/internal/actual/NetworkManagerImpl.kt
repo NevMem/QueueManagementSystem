@@ -36,7 +36,7 @@ internal class NetworkManagerImpl(
 
     private val retrofit by lazy {
         createDefaultRetrofitBuilder()
-            .baseUrl("http://qms.nikitonsky.tk")
+            .baseUrl("http://qms-back.nikitonsky.tk")
             .build()
     }
 

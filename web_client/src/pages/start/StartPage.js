@@ -1,5 +1,5 @@
 import './StartPage.css'
-import { React, Component, useState } from 'react'
+import { React, useState } from 'react'
 import Grid from '@material-ui/core/Grid'
 import localizedString from '../../localization/localizedString'
 import LoginSection from './LoginSection'

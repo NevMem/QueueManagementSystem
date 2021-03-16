@@ -108,6 +108,8 @@ async def check_unique_user(request: Request):
 async def create_organization(request: Request):
     new_organization = model.Organization(
         name=request.parsed.name,
+        address=request.parsed.address,
+        data=dict(**request.parsed.data)
     )
 
     new_permission = model.Permission(
@@ -142,12 +144,15 @@ async def get_organizations_list(request: Request):
                 info=organization_pb2.OrganizationInfo(
                     id=str(organization.id),
                     name=organization.name,
+                    address=organization.address,
+                    data=organization.data
                 ),
                 services=[
                     service_pb2.Service(
                         info=service_pb2.ServiceInfo(
                             id=str(service.id),
                             name=service.name,
+                            data=service.data
                         ),
                         queues=[
                             queue_pb2.Queue(
