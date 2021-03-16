@@ -21,7 +21,7 @@ internal class PushManagerImpl(
 
     private val processors = mutableSetOf<PushProcessor>()
 
-    private val receiver = PushBroadcastReceiver(logger, ::onPushData)
+    private val receiver = PushBroadcastReceiver(logger, ::onPushData, ::onNewToken)
 
     init {
         lifecycleOwner.lifecycle.addObserver(this)
@@ -54,5 +54,9 @@ internal class PushManagerImpl(
 
     private fun onPushData(data: Map<String, String>) {
         processors.forEach { processor -> processor.onPushData(data) }
+    }
+
+    private fun onNewToken(token: String) {
+
     }
 }
