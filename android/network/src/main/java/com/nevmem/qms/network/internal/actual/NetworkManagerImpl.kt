@@ -55,7 +55,7 @@ internal class NetworkManagerImpl(
     private val retrofit by lazy {
         Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("http://qms.nikitonsky.tk")
+            .baseUrl("http://qms-back.nikitonsky.tk")
             .client(client)
             .build()
     }
