@@ -9,13 +9,18 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.nevmem.qms.logger.Logger
+import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.permissions.*
+import com.nevmem.qms.push.PushProcessor
+import com.nevmem.qms.push.createPushManager
 import com.nevmem.qms.toast.manager.ToastProvider
 import com.nevmem.qms.toast.ui.ToastContainer
 import com.nevmem.qms.usecase.BottomBarHidingUsecase
 import com.yandex.metrica.YandexMetrica
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
+import org.koin.core.qualifier.named
 
 private const val ACTIVITY_PERMISSIONS_REQUEST_CODE = 123
 
@@ -25,6 +30,17 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
 
     private val toastProvider: ToastProvider by inject()
     private val permissionsManager: PermissionsManager by inject()
+    private val logger: Logger by inject()
+    private val networkManager: NetworkManager by inject()
+
+    private val pushManager = createPushManager(
+        this, networkManager, this, logger)
+
+    private val processors = listOf(
+        inject<PushProcessor>(named("toast-push-processor"))
+    ).apply {
+        forEach { pushManager.addPushProcessor(it.value) }
+    }
 
     private var currentPermissionsRequest: PermissionsRequest? = null
         set(value) {
@@ -41,6 +57,8 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        processStartIntent()
 
         window.statusBarColor = resources.getColor(R.color.backgroundColor, theme)
 
@@ -107,6 +125,19 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
 
     override fun hasPermission(permission: Permission): Boolean =
         ContextCompat.checkSelfPermission(this, permission.androidPermission) == PackageManager.PERMISSION_GRANTED
+
+    private fun processStartIntent() {
+        intent?.let { nonNullIntent ->
+            val data = nonNullIntent.extras?.keySet()?.mapNotNull { key ->
+                try {
+                    key to nonNullIntent.extras!!.getString(key)!!
+                } catch (_: Exception) {
+                    null
+                }
+            }?.toMap() ?: mapOf()
+            pushManager.processDataFromIntent(data)
+        }
+    }
 
     private fun checkPermissionsRequests() {
         if (!permissionsManager.hasRequests && currentPermissionsRequest == null) {

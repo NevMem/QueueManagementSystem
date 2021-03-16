@@ -3,6 +3,7 @@ package com.nevmem.qms.network.internal.debug
 import com.google.gson.Gson
 import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.QueueProto
+import com.nevmem.qms.data.NewPushTokenRequest
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.data.RegisterResponse
 import com.nevmem.qms.network.exceptions.BodyNotPresentException
@@ -122,4 +123,6 @@ internal class DebugNetworkManager : NetworkManager {
     override suspend fun register(credentials: ClientApiProto.RegisterRequest): RegisterResponse {
         TODO("Not yet implemented")
     }
+
+    override suspend fun registerNewPushToken(request: NewPushTokenRequest) = Unit
 }

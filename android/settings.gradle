@@ -1,3 +1,5 @@
+include ':common'
+include ':common-data'
 include ':suggests'
 include ':app'
 include ':auth'
@@ -10,11 +12,14 @@ include ':network'
 include ':notifications'
 include ':permissions'
 include ':protos'
+include ':push'
 include ':recycler'
 include ':scanner'
 include ':statemachine'
 include ':status'
 include ':tags'
 include ':toast'
+
+project(':common-data').projectDir = new File("../shared/common-data")
 
 rootProject.name = "QMS"
