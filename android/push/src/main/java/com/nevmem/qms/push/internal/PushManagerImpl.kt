@@ -6,15 +6,21 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
+import com.google.firebase.messaging.FirebaseMessaging
 import com.nevmem.qms.common.NEW_PUSH_BROADCAST
 import com.nevmem.qms.common.NEW_PUSH_TOKEN_BROADCAST
+import com.nevmem.qms.common.utils.infiniteRetry
+import com.nevmem.qms.common.utils.runOnIO
+import com.nevmem.qms.data.NewPushTokenRequest
 import com.nevmem.qms.logger.Logger
+import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.push.PushManager
 import com.nevmem.qms.push.PushProcessor
 import com.nevmem.qms.push.broadcast.PushBroadcastReceiver
 
 internal class PushManagerImpl(
     lifecycleOwner: LifecycleOwner,
+    private val networkManager: NetworkManager,
     private val context: Context,
     private val logger: Logger
 ) : PushManager, LifecycleObserver {
@@ -25,7 +31,10 @@ internal class PushManagerImpl(
 
     init {
         lifecycleOwner.lifecycle.addObserver(this)
-        onResume()
+
+        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+            onNewToken(token)
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -61,5 +70,10 @@ internal class PushManagerImpl(
 
     private fun onNewToken(token: String) {
         logger.reportEvent("push-manager.new-token", mapOf("token" to token))
+        runOnIO {
+            infiniteRetry {
+                networkManager.registerNewPushToken(NewPushTokenRequest(token))
+            }
+        }
     }
 }

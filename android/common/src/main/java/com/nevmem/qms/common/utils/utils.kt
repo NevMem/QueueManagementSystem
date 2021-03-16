@@ -9,3 +9,9 @@ inline fun runOnUi(crossinline block: suspend () -> Unit) {
         block()
     }
 }
+
+inline fun runOnIO(crossinline block: suspend () -> Unit) {
+    GlobalScope.launch(Dispatchers.IO) {
+        block()
+    }
+}

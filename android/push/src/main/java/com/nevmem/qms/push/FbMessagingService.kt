@@ -1,19 +1,12 @@
 package com.nevmem.qms.push
 
 import android.content.Intent
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.nevmem.qms.common.NEW_PUSH_BROADCAST
 import com.nevmem.qms.common.NEW_PUSH_TOKEN_BROADCAST
 
 class FbMessagingService : FirebaseMessagingService() {
-
-    init {
-        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
-            gotToken(token)
-        }
-    }
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)

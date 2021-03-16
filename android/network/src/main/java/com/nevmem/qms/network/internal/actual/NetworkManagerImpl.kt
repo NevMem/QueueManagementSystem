@@ -42,7 +42,7 @@ internal class NetworkManagerImpl(
 
     private val pushRetrofit by lazy {
         createDefaultRetrofitBuilder()
-            .baseUrl("")
+            .baseUrl("http://84.201.128.37:8002")
             .build()
     }
 

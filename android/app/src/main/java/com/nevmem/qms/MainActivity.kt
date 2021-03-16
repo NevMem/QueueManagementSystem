@@ -10,6 +10,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.nevmem.qms.logger.Logger
+import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.permissions.*
 import com.nevmem.qms.push.PushProcessor
 import com.nevmem.qms.push.createPushManager
@@ -30,8 +31,10 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
     private val toastProvider: ToastProvider by inject()
     private val permissionsManager: PermissionsManager by inject()
     private val logger: Logger by inject()
+    private val networkManager: NetworkManager by inject()
 
-    private val pushManager = createPushManager(this, this, logger)
+    private val pushManager = createPushManager(
+        this, networkManager, this, logger)
 
     private val processors = listOf(
         inject<PushProcessor>(named("toast-push-processor"))
