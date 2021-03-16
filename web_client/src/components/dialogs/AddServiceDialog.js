@@ -54,8 +54,12 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
     }
 
     return (
-        <Dialog {...rest} open={open} onClose={onClose} aria-labelledby={"add-service-dialog-" + organization.id}>
-            <DialogTitle id={"add-service-dialog" + organization.id}>
+        <Dialog
+                {...rest}
+                open={open}
+                onClose={onClose}
+                aria-labelledby={"add-service-dialog-" + organization.id}>
+            <DialogTitle id={"add-service-dialog" + organization.id} style={{minWidth: '400px'}}>
                 {localizedString('add_new_service_dialog_title')}
             </DialogTitle>
             <DialogContent>
