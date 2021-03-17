@@ -32,6 +32,28 @@ const Dialog = withStyles({
     }
 })(MuiDialog)
 
+class Checklist {
+    constructor() {
+        this.list = []
+    }
+
+    getList() {
+        return this.list
+    }
+
+    addList(title) {
+        this.list.push(title)
+    }
+
+    removeList(title) {
+        const index = this.list.indexOf(title)
+        if (index < 0) {
+            return
+        }
+        this.list.splice(index, 1)
+    }
+}
+
 export default function AddServiceDialog({ organization, open, onClose, ...rest }) {
 
     const { value: serviceName, bind: bindServiceName } = useInput('')
@@ -70,6 +92,9 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
                     variant="outlined"
                     label={localizedString('add_new_service_dialog_label')}
                     {...bindServiceName} />
+
+
+
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleCancel} color="default">

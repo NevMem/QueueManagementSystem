@@ -1,8 +1,6 @@
 const dictionary = {
     'add_new_organization_dialog_name_label': 'Имя новой организации',
     'add_new_organization_dialog_title': 'Добавляем новую организацию',
-    'add_new_queue_dialog_label': 'Имя новой очереди',
-    'add_new_queue_dialog_title': 'Добавляем новую очередь',
     'add_new_service_dialog_label': 'Имя нового сервиса',
     'add_new_service_dialog_title': 'Добавляем новый сервис',
     'all_services': 'Сервисы:',
@@ -16,7 +14,6 @@ const dictionary = {
     'logout_button': 'Выйти',
     'logout': 'Выйти',
     'new_organization': 'Новая организация',
-    'new_queue': 'Новая очередь',
     'new_service': 'Новый сервис',
     'ok': 'Ок',
     'password_label': 'Пароль',

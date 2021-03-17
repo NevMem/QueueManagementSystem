@@ -1,12 +1,12 @@
 import { Fragment } from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import AddQueueRow from '../queue-row/AddQueueRow'
+import AddManagerRow from '../manager-row/AddManagerRow'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Grid from '@material-ui/core/Grid'
 import MuiAccordion from '@material-ui/core/Accordion'
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails'
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary'
-import QueueRow from '../queue-row/QueueRow'
+import ManagerRow from '../manager-row/ManagerRow'
 import Typography from '@material-ui/core/Typography'
 
 const Accordion = withStyles({
@@ -86,9 +86,9 @@ const ServiceRow = ({ serviceData }) => {
                 </AccordionSummary>
                 <AccordionDetails>
                     {serviceData.queues && serviceData.queues.map(queue => {                    
-                        return <QueueRow key={queue.id} queueData={queue} />
+                        return <ManagerRow key={queue.id} queueData={queue} />
                     })}
-                    <AddQueueRow service={serviceData} />
+                    <AddManagerRow service={serviceData} />
                 </AccordionDetails>
             </Accordion>
         </Fragment>
