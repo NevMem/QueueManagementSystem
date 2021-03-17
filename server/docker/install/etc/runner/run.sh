@@ -17,7 +17,7 @@ if [[ -n "$SSL_KEY" ]]; then
 fi
 
 for ((i = 0; i < 4; i++)) do
-    supervisorctl start "uvicorn-$HTTPS_SUBSTR:uvicorn-$i"
+    supervisorctl start "uvicorn$HTTPS_SUBSTR:uvicorn-$i"
 done
 
 wait $SUPERVISORD_PID || :
