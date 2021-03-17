@@ -2,7 +2,6 @@ package com.nevmem.qms.status.internal
 
 import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.QueueProto
-import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.notifications.Channel
 import com.nevmem.qms.notifications.Notification
 import com.nevmem.qms.notifications.NotificationsManager

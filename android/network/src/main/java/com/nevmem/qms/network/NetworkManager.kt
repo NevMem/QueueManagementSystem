@@ -2,7 +2,6 @@ package com.nevmem.qms.network
 
 import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.OrganizitionProto
-import com.nevmem.qms.QueueProto
 import com.nevmem.qms.data.NewPushTokenRequest
 import com.nevmem.qms.network.data.RegisterResponse
 
