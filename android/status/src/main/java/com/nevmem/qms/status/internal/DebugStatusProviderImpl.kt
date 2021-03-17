@@ -1,5 +1,6 @@
 package com.nevmem.qms.status.internal
 
+import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.QueueProto
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.notifications.Channel
@@ -45,9 +46,11 @@ internal class DebugStatusProviderImpl(
             emit(FetchStatus.Error("Not found"))
         } else {
             emit(FetchStatus.Success(
-                QueueProto.Queue.newBuilder()
-                    .setName("Hospital")
-                    .setDescription((1..5).joinToString { "hospital " })
+                OrganizitionProto.Organization.newBuilder()
+                    .setInfo(OrganizitionProto.OrganizationInfo.newBuilder()
+                        .setName("Some name")
+                        .setAddress("Some address")
+                        .build())
                     .build()
             ))
         }
