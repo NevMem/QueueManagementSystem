@@ -130,8 +130,13 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
 
     const handleCancel = () => { onClose() }
 
+    const checklist = new Checklist()
+
     const handleOk = () => {
-        orgAdapter.addService(organization.id, serviceName)
+        let data = {
+            checklistItems: checklist.getList().map(elem => elem.name).join(',')
+        }
+        orgAdapter.addService(organization.id, serviceName, data)
             .then(data => {
                 onClose()
             })
@@ -143,8 +148,6 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
                 }
             })
     }
-
-    const checklist = new Checklist()
 
     const [useChecklist, setUseChecklist] = useState(false)
     const enableChecklist = () => { setUseChecklist(true) }

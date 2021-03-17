@@ -22,9 +22,9 @@ export const createOrganization = (token, name, address) => {
         { headers: { session: token } }))
 }
 
-export const createService = (token, name, organizationId) => {
+export const createService = (token, name, organizationId, data) => {
     return authorizedRequestWrapper(axios.post(
         paths.createService,
-        { name: name, organisationId: organizationId },
+        { name: name, organisationId: organizationId, data: data },
         { headers: { session: token } }))
 }

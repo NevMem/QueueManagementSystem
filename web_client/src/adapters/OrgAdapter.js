@@ -47,9 +47,9 @@ class OrgAdapter {
             })
     }
 
-    addService(organizationId, name) {
-        return createService(authAdapter.token, name, organizationId)
-            .then(data => {
+    addService(organizationId, name, data) {
+        return createService(authAdapter.token, name, organizationId, data)
+            .then(() => {
                 this.loadOrganizations()
             })
     }
