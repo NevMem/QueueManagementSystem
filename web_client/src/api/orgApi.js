@@ -25,6 +25,6 @@ export const createOrganization = (token, name, address) => {
 export const createService = (token, name, organizationId, data) => {
     return authorizedRequestWrapper(axios.post(
         paths.createService,
-        { name: name, organisationId: organizationId, data: data },
+        { name: name, organizationId: organizationId, data: data },
         { headers: { session: token } }))
 }
