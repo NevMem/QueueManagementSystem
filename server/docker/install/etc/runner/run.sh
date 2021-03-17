@@ -9,6 +9,17 @@ while supervisorctl status | grep -q -v "RUNNING\|STOPPED\|STOPPING"; do
     sleep 5
 done
 
+if [[-n "$SSL_KEY" ]]; then
+    mkdir /etc/ssl/qms
+    echo $SSL_KEY > /etc/ssl/qms/key.pem
+    echo $SSL_CERT > /etc/ssl/cert.pem
+    HTTPS_SUBSTR="https"
+fi
+
+for ((i = 0; i < 4; i++)) do
+    supervisorctl start "uvicorn-$HTTPS_SUBSTR:uvicorn-$i"
+done
+
 wait $SUPERVISORD_PID || :
 supervisorctl shutdown
 wait $SUPERVISORD_PID || :
