@@ -86,6 +86,10 @@ const ChecklistBlock = observer(({ checklist }) => {
 
     return (
         <Fragment>
+            <Typography
+                style={{marginTop: '12px', marginBottom: '12px'}}>
+                    {localizedString('checklist_header')}
+            </Typography>
             { checklist.getList().map((elem) => {
                 return (
                     <Grid container key={elem.id} justify='space-between'>
@@ -142,6 +146,9 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
 
     const checklist = new Checklist()
 
+    const [useChecklist, setUseChecklist] = useState(false)
+    const enableChecklist = () => { setUseChecklist(true) }
+
     return (
         <Dialog
                 {...rest}
@@ -160,7 +167,15 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
                     label={localizedString('add_new_service_dialog_label')}
                     {...bindServiceName} />
 
-                <ChecklistBlock checklist={checklist} />
+                { useChecklist && <ChecklistBlock checklist={checklist} /> }
+                { !useChecklist &&
+                    <Grid container justify='space-between' style={{flexDirection: 'row', flexWrap: 'nowrap'}}>
+                        <Typography style={{marginTop: '12px'}}>{localizedString('about_checklist')}</Typography>
+                        <IconButton aria-label='add checklist' onClick={enableChecklist}>
+                            <AddIcon />
+                        </IconButton>
+                    </Grid>
+                }
 
             </DialogContent>
             <DialogActions>

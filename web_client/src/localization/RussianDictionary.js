@@ -1,4 +1,5 @@
 const dictionary = {
+    'about_checklist': 'Добавить чеклист для пользователей',
     'add_new_organization_dialog_name_label': 'Имя новой организации',
     'add_new_organization_dialog_title': 'Добавляем новую организацию',
     'add_new_service_dialog_label': 'Имя нового сервиса',
@@ -7,6 +8,7 @@ const dictionary = {
     'app_intro_text': 'QMS - сервис для организации электронных очередей',
     'app_name': 'QMS',
     'cancel': 'Отмена',
+    'checklist_header': 'Чеклист',
     'edit': 'Редактировать',
     'login_form_title': 'Войдите чтобы управлять своими очередями',
     'login_label': 'Логин',
