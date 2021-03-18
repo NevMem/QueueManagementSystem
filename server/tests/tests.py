@@ -36,17 +36,6 @@ def test_configure_organization(server):
     assert len(service.queues) == 0
     assert service.info.name == 'Service'
 
-    #create queue
-    server.create_queue(token, name='Queue', service_id=service.info.id)
-    resp = server.get_organizations(token)
-    assert len(resp.organizations) == 1
-    org = resp.organizations[0]
-    assert len(org.services) == 1
-    service = org.services[0]
-    assert len(service.queues) == 1
-    queue = service.queues[0]
-    assert queue.name == 'Queue'
-
     server.remove_service(token, service.info.id)
     resp = server.get_organizations(token)
     assert len(resp.organizations) == 1
