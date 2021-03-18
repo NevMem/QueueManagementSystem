@@ -14,6 +14,27 @@ from server.app.utils.db_utils import prepare_db
 from server.app.utils.web import route, prepare_app, Request, ProtobufResponse
 
 
+def organization_from_model(organization):
+    return organization_pb2.Organization(
+        info=organization_pb2.OrganizationInfo(
+            id=str(organization.id),
+            name=organization.name,
+            address=organization.address,
+            data=organization.data
+        ),
+        services=[
+            service_pb2.Service(
+                info=service_pb2.ServiceInfo(
+                    id=str(service.id),
+                    name=service.name,
+                    data=service.data
+                ),
+            )
+            for service in organization.services
+        ]
+    )
+
+
 @route('/check_auth', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
 @requires('authenticated')
 async def check_auth(request: Request):
@@ -131,7 +152,7 @@ async def get_organizations_list(request: Request):
         .where(model.User.id == request.user.id)
         .join(model.Permission, model.Permission.organization_id == model.Organization.id)
         .join(model.User, model.User.id == model.Permission.user_id)
-        .options(selectinload(model.Organization.services), selectinload(model.Organization.services, model.Service.queues))
+        .options(selectinload(model.Organization.services))
     )
 
     result = await request.connection.execute(query)
@@ -140,35 +161,27 @@ async def get_organizations_list(request: Request):
     result = []
     for organization in organizations:
         result.append(
-            organization_pb2.Organization(
-                info=organization_pb2.OrganizationInfo(
-                    id=str(organization.id),
-                    name=organization.name,
-                    address=organization.address,
-                    data=organization.data
-                ),
-                services=[
-                    service_pb2.Service(
-                        info=service_pb2.ServiceInfo(
-                            id=str(service.id),
-                            name=service.name,
-                            data=service.data
-                        ),
-                        queues=[
-                            queue_pb2.Queue(
-                                id=queue.id,
-                                name=queue.name,
-                                image_url=queue.image_url,
-                            )
-                            for queue in service.queues
-                        ]
-                    )
-                    for service in organization.services
-                ]
-            )
+            organization_from_model(organization)
         )
 
     return ProtobufResponse(organization_pb2.OrganizationList(organizations=result))
+
+
+@route('/client/fetch_organization', methods=['POST', 'GET'], request_type=organization_pb2.OrganizationInfo)
+async def fetch_organization(request: Request):
+    query = (
+        select(model.Organization)
+        .where(model.Organization.id == request.parsed.id)
+        .options(selectinload(model.Organization.services))
+    )
+
+    result = await request.connection.execute(query)
+    organization = result.scalars().first()
+
+    if organization is None:
+        raise HTTPException(404)
+
+    return ProtobufResponse(organization_from_model(organization))
 
 
 @route('/admin/create_service', methods=['POST'], request_type=service_pb2.ServiceInfo)
@@ -211,34 +224,14 @@ async def remove_service(request: Request):
     return ProtobufResponse(empty_pb2.Empty())
 
 
-@route('/admin/create_queue', methods=['POST'], request_type=queue_pb2.Queue)
-@requires('authenticated')
-async def create_queue(request: Request):
-    new_queue = model.Queue(
-        name=request.parsed.name,
-        image_url=request.parsed.image_url,
-        service_id=request.parsed.service_id,
-    )
-
-    new_permission = model.Permission(
-        user_id=request.user.id,
-        permission_type='Owner',
-    )
-
-    new_queue.admins.append(new_permission)
-    request.connection.add(new_queue)
-
-    return ProtobufResponse(empty_pb2.Empty())
-
-
 @route('/client/enter_queue', methods=['POST'], request_type=queue_pb2.Queue)
 @requires('authenticated')
 async def enter_queue(request: Request):
     query = (
-        select(model.QueueItem)
-        .where(model.Queue.id == request.parsed.id)
-        .join(model.Queue, model.Queue.id == model.QueueItem.queue_id)
-        .order_by(model.QueueItem.enqueue_at.desc())
+        select(model.Ticket)
+        .where(model.Service.id == request.parsed.id)
+        .join(model.Service, model.Service.id == model.Ticket.service_id)
+        .order_by(model.Ticket.enqueue_at.desc())
         .limit(1)
     )
 
@@ -251,20 +244,19 @@ async def enter_queue(request: Request):
         last_ticket_id = last_queue_item.ticket_id
 
     query = (
-        select(model.QueueItem)
-        .where(model.QueueItem.user_id == request.user.id)
-        .order_by(model.QueueItem.enqueue_at.desc())
+        select(model.Ticket)
+        .where(model.Ticket.user_id == request.user.id)
+        .order_by(model.Ticket.enqueue_at.desc())
         .limit(1)
     )
 
-    result = await request.connection.execute(query)
-    has_entered_queue = not result.scalars().first().processed
-    if has_entered_queue:
+    last_ticket = (await request.connection.execute(query)).scalars().first()
+    if last_ticket and not last_ticket.processed:
         raise HTTPException(409)
 
-    new_queue_item = model.QueueItem(
+    new_queue_item = model.Ticket(
         user_id=request.user.id,
-        queue_id=request.parsed.id,
+        service_id=request.parsed.id,
         ticket_id=generate_next_ticket(last_ticket_id),
     )
 

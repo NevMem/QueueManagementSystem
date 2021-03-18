@@ -18,28 +18,13 @@ class UserAttachments(BaseModel):
     url = sqlalchemy.Column(types.Text)
 
 
-class Queue(BaseModel):
-    __tablename__ = 'Queues'
-
-    id = sqlalchemy.Column(types.String, primary_key=True, default=fixed_uuid)
-    name = sqlalchemy.Column(types.Text)
-
-    service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Services.id', ondelete="CASCADE"))
-
-    image_url = sqlalchemy.Column(types.Text)
-    description = sqlalchemy.Column(types.Text)
-    admins = relationship('Permission', cascade='all, delete-orphan')
-    # todo: other fields
-
-
 class Service(BaseModel):
     __tablename__ = 'Services'
 
     id = sqlalchemy.Column(UUID(), primary_key=True, default=uuid.uuid4)
     name = sqlalchemy.Column(types.Text, nullable=False)
-    organization_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Organizations.id'))
+    organization_id = sqlalchemy.Column(types.String, sqlalchemy.ForeignKey('Organizations.id'))
 
-    queues = relationship(Queue, cascade='all, delete-orphan')
     admins = relationship('Permission', cascade='all, delete-orphan')
 
     data = sqlalchemy.Column(postgresql.JSONB, default={})
@@ -48,7 +33,7 @@ class Service(BaseModel):
 class Organization(BaseModel):
     __tablename__ = 'Organizations'
 
-    id = sqlalchemy.Column(UUID(), primary_key=True, default=uuid.uuid4)
+    id = sqlalchemy.Column(types.String, primary_key=True, default=fixed_uuid)
     services = relationship(Service, cascade='all, delete-orphan')
 
     name = sqlalchemy.Column(types.Text, nullable=False)
@@ -64,9 +49,8 @@ class Permission(BaseModel):
     id = sqlalchemy.Column(UUID(), primary_key=True, default=uuid.uuid4)
 
     user_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Users.id'), index=True)
-    organization_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey(Organization.id, ondelete="CASCADE"))
-    service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey(Service.id, ondelete="CASCADE"))
-    queue_id = sqlalchemy.Column(types.String, sqlalchemy.ForeignKey('Queues.id', ondelete="CASCADE"))
+    organization_id = sqlalchemy.Column(types.String, sqlalchemy.ForeignKey(Organization.id))
+    service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey(Service.id))
 
     permission_type = sqlalchemy.Column(types.Text)
 
@@ -77,13 +61,13 @@ class Permission(BaseModel):
         return super().__getattribute__(item)
 
 
-class QueueItem(BaseModel):
-    __tablename__ = 'QueueItems'
+class Ticket(BaseModel):
+    __tablename__ = 'Tickets'
 
     id = sqlalchemy.Column(UUID(), primary_key=True, default=uuid.uuid4)
 
     user_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Users.id'), index=True)
-    queue_id = sqlalchemy.Column(types.String, sqlalchemy.ForeignKey('Queues.id'), index=True)
+    service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Services.id'), index=True)
 
     ticket_id = sqlalchemy.Column(types.Text, nullable=False)
     enqueue_at = sqlalchemy.Column(types.DateTime, server_default=func.now())
@@ -103,4 +87,4 @@ class User(BaseModel):
 
     permissions = relationship(Permission, backref='user')
     attachments = relationship(UserAttachments)
-    current_queue = relationship(QueueItem, uselist=False)
+    current_queue = relationship(Ticket, uselist=False)
