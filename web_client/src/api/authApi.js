@@ -1,6 +1,6 @@
 import { defaultRequestWrapper, authorizedRequestWrapper } from './wrappers'
 import axios from 'axios'
-import { withBackendUrl } from './utils'
+import { withBackendUrl, infiniteRetry } from './utils'
 
 const paths = withBackendUrl({
     checkAuth: '/check_auth',
@@ -30,10 +30,13 @@ export const processLogin = (login, password) => {
 }
 
 export const loadUser = (token) => {
-    return defaultRequestWrapper(axios.post(
-        paths.getUser,
-        undefined,
-        { headers: { session: token } }))
+    const factory = () => {
+        return defaultRequestWrapper(axios.post(
+            paths.getUser,
+            undefined,
+            { headers: { session: token } }))
+    }
+    return infiniteRetry(factory)
 }
 
 export const checkAuth = (token) => {
