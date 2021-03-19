@@ -25,7 +25,7 @@ class OrgAdapter {
     }
 
     loadOrganizations() {
-        if (authAdapter.token && !this.isLoading) {
+        if (authAdapter.user && authAdapter.user.token && !this.isLoading) {
             this.isLoading = true
             loadOrganizationList(authAdapter.token)
                 .then((data) => {
