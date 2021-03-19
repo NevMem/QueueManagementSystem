@@ -30,7 +30,7 @@ class OrgAdapter {
             loadOrganizationList(authAdapter.token)
                 .then((data) => {
                     if (data.status === 200) {
-                        this.setOrganizations(parseOrganizations(data.data))
+                        this.setOrganizations(parseOrganizations(data.data).reverse())
                     }
                     this.isLoading = false
                 })
@@ -47,9 +47,9 @@ class OrgAdapter {
             })
     }
 
-    addService(organizationId, name) {
-        return createService(authAdapter.token, name, organizationId)
-            .then(data => {
+    addService(organizationId, name, data) {
+        return createService(authAdapter.token, name, organizationId, data)
+            .then(() => {
                 this.loadOrganizations()
             })
     }

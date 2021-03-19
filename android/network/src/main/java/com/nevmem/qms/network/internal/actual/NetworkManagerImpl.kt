@@ -1,7 +1,7 @@
 package com.nevmem.qms.network.internal.actual
 
 import com.nevmem.qms.ClientApiProto
-import com.nevmem.qms.QueueProto
+import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.data.NewPushTokenRequest
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.network.NetworkManager
@@ -56,7 +56,7 @@ internal class NetworkManagerImpl(
     private val featuresService by lazy { featuresRetrofit.create(FeaturesService::class.java) }
     private val pushService by lazy { pushRetrofit.create(PushRegistrationService::class.java) }
 
-    override suspend fun fetchDataForInvite(invite: String): QueueProto.Queue {
+    override suspend fun fetchDataForInvite(invite: String): OrganizitionProto.Organization {
         TODO("Not yet implemented")
     }
 

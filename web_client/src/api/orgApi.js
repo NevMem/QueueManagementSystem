@@ -3,9 +3,9 @@ import { withBackendUrl } from './utils'
 import axios from 'axios'
 
 const paths = withBackendUrl({
-    createOrganization: '/admin/create_organisation',
+    createOrganization: '/admin/create_organization',
     createService: '/admin/create_service',
-    organizationsList: '/admin/get_organisations_list',
+    organizationsList: '/admin/get_organizations_list',
 })
 
 export const loadOrganizationList = (token) => {
@@ -22,9 +22,9 @@ export const createOrganization = (token, name, address) => {
         { headers: { session: token } }))
 }
 
-export const createService = (token, name, organizationId) => {
+export const createService = (token, name, organizationId, data) => {
     return authorizedRequestWrapper(axios.post(
         paths.createService,
-        { name: name, organisationId: organizationId },
+        { name: name, organizationId: organizationId, data: data },
         { headers: { session: token } }))
 }

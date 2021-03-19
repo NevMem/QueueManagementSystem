@@ -30,19 +30,20 @@ const parseOrganization = (json) => {
     const organization = {
         id: json.info.id,
         name: json.info.name,
+        address: json.info.address,
         services: parseServices(json.services)
     }
     return organization
 }
 
 const parseOrganizations = (json) => {
-    if (!json.organisations) {
+    if (!json.organizations) {
         return []
     }
 
     const organizations = []
 
-    for (const orgItem of json.organisations) {
+    for (const orgItem of json.organizations) {
         const parsed = parseOrganization(orgItem)
         if (parsed) {
             organizations.push(parsed)

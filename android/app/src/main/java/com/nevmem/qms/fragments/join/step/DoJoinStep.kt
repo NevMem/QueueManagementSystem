@@ -34,23 +34,23 @@ class DoJoinStep : JoinStep {
 
                 usecase.fetchStatus?.let { status ->
                     if (status is FetchStatus.Success) {
-                        status.payload.imageUrl?.let { url ->
+                        /* status.payload.imageUrl?.let { url ->
                             Glide.with(this)
                                 .load(url)
                                 .placeholder(R.drawable.join_placeholder)
                                 .into(image)
                         }
 
-                        image.isVisible = status.payload.imageUrl != null
+                        image.isVisible = status.payload.imageUrl != null */
 
-                        inviteDescription.text = status.payload.description
-                        inviteName.text = status.payload.name
+                        inviteDescription.text = status.payload.info.name
+                        inviteName.text = status.payload.info.address
 
                         joinButton.isEnabled = true
                         joinButton.setOnClickListener {
                             joinButton.isEnabled = false
                             runOnUi {
-                                statusProvider.join(status.payload).collect {
+                                /* statusProvider.join(status.payload).collect {
                                     when (it) {
                                         is JoinStatus.Pending -> {}
                                         is JoinStatus.Success -> {
@@ -62,7 +62,7 @@ class DoJoinStep : JoinStep {
                                             showToastManager.error(it.message)
                                         }
                                     }
-                                }
+                                } */
                             }
                         }
                     }

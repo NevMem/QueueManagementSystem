@@ -1,7 +1,7 @@
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 
-const QueueRow = ({ queueData }) => {
+const ManagerRow = ({ queueData }) => {
     const { name, waiting, avgServiceTime } = queueData
     return (
         <Grid container style={{paddingLeft: '16px', marginTop: '16px'}}>
@@ -24,4 +24,4 @@ const QueueRow = ({ queueData }) => {
     )
 }
 
-export default QueueRow
+export default ManagerRow

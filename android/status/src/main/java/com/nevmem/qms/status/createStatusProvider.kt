@@ -5,9 +5,7 @@ import com.nevmem.qms.notifications.NotificationsManager
 import com.nevmem.qms.status.internal.DebugStatusProviderImpl
 import com.nevmem.qms.status.internal.NetworkStatusProvider
 
-
 fun createDebugStatusProvider(
-    networkManager: NetworkManager,
     notificationsManager: NotificationsManager
 ): StatusProvider = DebugStatusProviderImpl(notificationsManager)
 

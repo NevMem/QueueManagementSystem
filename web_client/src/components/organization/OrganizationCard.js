@@ -8,7 +8,7 @@ import ServiceRow from '../service-row/ServiceRow'
 import Typography from '@material-ui/core/Typography'
 
 export default function OrganizationCard({organizationData, ...props}) {
-    const { name, services } = organizationData
+    const { name, address, services } = organizationData
 
     const [open, setOpen] = useState(false)
 
@@ -23,7 +23,7 @@ export default function OrganizationCard({organizationData, ...props}) {
     return (
         <div className = 'organizationCard' {...props}>
             <Grid container justify='space-between'>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                     <Typography style={{color: '#c0c0c0', fontSize: '30px'}} variant='body2'>
                         {name}
                     </Typography>
@@ -35,6 +35,11 @@ export default function OrganizationCard({organizationData, ...props}) {
                         text={localizedString('new_service')} />
                     <AddServiceDialog open={open} onClose={handleClose} organization={organizationData} />
                 </Grid>
+            </Grid>
+            <Grid conttainer>
+                <Typography style={{color: '#a0a0a0', fontSize: '20px'}} variant='body2'>
+                    {address}
+                </Typography>
             </Grid>
             <Grid container style={{marginTop: '20px', marginBottom: '20px'}}>
                 <Grid item>
