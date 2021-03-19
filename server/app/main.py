@@ -58,7 +58,7 @@ async def get_user(request: Request):
             permissions_pb2.Permission(
                 id=str(permission.id),
                 organization_id=str(permission.organization_id) if permission.organization_id else None,
-                queue_id=str(permission.queue_id) if permission.queue_id else None,
+                service_id=str(permission.service_id) if permission.service_id else None,
                 permission_type=permission.permission_type,
             )
             for permission in request.user.permissions

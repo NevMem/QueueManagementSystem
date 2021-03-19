@@ -10,7 +10,7 @@ message Permission {
     string id = 1;
     string user_id = 2;
     string organization_id = 3;
-    string queue_id = 4;
+    string service_id = 4;
     string permission_type = 5;
 }
 

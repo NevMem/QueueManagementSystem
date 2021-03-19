@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\020PermissionsProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x17proto/permissions.proto\x12\x03qms\"m\n\nPermission\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x17\n\x0forganization_id\x18\x03 \x01(\t\x12\x10\n\x08queue_id\x18\x04 \x01(\t\x12\x17\n\x0fpermission_type\x18\x05 \x01(\tB\"\n\x0e\x63om.nevmem.qmsB\x10PermissionsProtob\x06proto3'
+  serialized_pb=b'\n\x17proto/permissions.proto\x12\x03qms\"o\n\nPermission\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x17\n\x0forganization_id\x18\x03 \x01(\t\x12\x12\n\nservice_id\x18\x04 \x01(\t\x12\x17\n\x0fpermission_type\x18\x05 \x01(\tB\"\n\x0e\x63om.nevmem.qmsB\x10PermissionsProtob\x06proto3'
 )
 
 
@@ -55,7 +55,7 @@ _PERMISSION = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='queue_id', full_name='qms.Permission.queue_id', index=3,
+      name='service_id', full_name='qms.Permission.service_id', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -81,7 +81,7 @@ _PERMISSION = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=32,
-  serialized_end=141,
+  serialized_end=143,
 )
 
 DESCRIPTOR.message_types_by_name['Permission'] = _PERMISSION
