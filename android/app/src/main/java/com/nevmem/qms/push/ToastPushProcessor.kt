@@ -7,7 +7,12 @@ class ToastPushProcessor(
 ): PushProcessor {
     override fun onPushData(data: Map<String, String>) {
         if (data.containsKey("message")) {
-            showToastManager.default(data.getValue("message"))
+            val message = data.getValue("message")
+            when (data["type"]) {
+                "error" -> showToastManager.error(message)
+                "success" -> showToastManager.success(message)
+                else -> showToastManager.default(data.getValue("message"))
+            }
         }
     }
 }
