@@ -13,8 +13,9 @@ def run_scenarios():
 
         try:
             func()
+            reporter.report_success(name)
         except ExceptionWithBody as err:
-            reporter.report(name, err)
+            reporter.report_fail(name, err)
         except:
             assert(False)
 
