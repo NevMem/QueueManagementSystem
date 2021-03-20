@@ -35,3 +35,10 @@ class Client:
             self.base_url + 'admin/get_organizations_list',
             headers={'session': token})
         return res.status_code, res.text, res.json()
+
+    def create_service(self, token, org_id, name):
+        res = requests.post(
+            self.base_url + 'admin/create_service',
+            json={'name': name, 'organizationId': org_id},
+            headers={'session': token})
+        return res.status_code, res.text
