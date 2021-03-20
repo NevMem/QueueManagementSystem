@@ -35,6 +35,10 @@ def create_message():
         for fail in data['fails']:
             text += fail + '\n'
 
+        text += "\nСработавшие сценарии:\n"
+        for success in data['success']:
+            text += success + '\n'
+
         return text
 
 
