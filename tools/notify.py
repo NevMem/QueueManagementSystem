@@ -49,5 +49,5 @@ if __name__ == '__main__':
 
     if message is not None:
         for chat_id in args.chat_ids.split(','):
-            pass #send_message(args.token, chat_id, message)
+            send_message(args.token, chat_id, message)
 

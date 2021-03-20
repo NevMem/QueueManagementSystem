@@ -22,3 +22,16 @@ class Client:
             self.base_url + 'client/get_user',
             headers={'session': token})
         return res.status_code, res.text, res.json()
+
+    def create_organization(self, token, org_name):
+        res = requests.post(
+            self.base_url + 'admin/create_organization',
+            json={'name': org_name},
+            headers={'session': token})
+        return res.status_code, res.text
+
+    def load_organizations(self, token):
+        res = requests.post(
+            self.base_url + 'admin/get_organizations_list',
+            headers={'session': token})
+        return res.status_code, res.text, res.json()
