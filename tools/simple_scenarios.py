@@ -33,10 +33,7 @@ def check_default(resp):
 @scenario('Register')
 def just_login():
     client = Client()
-    login = random_string()
-    password = random_string()
-    name = random_string()
-    surname = random_string()
+    login, password, name, surname = create_user_data()
 
     code, body = client.register(login, password, name, surname)
     sc_assert(code == 200, body, code)
@@ -45,10 +42,7 @@ def just_login():
 @scenario('Reg -> Login')
 def reg_log():
     client = Client()
-    login = random_string()
-    password = random_string()
-    name = random_string()
-    surname = random_string()
+    login, password, name, surname = create_user_data()
 
     code, body = client.register(login, password, name, surname)
     sc_assert(code == 200, body, code)
@@ -59,10 +53,7 @@ def reg_log():
 @scenario('Reg -> Login -> GetUser')
 def reg_log_get_user():
     client = Client()
-    login = random_string()
-    password = random_string()
-    name = random_string()
-    surname = random_string()
+    login, password, name, surname = create_user_data()
 
     code, body = client.register(login, password, name, surname)
     sc_assert(code == 200, body, code)
