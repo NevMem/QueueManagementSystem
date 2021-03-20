@@ -1,7 +1,9 @@
 import argparse
 import json
+import os
 import requests
 import textwrap
+from pathlib import Path
 
 
 def send_message(bot_token, chat_id, message):
@@ -11,6 +13,14 @@ def send_message(bot_token, chat_id, message):
 
 
 def create_message():
+    if not Path('run_results.json').exists():
+        return textwrap.dedent("""
+            Это автоматическое сообщение из автотестов
+            В последнем запуске произошли какие-то ошибки
+            Скорее всего сработал какой-то ассерт, а автотестах
+            так как не удалось получить файл с результатами
+            Проверьте сборку на ТС
+        """)
     with open('run_results.json', 'r') as inp:
         data = json.loads(inp.read())
         if len(data['fails']) == 0:
@@ -18,7 +28,7 @@ def create_message():
 
         text = textwrap.dedent("""
             Это автоматическое сообщение из автотестов
-            В последнем заупске произошли какие-то ошибки
+            В последнем запуске произошли какие-то ошибки
 
             Упавшие сценарии:
         """)
