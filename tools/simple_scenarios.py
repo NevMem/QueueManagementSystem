@@ -90,7 +90,7 @@ def reg_log_create_get():
 
     code, body, data = client.load_organizations(token)
     sc_assert(code == 200, body, code)
-    sc_assert(len(data['organizations']) == 2, body, code)
+    sc_assert(len(data['organizations']) == 1, body, code)
     sc_assert(data['organizations'][0]['info']['name'] == org_name, body, code)
 
 @scenario('Reg -> Login -> Create org -> Add service -> Get orgs')
