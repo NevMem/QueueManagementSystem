@@ -12,10 +12,10 @@ def send_message(bot_token, chat_id, message):
     assert(response.status_code == 200)
 
 
-def create_message():
+def create_message(notify_success):
     if not Path('run_results.json').exists():
         return textwrap.dedent("""
-            Это автоматическое сообщение из автотестов
+            ‼️‼️‼️ Это автоматическое сообщение из автотестов
             В последнем запуске произошли какие-то ошибки
             Скорее всего сработал какой-то ассерт, а автотестах
             так как не удалось получить файл с результатами
@@ -24,10 +24,14 @@ def create_message():
     with open('run_results.json', 'r') as inp:
         data = json.loads(inp.read())
         if len(data['fails']) == 0:
+            if notify_success:
+                return textwrap.dedent("""
+                    ✅ Все сценарии отработали успешно!
+                """)
             return None
 
         text = textwrap.dedent("""
-            Это автоматическое сообщение из автотестов
+            ‼️‼️‼️ Это автоматическое сообщение из автотестов
             В последнем запуске произошли какие-то ошибки
 
             Упавшие сценарии:
@@ -46,9 +50,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--token', help='Bot token')
     parser.add_argument('--chat_ids', help='Chat ids')
+    parser.add_argument('--notify_success', help='Should we notify about fully successfull run', default=False, type=bool)
     args = parser.parse_args()
 
-    message = create_message()
+    message = create_message(args.notify_success)
     print(message)
 
     if message is not None:
