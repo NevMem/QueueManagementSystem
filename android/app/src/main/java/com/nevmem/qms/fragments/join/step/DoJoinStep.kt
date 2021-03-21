@@ -13,16 +13,16 @@ import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.R
 import com.nevmem.qms.fragments.join.JoinStep
 import com.nevmem.qms.fragments.join.JoinUsecase
+import com.nevmem.qms.fragments.join.step.gallery.GalleryItem
+import com.nevmem.qms.fragments.join.step.gallery.GalleryItemFactory
+import com.nevmem.qms.fragments.join.step.services.ServiceItem
+import com.nevmem.qms.fragments.join.step.services.ServiceItemFactory
 import com.nevmem.qms.inflate
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
-import com.nevmem.qms.recycler.RVHolder
-import com.nevmem.qms.recycler.RVItem
-import com.nevmem.qms.recycler.RVItemFactory
 import com.nevmem.qms.status.FetchStatus
 import com.nevmem.qms.status.StatusProvider
 import com.nevmem.qms.toast.manager.ShowToastManager
 import kotlinx.android.synthetic.main.fragment_step_do_join.*
-import kotlinx.android.synthetic.main.layout_gallery_item.view.*
 import kotlinx.android.synthetic.main.layout_media_link.view.*
 import org.koin.android.ext.android.inject
 
@@ -79,6 +79,10 @@ class DoJoinStep : JoinStep {
                 ).forEach {
                     it(org.info.dataMap)
                 }
+
+                services.adapter = BaseRecyclerAdapter(
+                    org.servicesList.map { ServiceItem(it) },
+                    ServiceItemFactory(requireContext()))
             }
 
             private fun updateMediaLinks(data: Map<String, String>) {
@@ -124,28 +128,11 @@ class DoJoinStep : JoinStep {
                         images += image
                     }
                 }
+                gallery.isVisible = images.isNotEmpty()
                 gallery.adapter = BaseRecyclerAdapter(
                     images.map { GalleryItem(it) },
                     GalleryItemFactory(requireContext()),
                     useAnimation = true)
-            }
-
-            data class GalleryItem(val imageUrl: String) : RVItem()
-
-            class GalleryItemFactory(private val context: Context) : RVItemFactory {
-                inner class GalleryImage(view: View): RVHolder(view) {
-                    override fun onBind(item: RVItem) {
-                        item as GalleryItem
-                        Glide.with(context)
-                            .load(item.imageUrl)
-                            .placeholder(R.drawable.image_placeholder)
-                            .into(itemView.image)
-                    }
-                }
-
-                override fun isAppropriateType(item: RVItem): Boolean = item is GalleryItem
-                override fun createHolder(root: ViewGroup): RVHolder
-                    = GalleryImage(context.inflate(R.layout.layout_gallery_item, root))
             }
         }
     }
