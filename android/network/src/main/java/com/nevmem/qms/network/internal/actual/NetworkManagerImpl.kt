@@ -166,12 +166,12 @@ internal class NetworkManagerImpl(
     }
 
     override suspend fun registerNewPushToken(request: NewPushTokenRequest) = suspendCoroutine<Unit> { continuation ->
-        pushService.registerNewPushToken(request).enqueue(object : Callback<Any> {
-            override fun onFailure(call: Call<Any>, t: Throwable) {
+        pushService.registerNewPushToken(request).enqueue(object : Callback<Unit> {
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
                 continuation.resumeWith(Result.failure(t))
             }
 
-            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                 if (response.isSuccessful && response.code() == 200) {
                     continuation.resumeWith(Result.success(Unit))
                 } else {
