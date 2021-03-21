@@ -41,15 +41,6 @@ class DoJoinStep : JoinStep {
 
                 usecase.fetchStatus?.let { status ->
                     if (status is FetchStatus.Success) {
-                        /* status.payload.imageUrl?.let { url ->
-                            Glide.with(this)
-                                .load(url)
-                                .placeholder(R.drawable.join_placeholder)
-                                .into(image)
-                        }
-
-                        image.isVisible = status.payload.imageUrl != null */
-
                         updateUi(status.payload)
 
                         /* joinButton.isEnabled = true
@@ -92,7 +83,8 @@ class DoJoinStep : JoinStep {
 
             private fun updateMediaLinks(data: Map<String, String>) {
                 val mediaLinks = data["media_links"]?.split(",") ?: listOf()
-                val actualLinks = mediaLinks.mapNotNull {
+                socialIcons.removeAllViews()
+                mediaLinks.mapNotNull {
                     val link = data["link_$it"]
                     if (link != null)
                         it to link
@@ -105,9 +97,7 @@ class DoJoinStep : JoinStep {
                         else -> R.drawable.icon_social_media
                     }
                     iconRes to it.second
-                }
-                socialIcons.removeAllViews()
-                actualLinks.forEach { row ->
+                }.forEach { row ->
                     val view = requireContext().inflate(R.layout.layout_media_link, socialIcons)
                     view.socialButton.setImageResource(row.first)
                     view.socialButton.setOnClickListener {
