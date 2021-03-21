@@ -70,7 +70,6 @@ class DoJoinStep : JoinStep {
                 inviteName.text = org.info.name
                 inviteAddress.text = org.info.address
                 inviteDescription.isVisible = false
-                joinButton.isEnabled = true
 
                 listOf(
                     ::updateDescription,

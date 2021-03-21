@@ -10,12 +10,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipChildren="false"
         android:padding="@dimen/indent_double">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clipChildren="false"
             app:cardElevation="2dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,6 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_margin="@dimen/indent_double"
                 android:orientation="vertical"
+                android:clipChildren="false"
                 android:gravity="center">
 
                 <com.google.android.material.textview.MaterialTextView
@@ -65,27 +68,18 @@
                     android:gravity="center"
                     tools:text="Some long long long long long description" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/services"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-
                 <LinearLayout
                     android:id="@+id/socialIcons"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/joinButton"
-                    android:layout_width="wrap_content"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/services"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/indent"
-                    android:fontFamily="@font/medium"
-                    android:text="@string/join_string"
-                    android:enabled="false" />
+                    android:clipChildren="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
