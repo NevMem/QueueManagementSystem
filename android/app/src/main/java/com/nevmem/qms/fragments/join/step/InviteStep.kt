@@ -91,7 +91,7 @@ class InviteStep : JoinStep {
                     GlobalScope.launch(Dispatchers.Main) {
                         val invite = inviteField.text?.toString() ?: ""
                         YandexMetrica.reportEvent("fetching_info_by_invite", mapOf("invite" to invite))
-                        statusProvider.fetchDataForInvite(invite.toLowerCase())
+                        statusProvider.fetchDataForInvite(invite)
                             .collect {
                                 if (it is FetchStatus.Error) {
                                     showToastManager.showToast(it.message, Type.Error)

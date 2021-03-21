@@ -2,11 +2,14 @@ package com.nevmem.qms.network.internal.actual
 
 import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.OrganizitionProto
+import com.nevmem.qms.ServiceProto
 import com.nevmem.qms.data.NewPushTokenRequest
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.data.RegisterResponse
 import com.nevmem.qms.network.internal.actual.services.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -56,8 +59,33 @@ internal class NetworkManagerImpl(
     private val featuresService by lazy { featuresRetrofit.create(FeaturesService::class.java) }
     private val pushService by lazy { pushRetrofit.create(PushRegistrationService::class.java) }
 
-    override suspend fun fetchDataForInvite(invite: String): OrganizitionProto.Organization {
-        TODO("Not yet implemented")
+    override suspend fun fetchDataForInvite(token: String, invite: String): OrganizitionProto.Organization = suspendCoroutine { continuation ->
+        suspend fun wrap() = suspendCoroutine<Organization> { wrapRequest(service.getOrganization(token, OrganizationInfo(invite)), it) }
+        GlobalScope.launch {
+            try {
+                val response = wrap()
+                val organization = OrganizitionProto.Organization.newBuilder()
+                    .setInfo(OrganizitionProto.OrganizationInfo.newBuilder()
+                        .setName(response.info?.name ?: "")
+                        .setAddress(response.info?.address ?: "")
+                        .build())
+                    .addAllServices(response.services.map {
+                        val service = ServiceProto.Service.newBuilder()
+                            .setInfo(ServiceProto.ServiceInfo.newBuilder()
+                                .setId(it.info.id)
+                                .setOrganizationId(it.info.organizationId)
+                                .setName(it.info.name)
+                                .putAllData(it.info.data)
+                                .build())
+                            .build()
+                        service
+                    })
+                    .build()
+                continuation.resumeWith(Result.success(organization))
+            } catch (t: Throwable) {
+                continuation.resumeWith(Result.failure(t))
+            }
+        }
     }
 
     override suspend fun loadFeatures(): Map<String, String> = suspendCoroutine { continuation ->
