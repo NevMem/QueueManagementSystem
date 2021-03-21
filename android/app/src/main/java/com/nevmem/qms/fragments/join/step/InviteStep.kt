@@ -67,6 +67,7 @@ class InviteStep : JoinStep {
                             it.permissionsManager = permissionsManager
                             it.onFound = { inviteCode ->
                                 inviteField.setText(inviteCode)
+                                joinButton.callOnClick()
                                 it.dismiss()
                             }
                             it.show(fm, "scanner")
