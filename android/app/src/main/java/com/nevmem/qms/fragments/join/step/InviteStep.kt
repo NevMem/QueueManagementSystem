@@ -66,7 +66,7 @@ class InviteStep : JoinStep {
                         QRScannerFragment.newInstance().let {
                             it.permissionsManager = permissionsManager
                             it.onFound = { inviteCode ->
-                                inviteField.setText(inviteCode.toUpperCase())
+                                inviteField.setText(inviteCode)
                                 it.dismiss()
                             }
                             it.show(fm, "scanner")
