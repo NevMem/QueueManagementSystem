@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     app:cardCornerRadius="@dimen/indent_double"
-    android:layout_margin="@dimen/indent"
     app:cardElevation="12dp"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:layout_margin="@dimen/indent"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    android:padding="@dimen/indent_double">
+    android:layout_width="match_parent">
+
+    <com.nevmem.qms.rating.ui.RatingView
+        android:id="@+id/ratingView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="-12dp"
+        android:layout_marginRight="-5dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -42,4 +51,4 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</com.google.android.material.card.MaterialCardView>
+</FrameLayout>
