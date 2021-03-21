@@ -35,12 +35,22 @@
                     android:fontFamily="@font/light"
                     tools:text="Some name" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/image"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/gallery"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/inviteAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/descriptionTextSize"
                     android:layout_marginTop="@dimen/indent"
-                    tools:src="@drawable/ic_launcher_background" />
+                    android:fontFamily="@font/light"
+                    android:gravity="center"
+                    tools:text="Address" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/inviteDescription"
@@ -51,6 +61,12 @@
                     android:fontFamily="@font/light"
                     android:gravity="center"
                     tools:text="Some long long long long long description" />
+
+                <LinearLayout
+                    android:id="@+id/socialIcons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/joinButton"

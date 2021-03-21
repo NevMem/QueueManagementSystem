@@ -68,6 +68,7 @@ internal class NetworkManagerImpl(
                     .setInfo(OrganizitionProto.OrganizationInfo.newBuilder()
                         .setName(response.info?.name ?: "")
                         .setAddress(response.info?.address ?: "")
+                        .putAllData(response.info?.data ?: mapOf())
                         .build())
                     .addAllServices(response.services.map {
                         val service = ServiceProto.Service.newBuilder()

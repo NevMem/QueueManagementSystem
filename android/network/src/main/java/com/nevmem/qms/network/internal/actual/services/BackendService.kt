@@ -9,8 +9,10 @@ import retrofit2.http.POST
 data class UserIdentity(val email: String?, val password: String?)
 data class RegisterRequest(val name: String?, val surname: String?, val identity: UserIdentity?)
 data class User(val id: String?, val name: String?, val surname: String?, val email: String?)
-data class OrganizationInfo(var id: String = "", var name: String = "", var address: String = "")
-data class ServiceInfo(var id: String = "", var name: String = "", var organizationId: String = "", var data: Map<String, String> = mapOf())
+data class OrganizationInfo(
+    var id: String = "", var name: String = "", var address: String = "", var data: Map<String, String> = mapOf())
+data class ServiceInfo(
+    var id: String = "", var name: String = "", var organizationId: String = "", var data: Map<String, String> = mapOf())
 data class Service(var info: ServiceInfo)
 data class Organization(var info: OrganizationInfo? = null, var services: List<Service> = listOf())
 
