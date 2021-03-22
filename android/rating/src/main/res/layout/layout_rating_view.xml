@@ -16,7 +16,7 @@
         android:id="@+id/ratingText"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:fontFamily="@font/light"
+        android:fontFamily="@font/medium"
         android:layout_marginStart="@dimen/indent"
         android:textSize="12sp"
         tools:text="4.9" />

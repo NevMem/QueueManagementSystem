@@ -17,6 +17,7 @@ class ServiceItemFactory(
         override fun onBind(item: RVItem) {
             item as ServiceItem
             itemView.serviceName.text = item.service.info.name
+            itemView.ratingView.setRatingId("service_${item.service.info.id}")
         }
     }
 
