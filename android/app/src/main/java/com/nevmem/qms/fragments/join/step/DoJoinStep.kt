@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.R
+import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.fragments.join.JoinStep
 import com.nevmem.qms.fragments.join.JoinUsecase
 import com.nevmem.qms.fragments.join.step.gallery.GalleryItem
@@ -35,6 +36,7 @@ class DoJoinStep : JoinStep {
             private val usecase: JoinUsecase by inject()
             private val statusProvider: StatusProvider by inject()
             private val showToastManager: ShowToastManager by inject()
+            private val featureManager: FeatureManager by inject()
 
             override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                 super.onViewCreated(view, savedInstanceState)
@@ -81,7 +83,7 @@ class DoJoinStep : JoinStep {
 
                 services.adapter = BaseRecyclerAdapter(
                     org.servicesList.map { ServiceItem(it) },
-                    ServiceItemFactory(requireContext(), parentFragmentManager))
+                    ServiceItemFactory(requireContext(), parentFragmentManager, featureManager))
             }
 
             private fun updateMediaLinks(data: Map<String, String>) {

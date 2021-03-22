@@ -6,4 +6,6 @@
     <string name="profile_page_history">Show history on profile page</string>
     <string name="use_cards_for_suggests_on_status_page">Use cards for suggests on status page</string>
     <string name="use_animation_on_join_page">Use animation on join page</string>
+    <string name="ratings_for_services">Show ratings for services</string>
+    <string name="ratings_for_organizations">Show ratings for organizations</string>
 </resources>
