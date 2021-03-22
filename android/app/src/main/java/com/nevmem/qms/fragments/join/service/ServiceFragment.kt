@@ -1,11 +1,9 @@
 package com.nevmem.qms.fragments.join.service
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.doOnAttach
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.nevmem.qms.R
 import com.nevmem.qms.ServiceProto
