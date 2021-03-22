@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.R
 import com.nevmem.qms.features.FeatureManager
+import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.fragments.join.JoinStep
 import com.nevmem.qms.fragments.join.JoinUsecase
 import com.nevmem.qms.fragments.join.step.gallery.GalleryItem
@@ -16,6 +17,7 @@ import com.nevmem.qms.fragments.join.step.gallery.GalleryItemFactory
 import com.nevmem.qms.fragments.join.step.services.ServiceItem
 import com.nevmem.qms.fragments.join.step.services.ServiceItemFactory
 import com.nevmem.qms.inflate
+import com.nevmem.qms.knownfeatures.KnownFeatures
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.status.FetchStatus
 import kotlinx.android.synthetic.main.fragment_step_do_join.*
@@ -45,6 +47,8 @@ class DoJoinStep : JoinStep {
                 inviteName.text = org.info.name
                 inviteAddress.text = org.info.address
                 inviteDescription.isVisible = false
+                ratingView.setRatingId("organization_${org.info.id}")
+                ratingView.isVisible = featureManager.isFeatureEnabled(KnownFeatures.RatingsForOrganizations.value)
 
                 listOf(
                     ::updateDescription,
