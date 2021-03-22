@@ -46,11 +46,21 @@ class ServiceFragment : BottomSheetDialogFragment() {
                 val description = data.getValue("description")
                 add(DescriptionItem(description))
             }
+
+            val items = (data["checklistItems"] ?: "").split(",")
+            if (items.isNotEmpty()) {
+                add(ChecklistHeader)
+                items.forEach {
+                    add(ChecklistItem(it))
+                }
+            }
         }
 
         recycler.adapter = BaseRecyclerAdapter(
             listItems,
-            DescriptionItemFactory(requireContext()))
+            DescriptionItemFactory(requireContext()),
+            ChecklistHeaderFactory(requireContext()),
+            ChecklistItemFactory(requireContext()))
     }
 
     companion object {
