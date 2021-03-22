@@ -81,7 +81,7 @@ class DoJoinStep : JoinStep {
 
                 services.adapter = BaseRecyclerAdapter(
                     org.servicesList.map { ServiceItem(it) },
-                    ServiceItemFactory(requireContext()))
+                    ServiceItemFactory(requireContext(), parentFragmentManager))
             }
 
             private fun updateMediaLinks(data: Map<String, String>) {
