@@ -1,14 +1,11 @@
 package com.nevmem.qms.fragments.join.step
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.R
 import com.nevmem.qms.features.FeatureManager
@@ -21,8 +18,6 @@ import com.nevmem.qms.fragments.join.step.services.ServiceItemFactory
 import com.nevmem.qms.inflate
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.status.FetchStatus
-import com.nevmem.qms.status.StatusProvider
-import com.nevmem.qms.toast.manager.ShowToastManager
 import kotlinx.android.synthetic.main.fragment_step_do_join.*
 import kotlinx.android.synthetic.main.layout_media_link.view.*
 import org.koin.android.ext.android.inject
@@ -34,8 +29,6 @@ class DoJoinStep : JoinStep {
         class DoJoinFragment : Fragment(R.layout.fragment_step_do_join) {
 
             private val usecase: JoinUsecase by inject()
-            private val statusProvider: StatusProvider by inject()
-            private val showToastManager: ShowToastManager by inject()
             private val featureManager: FeatureManager by inject()
 
             override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,26 +37,6 @@ class DoJoinStep : JoinStep {
                 usecase.fetchStatus?.let { status ->
                     if (status is FetchStatus.Success) {
                         updateUi(status.payload)
-
-                        /* joinButton.isEnabled = true
-                        joinButton.setOnClickListener {
-                            joinButton.isEnabled = false
-                            runOnUi {
-                                statusProvider.join(status.payload).collect {
-                                    when (it) {
-                                        is JoinStatus.Pending -> {}
-                                        is JoinStatus.Success -> {
-                                            joinButton.isEnabled = true
-                                            findNavController().navigate(JoinFragmentDirections.moveToStatusPage())
-                                        }
-                                        is JoinStatus.Error -> {
-                                            joinButton.isEnabled = true
-                                            showToastManager.error(it.message)
-                                        }
-                                    }
-                                }
-                            }
-                        } */
                     }
                 }
             }
