@@ -45,12 +45,12 @@ class ServiceFragment : BottomSheetDialogFragment() {
                 add(DescriptionItem(description))
             }
 
-            val items = (data["checklistItems"] ?: "").split(",")
+            val items = (data["checklistItems"] ?: "").split(",").filter { it.isNotEmpty() }
             if (items.isNotEmpty()) {
                 add(ChecklistHeader)
-                items.forEach {
+                repeat(4) { items.forEach {
                     add(ChecklistItem(it))
-                }
+                }}
             }
         }
 
