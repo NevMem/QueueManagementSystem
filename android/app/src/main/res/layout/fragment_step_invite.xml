@@ -28,6 +28,7 @@
             android:textSize="@dimen/join_action_text_size"
             android:fontFamily="@font/montserrat_light"
             android:layout_marginTop="@dimen/indent"
+            android:gravity="center"
             android:text="@string/invite_step_action_text" />
 
         <com.google.android.material.textfield.TextInputLayout

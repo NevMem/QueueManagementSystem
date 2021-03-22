@@ -36,4 +36,5 @@
 
     <string name="status_suggests_header">You have zero appointments, here is list for you:</string>
     <string name="to_exp_string">to exp</string>
+    <string name="description_string">Description</string>
 </resources>
