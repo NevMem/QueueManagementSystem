@@ -9,6 +9,6 @@ class NetworkLayer:
         print(kwargs, file=sys.stderr)
         response = requests.post(*args, **kwargs)
         print('Got response', file=sys.stderr)
-        print(response.text)
+        print(response.text, file=sys.stderr)
         return response
 
