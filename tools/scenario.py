@@ -4,9 +4,19 @@ scenarios = []
 
 def scenario(name):
     def wrapper(func):
-        def inner_wrapper():
+        def actual_runner_http():
             client = Client(name)
             func(client)
-        scenarios.append({'scenario_name': name, 'scenario': inner_wrapper})
-        return inner_wrapper
+
+        def actual_runner_https():
+            client = Client(name, use_https=True)
+            func(client)
+        scenarios.append({
+            'scenario_name': '[HTTP] ' + name,
+            'scenario': actual_runner_http,
+            'flaky': False})
+        scenarios.append({
+            'scenario_name': '[HTTPS] ' + name,
+            'scenario': actual_runner_https,
+            'flaky': True})
     return wrapper

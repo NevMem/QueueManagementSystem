@@ -7,9 +7,10 @@ class CustomEncoder(json.JSONEncoder):
 
 
 class Report:
-    def __init__(self, name, exception):
+    def __init__(self, name, exception, is_flaky):
         self.name = name
         self.exception = exception
+        self.is_flaky = is_flaky
 
 
 class Reporter:
@@ -22,9 +23,9 @@ class Reporter:
     def report_success(self, name):
         self.successes.append(name)
 
-    def report_fail(self, name, exception):
+    def report_fail(self, name, exception, is_flaky=False):
         self.fails.append(name)
-        self.reports.append(Report(name, exception))
+        self.reports.append(Report(name, exception, is_flaky))
 
     def write_report(self):
         with open(self.output_filename, 'w') as out:
