@@ -6,11 +6,11 @@ class NetworkLayer:
         self.name = name
 
     def post(self, *args, **kwargs):
-        self.log('▶️ Making post request')
+        self.log('Making post request')
         self.log(args, tabs=1)
         self.log(kwargs, tabs=1)
         response = requests.post(*args, **kwargs)
-        self.log('◀️ Got response')
+        self.log('Got response')
         self.log(response.text, tabs=1)
         self.log('\n')
         return response
