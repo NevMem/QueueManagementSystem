@@ -4,11 +4,11 @@ import sys
 
 class NetworkLayer:
     def post(self, *args, **kwargs):
-        print('Making post request', file=sys.stderr)
-        print(args, file=sys.stderr)
-        print(kwargs, file=sys.stderr)
+        print('Making post request')
+        print(args)
+        print(kwargs)
         response = requests.post(*args, **kwargs)
-        print('Got response', file=sys.stderr)
-        print(response.text, file=sys.stderr)
+        print('Got response')
+        print(response.text)
         return response
 
