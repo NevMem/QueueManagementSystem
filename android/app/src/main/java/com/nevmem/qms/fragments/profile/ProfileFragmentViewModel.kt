@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class ProfileFragmentViewModel(
     private val authManager: AuthManager,
     private val showToastManager: ShowToastManager,
-    private val featureManager: FeatureManager
+    featureManager: FeatureManager
 ) : ViewModel() {
 
     private val profileList = MutableLiveData<List<RVItem>>()
@@ -25,25 +25,6 @@ class ProfileFragmentViewModel(
 
     private val visitedList = MutableLiveData<List<RVItem>>()
     internal val visited: LiveData<List<RVItem>> = visitedList
-
-    data class ProfileAvatar(var avatarUrl: String? = null): RVItem()
-    data class ProfileName(var name: String = ""): RVItem()
-    data class ProfileLastName(var lastName: String = ""): RVItem()
-    data class ProfileRating(var rating: Double = 0.0): RVItem()
-    data class ProfileEmail(var email: String = ""): RVItem()
-    enum class DocumentType {
-        Passport,
-        InternationalPassport,
-        Policy,
-    }
-    data class ProfileDocument(var type: DocumentType, var number: String? = null): RVItem()
-    object ProfileAddDocument : RVItem()
-
-    data class ProfileVisitedPlace(
-        var title: String = "",
-        var imageUrl: String? = null,
-        var tags: List<String> = emptyList()
-    ) : RVItem()
 
     private var user: UserLoadingState.User? = null
         set(value) {
