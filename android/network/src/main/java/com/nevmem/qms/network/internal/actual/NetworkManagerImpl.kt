@@ -66,6 +66,7 @@ internal class NetworkManagerImpl(
                 val response = wrap()
                 val organization = OrganizitionProto.Organization.newBuilder()
                     .setInfo(OrganizitionProto.OrganizationInfo.newBuilder()
+                        .setId(response.info?.id)
                         .setName(response.info?.name ?: "")
                         .setAddress(response.info?.address ?: "")
                         .putAllData(response.info?.data ?: mapOf())
