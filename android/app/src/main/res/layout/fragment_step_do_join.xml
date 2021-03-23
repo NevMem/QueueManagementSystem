@@ -81,7 +81,9 @@
                         android:scaleType="fitCenter"
                         android:layout_marginStart="@dimen/indent"
                         android:tint="@color/secondaryTextColor"
-                        android:src="@drawable/icon_share" />
+                        android:src="@drawable/icon_share"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 

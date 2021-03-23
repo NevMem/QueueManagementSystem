@@ -8,5 +8,6 @@ enum class KnownFeatures(val value: String, val textDescriptionResource: Int) {
     UseCardsForSuggestsOnStatusPage("use_cards_for_suggests_on_status_page", R.string.use_cards_for_suggests_on_status_page),
     UseAnimationsOnJoinPage("use_animation_on_join_page", R.string.use_animation_on_join_page),
     RatingsForServices("rating_for_services", R.string.ratings_for_services),
-    RatingsForOrganizations("rating_for_organizations", R.string.ratings_for_organizations)
+    RatingsForOrganizations("rating_for_organizations", R.string.ratings_for_organizations),
+    EnableOrganizationSharing("enable_organizations_sharing", R.string.enable_organizations_sharing)
 }

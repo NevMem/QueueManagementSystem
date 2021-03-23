@@ -50,6 +50,7 @@ class DoJoinStep : JoinStep {
                 ratingView.setRatingId("organization_${org.info.id}")
                 ratingView.isVisible = featureManager.isFeatureEnabled(KnownFeatures.RatingsForOrganizations.value)
 
+                shareButton.isVisible = featureManager.isFeatureEnabled(KnownFeatures.EnableOrganizationSharing.value)
                 shareButton.setOnClickListener {
                     val intent = Intent.createChooser(Intent().apply {
                         action = Intent.ACTION_SEND
