@@ -3,9 +3,9 @@ from tools.network.network_layer import NetworkLayer
 
 
 class Client:
-    def __init__(self):
+    def __init__(self, name):
         self.base_url = 'http://qms-back.nikitonsky.tk/'
-        self.layer = NetworkLayer()
+        self.layer = NetworkLayer(name)
 
     def login(self, login, password):
         res = self.layer.post(
