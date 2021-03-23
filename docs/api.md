@@ -78,6 +78,16 @@ Response: google.protobuf.Empty
 
 В случае, если сервис с таким названием уже есть - возвращаем 409
 
+#### Получить qr для сервиса
+
+POST `/admin/get_service_qr`
+
+Request: proto.service.ServiceInfo
+
+Response: QR code SVG
+
+Требуется залогин, будут проверены права на доступ к сервису
+
 #### Создать очередь
 
 POST `admin/create_queue`

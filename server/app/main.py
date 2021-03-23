@@ -2,6 +2,9 @@
 from google.protobuf import empty_pb2
 from sqlalchemy.sql import select, and_, delete
 from sqlalchemy.orm import selectinload
+import qrcode
+import qrcode.image.svg
+import io
 
 from starlette.authentication import requires
 from starlette.exceptions import HTTPException
@@ -11,7 +14,7 @@ from server.app.middleware import middleware
 from server.app import model
 from server.app.utils import sha_hash, generate_next_ticket
 from server.app.utils.db_utils import prepare_db
-from server.app.utils.web import route, prepare_app, Request, ProtobufResponse
+from server.app.utils.web import route, prepare_app, Request, ProtobufResponse, Response
 
 
 def organization_from_model(organization):
@@ -222,6 +225,24 @@ async def remove_service(request: Request):
     )
     await request.connection.execute(delete_query)
     return ProtobufResponse(empty_pb2.Empty())
+
+
+@route('/admin/get_service_qr', methods=['POST'], request_type=service_pb2.ServiceInfo)
+@requires('authenticated')
+async def get_service_qr(request: Request):
+    query = (
+        select(model.Permission)
+        .where(and_(
+            model.Permission.user_id == request.user.id,
+            model.Permission.service_id == request.parsed.id
+        )).limit(1)
+    )
+    if len([await request.connection.execute(query)]) == 0:
+        raise HTTPException(403)
+    img = qrcode.make(request.parsed.id, image_factory=qrcode.image.svg.SvgImage)
+    resp = io.BytesIO()
+    img.save(resp)
+    return Response(content=resp.getvalue())
 
 
 @route('/client/enter_queue', methods=['POST'], request_type=queue_pb2.Queue)
