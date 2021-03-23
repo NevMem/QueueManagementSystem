@@ -15,9 +15,10 @@ def run_scenarios():
             func()
             reporter.report_success(name)
         except ExceptionWithBody as err:
-            reporter.report_fail(name, err)
-        except:
-            assert(False)
+            reporter.report_fail(name, err, is_flaky=scenario['flaky'])
+        except Exception as ex:
+            print(ex)
+            reporter.report_fail(name, ExceptionWithBody(str(ex), 0), is_flaky=scenario['flaky'])
 
     reporter.write_report()
 

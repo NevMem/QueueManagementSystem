@@ -3,8 +3,11 @@ from tools.network.network_layer import NetworkLayer
 
 
 class Client:
-    def __init__(self, name):
-        self.base_url = 'http://qms-back.nikitonsky.tk/'
+    def __init__(self, name, use_https=False):
+        if use_https:
+            self.base_url = 'https://qms-back.nikitonsky.tk/'
+        else:
+            self.base_url = 'http://qms-back.nikitonsky.tk/'
         self.layer = NetworkLayer(name)
 
     def login(self, login, password):
