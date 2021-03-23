@@ -27,7 +27,7 @@ def create_message(notify_success, notify_flaky):
         fails_count = 0
         flaky_fails_count = 0
         for fail in data['fails']:
-            for report in data['fails']:
+            for report in data['reports']:
                 if report['name'] == fail:
                     fails_count += report['is_flaky'] == False
                     flaky_fails_count += report['is_flaky'] == True
@@ -74,6 +74,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--notify_flaky',
         help='Should we notify about flaky test fail',
+        action='store_true',
         default=False)
     args = parser.parse_args()
 
