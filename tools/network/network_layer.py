@@ -9,7 +9,7 @@ class NetworkLayer:
         self.log('Making post request')
         self.log(args, tabs=1)
         self.log(kwargs, tabs=1)
-        response = requests.post(*args, **kwargs)
+        response = requests.post(timeout=5, *args, **kwargs)
         self.log('Got response')
         self.log(response.text, tabs=1)
         self.log('\n')
