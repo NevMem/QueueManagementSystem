@@ -45,15 +45,45 @@
                 android:clipToPadding="false"
                 android:gravity="center">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/inviteName"
-                    android:layout_width="wrap_content"
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/nameTextSize"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
                     android:layout_marginTop="@dimen/indent"
-                    android:layout_marginBottom="@dimen/indent_double"
-                    android:fontFamily="@font/light"
-                    tools:text="Some name" />
+                    android:layout_marginBottom="@dimen/indent_double">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/inviteName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="@dimen/nameTextSize"
+                        android:fontFamily="@font/light"
+                        tools:text="Some name, long long long" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/bookmarkButton"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:padding="@dimen/indent"
+                        android:background="#00000000"
+                        android:scaleType="fitCenter"
+                        android:layout_marginStart="@dimen/indent"
+                        android:tint="@color/secondaryTextColor"
+                        android:src="@drawable/icon_bookmark_disabled" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/shareIcon"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:padding="@dimen/indent"
+                        android:background="#00000000"
+                        android:scaleType="fitCenter"
+                        android:layout_marginStart="@dimen/indent"
+                        android:tint="@color/secondaryTextColor"
+                        android:src="@drawable/icon_share" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/gallery"
