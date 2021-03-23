@@ -63,8 +63,8 @@
 
                     <androidx.appcompat.widget.AppCompatImageButton
                         android:id="@+id/bookmarkButton"
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
                         android:padding="@dimen/indent"
                         android:background="#00000000"
                         android:scaleType="fitCenter"
@@ -74,8 +74,8 @@
 
                     <androidx.appcompat.widget.AppCompatImageButton
                         android:id="@+id/shareButton"
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
                         android:padding="@dimen/indent"
                         android:background="#00000000"
                         android:scaleType="fitCenter"
