@@ -1,9 +1,12 @@
+from tools.client.client import Client
+
 scenarios = []
 
 def scenario(name):
     def wrapper(func):
-        scenarios.append({'scenario_name': name, 'scenario': func})
         def inner_wrapper():
-            func()
+            client = Client()
+            func(client)
+        scenarios.append({'scenario_name': name, 'scenario': inner_wrapper})
         return inner_wrapper
     return wrapper
