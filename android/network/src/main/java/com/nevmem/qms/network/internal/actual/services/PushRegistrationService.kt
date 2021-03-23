@@ -7,5 +7,5 @@ import retrofit2.http.POST
 
 interface PushRegistrationService {
     @POST("/api/push/register")
-    fun registerNewPushToken(@Body request: NewPushTokenRequest): Call<Any>
+    fun registerNewPushToken(@Body request: NewPushTokenRequest): Call<Unit>
 }

@@ -18,9 +18,8 @@ import com.nevmem.qms.notifications.createNotificationsManager
 import com.nevmem.qms.permissions.createPermissionsManager
 import com.nevmem.qms.push.PushProcessor
 import com.nevmem.qms.push.ToastPushProcessor
-import com.nevmem.qms.push.createPushManager
 import com.nevmem.qms.status.StatusProvider
-import com.nevmem.qms.status.createDebugStatusProvider
+import com.nevmem.qms.status.createStatusProvider
 import com.nevmem.qms.suggests.createDebugSuggestsManager
 import com.nevmem.qms.toast.manager.ShowToastManager
 import com.nevmem.qms.toast.manager.ToastManager
@@ -45,7 +44,7 @@ class QMSApplication : Application() {
         single<ShowToastManager> { get<ToastManager>() }
         single<ToastProvider> { get<ToastManager>() }
         single<NetworkManager> { createNetworkManager(get()) }
-        single<StatusProvider> { createDebugStatusProvider(get()) }
+        single<StatusProvider> { createStatusProvider(get(), get(), get()) }
         single {
             createFeatureManager(
                 get(),

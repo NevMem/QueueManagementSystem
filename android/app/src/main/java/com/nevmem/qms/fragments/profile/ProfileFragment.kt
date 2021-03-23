@@ -27,8 +27,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val showToastManager: ShowToastManager by inject()
     private val authManager: AuthManager by inject()
 
-    object HeaderStub : RVItem()
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -36,7 +34,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         mergeLatestWithEmpty(model.profile, model.visited).observe(viewLifecycleOwner, Observer { list ->
             recycler.adapter = BaseRecyclerAdapter(
-                listOf(HeaderStub) + list,
+                listOf(HeaderStub) + list + listOf(SpaceStub),
                 ProfileAvatarFactory(requireContext()),
                 ProfileNameFactory(requireContext()),
                 ProfileLastNameFactory(requireContext()),
@@ -46,6 +44,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 ProfileDocumentFactory(requireContext()),
                 ProfileAddDocumentFactory(requireContext(), showToastManager),
                 HeaderFactory(findNavController(), requireContext(), authManager),
+                SpaceStubFactory(requireContext()),
                 useAnimation = featureManager.isFeatureEnabled(KnownFeatures.UseAnimationsOnProfilePage.value))
         })
     }

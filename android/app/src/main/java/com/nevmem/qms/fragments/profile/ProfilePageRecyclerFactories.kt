@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.profile_visited.view.*
 internal class ProfileAvatarFactory(private val context: Context) : RVItemFactory {
     private inner class Holder(view: View) : RVHolder(view) {
         override fun onBind(item: RVItem) {
-            item as ProfileFragmentViewModel.ProfileAvatar
+            item as ProfileAvatar
             Glide.with(context)
                 .load(item.avatarUrl)
                 .placeholder(R.drawable.icon_profile)
@@ -39,45 +39,45 @@ internal class ProfileAvatarFactory(private val context: Context) : RVItemFactor
                 .into(itemView.avatarImage)
         }
     }
-    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileAvatar
+    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileAvatar
     override fun createHolder(root: ViewGroup): RVHolder
-            = Holder(LayoutInflater.from(context).inflate(R.layout.profile_avatar, root, false))
+        = Holder(LayoutInflater.from(context).inflate(R.layout.profile_avatar, root, false))
 }
 
 internal class ProfileNameFactory(private val context: Context) : RVItemFactory {
     private inner class Holder(view: View) : RVHolder(view) {
         override fun onBind(item: RVItem) {
-            item as ProfileFragmentViewModel.ProfileName
+            item as ProfileName
             itemView.profileName.text = item.name
         }
     }
-    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileName
+    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileName
     override fun createHolder(root: ViewGroup): RVHolder
-            = Holder(LayoutInflater.from(context).inflate(R.layout.profile_name, root, false))
+        = Holder(LayoutInflater.from(context).inflate(R.layout.profile_name, root, false))
 }
 
 internal class ProfileLastNameFactory(private val context: Context) : RVItemFactory {
     private inner class Holder(view: View) : RVHolder(view) {
         override fun onBind(item: RVItem) {
-            item as ProfileFragmentViewModel.ProfileLastName
+            item as ProfileLastName
             itemView.profileLastName.text = item.lastName
         }
     }
-    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileLastName
+    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileLastName
     override fun createHolder(root: ViewGroup): RVHolder
-            = Holder(LayoutInflater.from(context).inflate(R.layout.profile_lastname, root, false))
+        = Holder(LayoutInflater.from(context).inflate(R.layout.profile_lastname, root, false))
 }
 
 internal class ProfileEmailFactory(private val context: Context) : RVItemFactory {
     private inner class Holder(view: View) : RVHolder(view) {
         override fun onBind(item: RVItem) {
-            item as ProfileFragmentViewModel.ProfileEmail
+            item as ProfileEmail
             itemView.profileEmail.text = item.email
         }
     }
-    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileEmail
+    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileEmail
     override fun createHolder(root: ViewGroup): RVHolder
-            = Holder(LayoutInflater.from(context).inflate(R.layout.profile_email, root, false))
+        = Holder(LayoutInflater.from(context).inflate(R.layout.profile_email, root, false))
 }
 
 internal class ProfileVisitedFactory(
@@ -91,7 +91,7 @@ internal class ProfileVisitedFactory(
         }
 
         override fun onBind(item: RVItem) {
-            item as ProfileFragmentViewModel.ProfileVisitedPlace
+            item as ProfileVisitedPlace
             Glide.with(context)
                 .load(item.imageUrl)
                 .into(itemView.placeIcon)
@@ -108,14 +108,15 @@ internal class ProfileVisitedFactory(
             }
         }
     }
-    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileVisitedPlace
-    override fun createHolder(root: ViewGroup): RVHolder = Holder(context.inflate(R.layout.profile_visited, root))
+    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileVisitedPlace
+    override fun createHolder(root: ViewGroup): RVHolder
+        = Holder(context.inflate(R.layout.profile_visited, root))
 }
 
 internal class ProfileRatingFactory(private val context: Context) : RVItemFactory {
     private inner class Holder(view: View) : RVHolder(view) {
         override fun onBind(item: RVItem) {
-            item as ProfileFragmentViewModel.ProfileRating
+            item as ProfileRating
             itemView.profileRating.text = "${item.rating}"
             if (item.rating >= 4) {
                 itemView.profileRating.setTextColor(context.getColor(R.color.successColor))
@@ -124,9 +125,9 @@ internal class ProfileRatingFactory(private val context: Context) : RVItemFactor
             }
         }
     }
-    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragmentViewModel.ProfileRating
+    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileRating
     override fun createHolder(root: ViewGroup): RVHolder
-            = Holder(context.inflate(R.layout.profile_rating, root))
+        = Holder(context.inflate(R.layout.profile_rating, root))
 }
 
 internal class HeaderFactory(
@@ -151,6 +152,19 @@ internal class HeaderFactory(
         }
     }
 
-    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileFragment.HeaderStub
-    override fun createHolder(root: ViewGroup): RVHolder = Holder(context.inflate(R.layout.profile_header, root))
+    override fun isAppropriateType(item: RVItem): Boolean = item is HeaderStub
+    override fun createHolder(root: ViewGroup): RVHolder
+        = Holder(context.inflate(R.layout.profile_header, root))
+}
+
+internal class SpaceStubFactory(
+    private val context: Context
+) : RVItemFactory {
+    private inner class Holder(view: View) : RVHolder(view) {
+        override fun onBind(item: RVItem) = Unit
+    }
+
+    override fun isAppropriateType(item: RVItem): Boolean = item is SpaceStub
+    override fun createHolder(root: ViewGroup): RVHolder
+        = Holder(context.inflate(R.layout.layout_space_stub, root))
 }

@@ -83,6 +83,7 @@ dependencies {
     implementation project(':permissions')
     implementation project(':protos')
     implementation project(':push')
+    implementation project(':rating')
     implementation project(':recycler')
     implementation project(':scanner')
     implementation project(':statemachine')

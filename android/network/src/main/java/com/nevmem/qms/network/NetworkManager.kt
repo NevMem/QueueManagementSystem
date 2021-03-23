@@ -6,7 +6,7 @@ import com.nevmem.qms.data.NewPushTokenRequest
 import com.nevmem.qms.network.data.RegisterResponse
 
 interface NetworkManager {
-    suspend fun fetchDataForInvite(invite: String): OrganizitionProto.Organization
+    suspend fun fetchDataForInvite(token: String, invite: String): OrganizitionProto.Organization
 
     suspend fun loadFeatures(): Map<String, String>
 
