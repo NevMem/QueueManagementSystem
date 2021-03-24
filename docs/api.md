@@ -78,11 +78,13 @@ Response: google.protobuf.Empty
 
 В случае, если сервис с таким названием уже есть - возвращаем 409
 
-#### Получить qr для сервиса
+#### Получить qr для сервиса или организации
 
-POST `/admin/get_service_qr`
+GET `/admin/generate_qr?organization?<organization_id>&service=<service_id>`
 
-Request: proto.service.ServiceInfo
+Request: None 
+
+Параметр service - опциональный
 
 Response: QR code SVG
 

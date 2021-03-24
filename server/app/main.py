@@ -231,8 +231,28 @@ async def remove_service(request: Request):
 @route('/admin/generate_qr', methods=['GET'], request_type=service_pb2.ServiceInfo)
 async def generate_qr(request: Request):
     payload = {'organization': request.query_params['organization']}
+    if 'organization' not in request.query_params:
+        raise HTTPException(400)
+
     if 'service' in request.query_params:
         payload['service'] = request.query_params['service']
+        query = (
+            select(model.Service)
+            .where(and_(
+                model.Service.id == request.query_params['service'],
+                model.Service.organization_id == request.query_params['organization']
+            ).limit(1))
+        )
+    else:
+        query = (
+            select(model.Organization)
+            .where(model.Organization.id == request.query_params['organization'])
+            .limit(1)
+        )
+
+    if len([await request.connection.execute(query)]) == 0:
+        raise HTTPException(404)
+
     img = qrcode.make(json.dumps(payload), image_factory=qrcode.image.svg.SvgImage)
     resp = io.BytesIO()
     img.save(resp)
