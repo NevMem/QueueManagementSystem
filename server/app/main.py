@@ -241,7 +241,8 @@ async def generate_qr(request: Request):
             .where(and_(
                 model.Service.id == request.query_params['service'],
                 model.Service.organization_id == request.query_params['organization']
-            ).limit(1))
+                )
+            ).limit(1)
         )
     else:
         query = (
