@@ -5,6 +5,7 @@ from sqlalchemy.orm import selectinload
 import qrcode
 import qrcode.image.svg
 import io
+import json
 
 from starlette.authentication import requires
 from starlette.exceptions import HTTPException
@@ -227,19 +228,12 @@ async def remove_service(request: Request):
     return ProtobufResponse(empty_pb2.Empty())
 
 
-@route('/admin/get_service_qr', methods=['POST'], request_type=service_pb2.ServiceInfo)
-@requires('authenticated')
-async def get_service_qr(request: Request):
-    query = (
-        select(model.Permission)
-        .where(and_(
-            model.Permission.user_id == request.user.id,
-            model.Permission.service_id == request.parsed.id
-        )).limit(1)
-    )
-    if len([await request.connection.execute(query)]) == 0:
-        raise HTTPException(403)
-    img = qrcode.make(request.parsed.id, image_factory=qrcode.image.svg.SvgImage)
+@route('/admin/generate_qr', methods=['GET'], request_type=service_pb2.ServiceInfo)
+async def generate_qr(request: Request):
+    payload = {'organization': request.query_params['organization']}
+    if 'service' in request.query_params:
+        payload['service'] = request.query_params['service']
+    img = qrcode.make(json.dumps(payload), image_factory=qrcode.image.svg.SvgImage)
     resp = io.BytesIO()
     img.save(resp)
     return Response(content=resp.getvalue())

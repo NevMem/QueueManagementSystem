@@ -31,7 +31,8 @@ def test_configure_organization(server):
     service = org.services[0]
     assert len(service.queues) == 0
     assert service.info.name == 'Service'
-    assert server.get_service_qr(token=token, id=service.info.id).content != b''
+    assert server.get_qr(organization=org.info.id).content != b''
+    assert server.get_qr(organization=org.info.id, service=service.info.id).content != b''
 
     server.remove_service(token, service.info.id)
     resp = server.get_organizations(token)
