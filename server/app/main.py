@@ -228,7 +228,7 @@ async def remove_service(request: Request):
     return ProtobufResponse(empty_pb2.Empty())
 
 
-@route('/admin/generate_qr', methods=['GET'], request_type=service_pb2.ServiceInfo)
+@route('/admin/generate_qr', methods=['GET'])
 async def generate_qr(request: Request):
     payload = {'organization': request.query_params['organization']}
     if 'organization' not in request.query_params:
