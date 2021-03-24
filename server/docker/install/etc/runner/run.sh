@@ -10,9 +10,7 @@ while supervisorctl status | grep -q -v "RUNNING\|STOPPED\|STOPPING"; do
 done
 
 if [[ -f "/run/secrets/SSL_KEY" ]]; then
-    for ((i = 0; i < 4; i++)) do
-        supervisorctl start "uvicorn-https:uvicorn-$i"
-    done
+    supervisorctl start uvicorn-https
 fi
 
 
