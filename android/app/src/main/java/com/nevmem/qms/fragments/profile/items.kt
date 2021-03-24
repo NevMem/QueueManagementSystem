@@ -23,5 +23,5 @@ data class ProfileVisitedPlace(
 ) : RVItem()
 
 object HeaderStub : RVItem()
-
 object SpaceStub : RVItem()
+object ProfileLoadingStub : RVItem()

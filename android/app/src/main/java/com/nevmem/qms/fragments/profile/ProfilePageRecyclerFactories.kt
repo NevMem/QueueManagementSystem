@@ -1,5 +1,6 @@
 package com.nevmem.qms.fragments.profile
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ import com.nevmem.qms.recycler.RVHolder
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.recycler.RVItemFactory
 import com.nevmem.qms.utils.ifDebug
+import kotlinx.android.synthetic.main.layout_profile_loading_stub.view.*
 import kotlinx.android.synthetic.main.profile_avatar.view.*
 import kotlinx.android.synthetic.main.profile_email.view.*
 import kotlinx.android.synthetic.main.profile_header.view.*
@@ -167,4 +169,32 @@ internal class SpaceStubFactory(
     override fun isAppropriateType(item: RVItem): Boolean = item is SpaceStub
     override fun createHolder(root: ViewGroup): RVHolder
         = Holder(context.inflate(R.layout.layout_space_stub, root))
+}
+
+internal class ProfileLoadingStubFactory(
+    private val context: Context
+) :RVItemFactory {
+    private inner class Holder(view: View) : RVHolder(view) {
+        override fun onBind(item: RVItem) {
+            val animator = ValueAnimator.ofFloat(1f, 0.5f, 1f).apply {
+                repeatCount = ValueAnimator.INFINITE
+                duration = 1000L
+
+                addUpdateListener {
+                    itemView.profileLoadingStubIcon.alpha = it.animatedValue as Float
+                }
+            }
+
+            itemView.doOnAttach {
+                animator.start()
+                it.doOnDetach {
+                    animator.cancel()
+                }
+            }
+        }
+    }
+
+    override fun isAppropriateType(item: RVItem): Boolean = item is ProfileLoadingStub
+    override fun createHolder(root: ViewGroup): RVHolder
+        = Holder(context.inflate(R.layout.layout_profile_loading_stub, root))
 }
