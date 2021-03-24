@@ -10,8 +10,8 @@ RUN apt update && \
  vim \
  telnet \
  lsof \
- nginx=1.19.8 \
- syslog-ng syslog-ng-include \
+ nginx \
+ syslog-ng
 
 
 RUN python3 -m pip install -r /usr/lib/qms/server/app/requirenments.txt
