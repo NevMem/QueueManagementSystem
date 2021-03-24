@@ -1,5 +1,7 @@
 import typing as tp
 import functools
+import logging
+import logging.handlers
 
 from google.protobuf.message import Message
 from google.protobuf import empty_pb2
@@ -61,6 +63,10 @@ def route(path: str, request_type: Message = empty_pb2.Empty, response_type: Mes
 
 
 def prepare_app(*args, **kwargs):
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+    handler = logging.handlers.SysLogHandler(address='/dev/log')
+    logger.addHandler(handler)
     return Starlette(*args, routes=_routes, **kwargs)
 
 
