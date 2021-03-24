@@ -8,7 +8,11 @@ RUN apt update && \
  python3.9-minimal \
  python3-pip \
  vim \
- telnet
+ telnet \
+ lsof \
+ nginx=1.19.8 \
+ syslog-ng syslog-ng-include \
+
 
 RUN python3 -m pip install -r /usr/lib/qms/server/app/requirenments.txt
 RUN python3 -m pip install supervisor
