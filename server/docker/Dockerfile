@@ -4,6 +4,7 @@ COPY install /
 COPY tmp /
 
 RUN apt update && \
+ DEBIAN_FRONTEND=noninteractive \
  apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages \
  python3.9-minimal \
  python3-pip \
