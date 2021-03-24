@@ -2,6 +2,10 @@
 from google.protobuf import empty_pb2
 from sqlalchemy.sql import select, and_, delete
 from sqlalchemy.orm import selectinload
+import qrcode
+import qrcode.image.svg
+import io
+import json
 
 from starlette.authentication import requires
 from starlette.exceptions import HTTPException
@@ -11,7 +15,7 @@ from server.app.middleware import middleware
 from server.app import model
 from server.app.utils import sha_hash, generate_next_ticket
 from server.app.utils.db_utils import prepare_db
-from server.app.utils.web import route, prepare_app, Request, ProtobufResponse
+from server.app.utils.web import route, prepare_app, Request, ProtobufResponse, Response
 
 
 def organization_from_model(organization):
@@ -222,6 +226,38 @@ async def remove_service(request: Request):
     )
     await request.connection.execute(delete_query)
     return ProtobufResponse(empty_pb2.Empty())
+
+
+@route('/admin/generate_qr', methods=['GET'])
+async def generate_qr(request: Request):
+    payload = {'organization': request.query_params['organization']}
+    if 'organization' not in request.query_params:
+        raise HTTPException(400)
+
+    if 'service' in request.query_params:
+        payload['service'] = request.query_params['service']
+        query = (
+            select(model.Service)
+            .where(and_(
+                model.Service.id == request.query_params['service'],
+                model.Service.organization_id == request.query_params['organization']
+                )
+            ).limit(1)
+        )
+    else:
+        query = (
+            select(model.Organization)
+            .where(model.Organization.id == request.query_params['organization'])
+            .limit(1)
+        )
+
+    if len([await request.connection.execute(query)]) == 0:
+        raise HTTPException(404)
+
+    img = qrcode.make(json.dumps(payload), image_factory=qrcode.image.svg.SvgImage)
+    resp = io.BytesIO()
+    img.save(resp)
+    return Response(content=resp.getvalue())
 
 
 @route('/client/enter_queue', methods=['POST'], request_type=queue_pb2.Queue)

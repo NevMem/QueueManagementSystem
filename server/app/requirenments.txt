@@ -8,3 +8,4 @@ sqlalchemy_mixins
 asyncpg==0.21.0
 protobuf==3.14.0
 requests==2.25.1
+qrcode==6.1

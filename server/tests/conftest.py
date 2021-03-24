@@ -71,3 +71,9 @@ class Server(TestClient):
         req = Queue(**kwargs)
         return self.post('/admin/create_queue', headers={'session': token, 'content-type': 'application/protobuf'},
                          data=req.SerializeToString())
+
+    def get_qr(self, **kwargs):
+        return self.get(
+            '/admin/generate_qr',
+            params=kwargs
+        )
