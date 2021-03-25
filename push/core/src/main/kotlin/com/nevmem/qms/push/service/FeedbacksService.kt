@@ -13,6 +13,7 @@ class FeedbacksService {
     }
 
     fun publishFeedback(feedback: Feedback) {
+        check(feedback.score >= 0)
         feedbacks.add(feedback)
     }
 }
