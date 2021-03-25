@@ -26,6 +26,14 @@ def test_configure_organization(server):
     assert len(org.services) == 0
     assert org.info.name == 'Organization'
 
+    server.update_organization(token, id=org.info.id, name=org.info.name, data={'key': 'value'})
+    resp = server.get_organizations(token)
+    assert len(resp.organizations) == 1
+    org = resp.organizations[0]
+    assert len(org.services) == 0
+    assert org.info.name == 'Organization'
+    assert org.info.data == {'key': 'value'}
+
     # create service
     server.create_service(token, 'Service', organization_id=org.info.id)
     resp = server.get_organizations(token)
@@ -35,6 +43,16 @@ def test_configure_organization(server):
     service = org.services[0]
     assert len(service.queues) == 0
     assert service.info.name == 'Service'
+    server.update_service(token, id=service.info.id, name=service.info.name, data={'key': 'value'})
+    resp = server.get_organizations(token)
+    assert len(resp.organizations) == 1
+    org = resp.organizations[0]
+    assert len(org.services) == 1
+    service = org.services[0]
+    assert len(service.queues) == 0
+    assert service.info.name == 'Service'
+    assert service.info.data == {'key': 'value'}
+
     assert server.get_qr(organization=org.info.id).content != b''
     assert server.get_qr(organization=org.info.id, service=service.info.id).content != b''
 

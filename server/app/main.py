@@ -1,6 +1,6 @@
 
 from google.protobuf import empty_pb2
-from sqlalchemy.sql import select, and_, delete, update
+from sqlalchemy.sql import select, and_, delete, update, exists
 from sqlalchemy.orm import selectinload
 import qrcode
 import qrcode.image.svg
@@ -166,6 +166,32 @@ async def create_organization(request: Request):
     return ProtobufResponse(empty_pb2.Empty())
 
 
+@route('/admin/update_organization', methods=['POST'], request_type=organization_pb2.OrganizationInfo)
+@requires('authenticated')
+async def update_organization(request: Request) -> empty_pb2.Empty:
+    auth_query = (
+        select(exists(model.Permission))
+        .where(and_(
+            model.Permission.organization_id == request.parsed.id,
+            model.Permission.user_id == request.user.id
+        ))
+    )
+    if not (await request.connection.execute(auth_query)).scalar():
+        raise HTTPException(403)
+
+    query = (
+        update(model.Organization)
+        .where(model.Organization.id == request.parsed.id)
+        .values({
+            model.Organization.name: request.parsed.name,
+            model.Organization.address: request.parsed.address,
+            model.Organization.data: dict(**request.parsed.data)
+        })
+    )
+    await request.connection.execute(query)
+    return ProtobufResponse(empty_pb2.Empty())
+
+
 @route('/admin/get_organizations_list', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
 @requires('authenticated')
 async def get_organizations_list(request: Request):
@@ -223,6 +249,33 @@ async def create_service(request: Request):
     new_service.admins.append(new_permission)
     request.connection.add(new_service)
 
+    return ProtobufResponse(empty_pb2.Empty())
+
+
+@route('/admin/update_service', methods=['POST'], request_type=service_pb2.ServiceInfo)
+@requires('authenticated')
+async def update_organization(request: Request) -> empty_pb2.Empty:
+    auth_query = (
+        select(exists(model.Permission))
+        .where(
+            and_(
+                model.Permission.service_id == request.parsed.id,
+                model.Permission.user_id == request.user.id
+            )
+    )
+    )
+    if not (await request.connection.execute(auth_query)).scalar():
+        raise HTTPException(403)
+
+    query = (
+        update(model.Service)
+        .where(model.Service.id == request.parsed.id)
+        .values({
+            model.Service.name: request.parsed.name,
+            model.Service.data: dict(**request.parsed.data)
+        })
+    )
+    await request.connection.execute(query)
     return ProtobufResponse(empty_pb2.Empty())
 
 

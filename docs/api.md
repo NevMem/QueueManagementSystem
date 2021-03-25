@@ -68,6 +68,16 @@ Response: google.protobuf.Empty
 
 В случае, если организация с таким названием уже есть - возвращаем 409
 
+#### Обновить организацию
+
+POST `admin/update_organisation`
+
+Request: proto.organisation.OrganisationInfo
+
+Response: google.protobuf.Empty
+
+Заливает в базу инфу as is
+
 #### Список редактируемых организаций
 
 POST/GET `admin/get_organisations_list`
@@ -87,6 +97,16 @@ Request: proto.service.ServiceInfo
 Response: google.protobuf.Empty
 
 В случае, если сервис с таким названием уже есть - возвращаем 409
+
+#### Обновить сервис
+
+POST `admin/update_service`
+
+Request: proto.service.ServiceInfo
+
+Response: google.protobuf.Empty
+
+Заливает новую информацию про сервис в базу as is. Нельзя поменять id организации
 
 #### Получить qr для сервиса или организации
 
