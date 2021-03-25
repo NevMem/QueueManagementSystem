@@ -23,6 +23,16 @@ from server.app.utils.protobuf import patch_enums
 patch_enums()
 
 
+def user_from_permission(permission):
+    return user_pb2.User(
+        name=permission.user.name,
+        surname=permission.user.surname,
+        email=permission.user.email,
+        id=str(permission.user.id),
+        permission_type=permission.permission_type,
+    )
+
+
 def organization_from_model(organization):
     return organization_pb2.Organization(
         info=organization_pb2.OrganizationInfo(
@@ -38,19 +48,17 @@ def organization_from_model(organization):
                     name=service.name,
                     data=service.data
                 ),
+                admins=[
+                    user_from_permission(permission)
+                    for permission in service.admins
+                ],
             )
             for service in organization.services
         ],
         admins=[
-            user_pb2.User(
-                name=admin.user.name,
-                surname=admin.user.surname,
-                email=admin.user.email,
-                id=str(admin.user.id),
-                permission_type=admin.permission_type,
-            )
-            for admin in organization.admins
-        ]
+            user_from_permission(permission)
+            for permission in organization.admins
+        ],
     )
 
 
@@ -218,7 +226,9 @@ async def get_organizations_list(request: Request):
         .options(
             selectinload(model.Organization.services),
             selectinload(model.Organization.admins),
-            selectinload(model.Organization.admins, model.Permission.user)
+            selectinload(model.Organization.admins, model.Permission.user),
+            selectinload(model.Organization.services, model.Service.admins),
+            selectinload(model.Organization.services, model.Service.admins, model.Permission.user)
         )
     )
 
@@ -242,7 +252,10 @@ async def fetch_organization(request: Request):
         .options(
             selectinload(model.Organization.services),
             selectinload(model.Organization.admins),
-            selectinload(model.Organization.admins, model.Permission.user)
+            selectinload(model.Organization.admins, model.Permission.user),
+            selectinload(model.Organization.admins, model.Permission.user),
+            selectinload(model.Organization.services, model.Service.admins),
+            selectinload(model.Organization.services, model.Service.admins, model.Permission.user)
         )
     )
 
