@@ -41,7 +41,6 @@ def test_configure_organization(server):
     org = resp.organizations[0]
     assert len(org.services) == 1
     service = org.services[0]
-    assert len(service.queues) == 0
     assert service.info.name == 'Service'
     server.update_service(token, id=service.info.id, name=service.info.name, data={'key': 'value'})
     resp = server.get_organizations(token)
@@ -49,7 +48,6 @@ def test_configure_organization(server):
     org = resp.organizations[0]
     assert len(org.services) == 1
     service = org.services[0]
-    assert len(service.queues) == 0
     assert service.info.name == 'Service'
     assert service.info.data == {'key': 'value'}
 
