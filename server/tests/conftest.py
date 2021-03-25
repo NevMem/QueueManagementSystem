@@ -4,7 +4,7 @@ from server.app.main import app
 from starlette.testclient import TestClient
 from server.app.utils.db_utils import drop_db, prepare_db
 
-from proto.organization_pb2 import OrganizationList
+from proto.organization_pb2 import OrganizationList, OrganizationInfo
 from proto.service_pb2 import ServiceInfo
 from proto.queue_pb2 import Queue
 from proto.user_pb2 import User
@@ -66,6 +66,11 @@ class Server(TestClient):
     def create_organization(self, token: str, **kwargs):
         return self.post('/admin/create_organization', json=kwargs, headers={'session': token})
 
+    def update_organization(self, token: str, **kwargs):
+        req = OrganizationInfo(**kwargs)
+        return self.post('/admin/update_organization', headers={'session': token, 'content-type': 'application/protobuf'},
+                         data=req.SerializeToString())
+
     def get_organizations(self, token: str):
         resp = self.post('/admin/get_organizations_list', headers={'session': token, 'content-type': 'application/protobuf'})
         res = OrganizationList()
@@ -75,6 +80,11 @@ class Server(TestClient):
     def create_service(self, token: str, name: str, organization_id: str, **kwargs):
         req = ServiceInfo(name=name, organization_id=organization_id, data=kwargs)
         return self.post('/admin/create_service', headers={'session': token, 'content-type': 'application/protobuf'}, data=req.SerializeToString())
+
+    def update_service(self, token: str, **kwargs):
+        req = ServiceInfo(**kwargs)
+        return self.post('/admin/update_service', headers={'session': token, 'content-type': 'application/protobuf'},
+                         data=req.SerializeToString())
 
     def remove_service(self, token: str, id: str):
         return self.post('/admin/remove_service', headers={'session': token}, json={'id': id})
