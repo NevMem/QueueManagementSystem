@@ -14,6 +14,10 @@ def test_check_unique_user(server):
 def test_configure_organization(server):
     server.register_user(email='mail@mail', password='password')
     token = server.login(email='mail@mail', password='password').headers['session']
+    server.update_user(token, email='mail@mail', name='Myname', data={'key': 'value'})
+    resp = server.get_user(token)
+    assert resp.name == 'Myname'
+    assert resp.data == {'key': 'value'}
     # create organization
     server.create_organization(token, name='Organization')
     resp = server.get_organizations(token)

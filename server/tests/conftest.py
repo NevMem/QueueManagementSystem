@@ -7,6 +7,7 @@ from server.app.utils.db_utils import drop_db, prepare_db
 from proto.organization_pb2 import OrganizationList
 from proto.service_pb2 import ServiceInfo
 from proto.queue_pb2 import Queue
+from proto.user_pb2 import User
 
 
 @pytest.fixture(scope='function')
@@ -40,6 +41,17 @@ class Server(TestClient):
 
     def login(self, email: str, password: str):
         return self.post('/client/login', json={'email': email, 'password': password, })
+
+    def update_user(self, token, **kwargs):
+        req = User(**kwargs)
+        return self.post('/client/update_user', headers={'session': token, 'content-type': 'application/protobuf'},
+                         data=req.SerializeToString())
+
+    def get_user(self, token) -> User:
+        resp = self.post('/client/get_user', headers={'session': token, 'content-type': 'application/protobuf'})
+        res = User()
+        res.ParseFromString(resp.content)
+        return res
 
     def get(self, *args, **kwargs):
         resp = super(Server, self).get(*args, **kwargs)

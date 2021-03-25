@@ -28,6 +28,16 @@ Response: proto.user.User
 
 Возвращает информацию об авторизованном пользоватеел
 
+#### Обновления информации о пользователе
+
+POST `/client/update_user`
+
+Request: proto.user.User
+
+Response: None
+
+Обновляет информацию о пользователе, с токеном которого пришел запрос
+
 #### Проверка уникальности пользователя
 
 POST/GET `client/check_unique_user` 
