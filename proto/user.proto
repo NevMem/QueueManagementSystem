@@ -40,5 +40,7 @@ message User {
   string surname = 4;
   repeated Permission permissions = 5;
 
+  string permission_type = 7;
+
   map<string, string> data = 6;
 }

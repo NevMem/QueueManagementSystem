@@ -6,6 +6,33 @@ option java_package = "com.nevmem.qms";
 option java_outer_classname = "PermissionsProto";
 
 
+enum PermissionType {
+    USER = 0;
+    OWNER = 1;
+    MANAGER = 2;
+}
+
+enum TargetObject {
+    SERVICE = 0;
+    ORGANIZATION = 1;
+}
+
+message AddUserRequest {
+    PermissionType permission_type = 1;
+
+    TargetObject target_object = 2;
+    string id = 3;  // target id
+    string email = 4;
+}
+
+message RemoveUserRequest {
+    TargetObject target_object = 1;
+    string id = 2;
+
+    string email = 3;
+}
+
+
 message Permission {
     string id = 1;
     string user_id = 2;

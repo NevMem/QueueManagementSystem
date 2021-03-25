@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\016ClientApiProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x10proto/user.proto\x12\x03qms\x1a\x17proto/permissions.proto\"/\n\x0cUserIdentity\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"U\n\x0fRegisterRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07surname\x18\x02 \x01(\t\x12#\n\x08identity\x18\x03 \x01(\x0b\x32\x11.qms.UserIdentity\"2\n\x0b\x41uthRequest\x12#\n\x08identity\x18\x01 \x01(\x0b\x32\x11.qms.UserIdentity\"\x1d\n\x0c\x41uthResponse\x12\r\n\x05token\x18\x01 \x01(\t\",\n\x17\x43heckUniqueUserResponse\x12\x11\n\tis_unique\x18\x01 \x01(\x08\"\xb6\x01\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x0f\n\x07surname\x18\x04 \x01(\t\x12$\n\x0bpermissions\x18\x05 \x03(\x0b\x32\x0f.qms.Permission\x12!\n\x04\x64\x61ta\x18\x06 \x03(\x0b\x32\x13.qms.User.DataEntry\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42 \n\x0e\x63om.nevmem.qmsB\x0e\x43lientApiProtob\x06proto3'
+  serialized_pb=b'\n\x10proto/user.proto\x12\x03qms\x1a\x17proto/permissions.proto\"/\n\x0cUserIdentity\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"U\n\x0fRegisterRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07surname\x18\x02 \x01(\t\x12#\n\x08identity\x18\x03 \x01(\x0b\x32\x11.qms.UserIdentity\"2\n\x0b\x41uthRequest\x12#\n\x08identity\x18\x01 \x01(\x0b\x32\x11.qms.UserIdentity\"\x1d\n\x0c\x41uthResponse\x12\r\n\x05token\x18\x01 \x01(\t\",\n\x17\x43heckUniqueUserResponse\x12\x11\n\tis_unique\x18\x01 \x01(\x08\"\xcf\x01\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x0f\n\x07surname\x18\x04 \x01(\t\x12$\n\x0bpermissions\x18\x05 \x03(\x0b\x32\x0f.qms.Permission\x12\x17\n\x0fpermission_type\x18\x07 \x01(\t\x12!\n\x04\x64\x61ta\x18\x06 \x03(\x0b\x32\x13.qms.User.DataEntry\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42 \n\x0e\x63om.nevmem.qmsB\x0e\x43lientApiProtob\x06proto3'
   ,
   dependencies=[proto_dot_permissions__pb2.DESCRIPTOR,])
 
@@ -242,8 +242,8 @@ _USER_DATAENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=455,
-  serialized_end=498,
+  serialized_start=480,
+  serialized_end=523,
 )
 
 _USER = _descriptor.Descriptor(
@@ -290,7 +290,14 @@ _USER = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='data', full_name='qms.User.data', index=5,
+      name='permission_type', full_name='qms.User.permission_type', index=5,
+      number=7, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='data', full_name='qms.User.data', index=6,
       number=6, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -309,7 +316,7 @@ _USER = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=316,
-  serialized_end=498,
+  serialized_end=523,
 )
 
 _REGISTERREQUEST.fields_by_name['identity'].message_type = _USERIDENTITY

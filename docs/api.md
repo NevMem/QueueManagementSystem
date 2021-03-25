@@ -119,14 +119,37 @@ Request: None
 Response: QR code SVG
 
 
-#### Создать очередь
 
-POST `admin/create_queue`
+#### Добавить пользователя в организацию/сервис
 
-Request:  proto.queue.Queue
+POST `admin/add_user`
+
+Request:  proto.permissions.AddUserRequest
 
 Response:  google.protobuf.Empty
 
-Создает очередь в выбранной организации
+Добавляет пользователя в организацию
+
+
+#### Удалить пользователя из организации/сервиса
+
+POST `admin/remove_user`
+
+Request:  proto.permissions.RemoveUserRequest
+
+Response:  google.protobuf.Empty
+
+Удалить пользователя из организации
+
+
+#### Обновить права пользователя в организации/сервисе
+
+POST `admin/update_user_privilege`
+
+Request:  proto.permissions.AddUserRequest
+
+Response:  google.protobuf.Empty
+
+Удалить пользователя из организации
 
 

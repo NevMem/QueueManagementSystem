@@ -6,6 +6,7 @@ option java_package = "com.nevmem.qms";
 option java_outer_classname = "OrganizitionProto";
 
 import "proto/service.proto";
+import "proto/user.proto";
 
 
 message OrganizationInfo {
@@ -19,6 +20,7 @@ message OrganizationInfo {
 message Organization {
   OrganizationInfo info = 1;
 
+  repeated User admins = 3;
   repeated Service services = 2;
 }
 

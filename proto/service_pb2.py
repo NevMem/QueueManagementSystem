@@ -11,7 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-from proto import queue_pb2 as proto_dot_queue__pb2
+from proto import user_pb2 as proto_dot_user__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -20,9 +20,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\014ServiceProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x13proto/service.proto\x12\x03qms\x1a\x11proto/queue.proto\"\x97\x01\n\x0bServiceInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x17\n\x0forganization_id\x18\x04 \x01(\t\x12(\n\x04\x64\x61ta\x18\x03 \x03(\x0b\x32\x1a.qms.ServiceInfo.DataEntry\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"5\n\x0fServiceInfoList\x12\"\n\x08services\x18\x01 \x03(\x0b\x32\x10.qms.ServiceInfo\"E\n\x07Service\x12\x1e\n\x04info\x18\x01 \x01(\x0b\x32\x10.qms.ServiceInfo\x12\x1a\n\x06queues\x18\x02 \x03(\x0b\x32\n.qms.QueueB\x1e\n\x0e\x63om.nevmem.qmsB\x0cServiceProtob\x06proto3'
+  serialized_pb=b'\n\x13proto/service.proto\x12\x03qms\x1a\x10proto/user.proto\"\x97\x01\n\x0bServiceInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x17\n\x0forganization_id\x18\x04 \x01(\t\x12(\n\x04\x64\x61ta\x18\x03 \x03(\x0b\x32\x1a.qms.ServiceInfo.DataEntry\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"5\n\x0fServiceInfoList\x12\"\n\x08services\x18\x01 \x03(\x0b\x32\x10.qms.ServiceInfo\"D\n\x07Service\x12\x1e\n\x04info\x18\x01 \x01(\x0b\x32\x10.qms.ServiceInfo\x12\x19\n\x06\x61\x64mins\x18\x03 \x03(\x0b\x32\t.qms.UserB\x1e\n\x0e\x63om.nevmem.qmsB\x0cServiceProtob\x06proto3'
   ,
-  dependencies=[proto_dot_queue__pb2.DESCRIPTOR,])
+  dependencies=[proto_dot_user__pb2.DESCRIPTOR,])
 
 
 
@@ -61,8 +61,8 @@ _SERVICEINFO_DATAENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=156,
-  serialized_end=199,
+  serialized_start=155,
+  serialized_end=198,
 )
 
 _SERVICEINFO = _descriptor.Descriptor(
@@ -113,8 +113,8 @@ _SERVICEINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=48,
-  serialized_end=199,
+  serialized_start=47,
+  serialized_end=198,
 )
 
 
@@ -145,8 +145,8 @@ _SERVICEINFOLIST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=201,
-  serialized_end=254,
+  serialized_start=200,
+  serialized_end=253,
 )
 
 
@@ -166,8 +166,8 @@ _SERVICE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='queues', full_name='qms.Service.queues', index=1,
-      number=2, type=11, cpp_type=10, label=3,
+      name='admins', full_name='qms.Service.admins', index=1,
+      number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -184,15 +184,15 @@ _SERVICE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=256,
-  serialized_end=325,
+  serialized_start=255,
+  serialized_end=323,
 )
 
 _SERVICEINFO_DATAENTRY.containing_type = _SERVICEINFO
 _SERVICEINFO.fields_by_name['data'].message_type = _SERVICEINFO_DATAENTRY
 _SERVICEINFOLIST.fields_by_name['services'].message_type = _SERVICEINFO
 _SERVICE.fields_by_name['info'].message_type = _SERVICEINFO
-_SERVICE.fields_by_name['queues'].message_type = proto_dot_queue__pb2._QUEUE
+_SERVICE.fields_by_name['admins'].message_type = proto_dot_user__pb2._USER
 DESCRIPTOR.message_types_by_name['ServiceInfo'] = _SERVICEINFO
 DESCRIPTOR.message_types_by_name['ServiceInfoList'] = _SERVICEINFOLIST
 DESCRIPTOR.message_types_by_name['Service'] = _SERVICE

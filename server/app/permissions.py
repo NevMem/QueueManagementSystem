@@ -2,28 +2,42 @@
 
 class _BasePermissions(type):
 
-    def __getattribute__(cls, item):
-        if item in super().__getattribute__('__dict__'):
-            return super().__getattribute__(item)
+    def __init__(cls, name, bases, dct):
+        super().__init__(name, bases, dct)
+        permissions = set()
 
-        return False
+        for item in dir(cls):
+            value = getattr(cls, item)
 
-    def __getitem__(self, item):
-        return self.__getattribute__(item)
+            if type(value) == bool and value:
+                permissions.add(item)
+
+        cls.permissions = permissions
 
 
 class UserPermissions(metaclass=_BasePermissions):
     pass
 
 
-class OwnerPermissions(UserPermissions):
-    update_info = True
+class ManagerPermissions(UserPermissions):
+    update = True
+
+
+class OwnerPermissions(ManagerPermissions):
     delete = True
+
     add_admins = True
-    create_queue = True
+    remove_admins = True
+
+    create_service = True
 
 
 PERMISSIONS_MAP = {
-    'Owner': OwnerPermissions,
-    'User': UserPermissions,
+    'OWNER': OwnerPermissions,
+    'USER': UserPermissions,
+    'MANAGER': ManagerPermissions,
 }
+
+
+if __name__ == '__main__':
+    print(OwnerPermissions.permissions)
