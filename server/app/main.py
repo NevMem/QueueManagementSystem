@@ -1,6 +1,6 @@
 
 from google.protobuf import empty_pb2
-from sqlalchemy.sql import select, and_, delete
+from sqlalchemy.sql import select, and_, delete, update
 from sqlalchemy.orm import selectinload
 import qrcode
 import qrcode.image.svg
@@ -66,7 +66,8 @@ async def get_user(request: Request):
                 permission_type=permission.permission_type,
             )
             for permission in request.user.permissions
-        ]
+        ],
+        data=request.user.data
     )
 
     return ProtobufResponse(response)
@@ -90,6 +91,23 @@ async def register(request: Request) -> ProtobufResponse:
     )
 
     request.connection.add(new_user)
+    return ProtobufResponse(empty_pb2.Empty())
+
+
+@route('/client/update_user', methods=['POST'], request_type=user_pb2.User)
+@requires('authenticated')
+async def update_user(request: Request) -> ProtobufResponse:
+    query = (
+        update(model.User)
+        .where(model.User.id == request.user.id)
+        .values({
+            model.User.email: request.parsed.email,
+            model.User.name: request.parsed.name,
+            model.User.surname: request.parsed.surname,
+            model.User.data: dict(**request.parsed.data)
+        })
+    )
+    await request.connection.execute(query)
     return ProtobufResponse(empty_pb2.Empty())
 
 

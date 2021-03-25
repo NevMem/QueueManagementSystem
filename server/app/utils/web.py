@@ -65,8 +65,8 @@ def route(path: str, request_type: Message = empty_pb2.Empty, response_type: Mes
 def prepare_app(*args, **kwargs):
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
-    handler = logging.handlers.SysLogHandler(address='/dev/log')
-    logger.addHandler(handler)
+    #handler = logging.handlers.SysLogHandler(address='/dev/log')
+    #logger.addHandler(handler)
     return Starlette(*args, routes=_routes, **kwargs)
 
 

@@ -88,3 +88,4 @@ class User(BaseModel):
     permissions = relationship(Permission, backref='user')
     attachments = relationship(UserAttachments)
     current_queue = relationship(Ticket, uselist=False)
+    data = sqlalchemy.Column(types.JSON, default={})
