@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.nevmem.qms.auth.createAuthManager
 import com.nevmem.qms.features.createFeatureManager
+import com.nevmem.qms.feedback.createFeedbackManager
 import com.nevmem.qms.fragments.dev_settings.DeveloperSettingsFragmentViewModel
 import com.nevmem.qms.fragments.login.LoginPageViewModel
 import com.nevmem.qms.fragments.profile.ProfileFragmentViewModel
@@ -64,6 +65,7 @@ class QMSApplication : Application() {
         single<PushProcessor>(named("toast-push-processor")) {
             ToastPushProcessor(get())
         }
+        single { createFeedbackManager(get(), get()) }
     }
 
     private val viewModelsModule = module {
