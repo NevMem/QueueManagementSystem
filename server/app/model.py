@@ -60,6 +60,10 @@ class Permission(BaseModel):
             return getattr(PERMISSIONS_MAP.get(super().__getattribute__('permission_type'), UserPermissions), item)
         return super().__getattribute__(item)
 
+    @property
+    def permissions_list(self):
+        return PERMISSIONS_MAP[self.permission_type].permissions
+
 
 class Ticket(BaseModel):
     __tablename__ = 'Tickets'

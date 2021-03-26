@@ -1,5 +1,6 @@
 import base64
 import itsdangerous
+import logging
 import json
 from google.protobuf.json_format import ParseDict
 from itsdangerous.exc import BadTimeSignature, SignatureExpired
@@ -17,19 +18,34 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 from server.app import model
 from server.app.config import Config
 from server.app.utils.db_utils import session_scope
-from server.app.utils.web import get_signature
+from server.app.utils.web import get_signature, get_check_attr
 
 
 class BasicAuthBackend(AuthenticationBackend):
+    logger = logging.getLogger('app')
+
     async def authenticate(self, request):
         if 'user' not in request.session:
-            return
+            return AuthCredentials([]), None
 
-        query = select(model.User).where(model.User.email == request.session['user']).options(selectinload(model.User.permissions))
+        query = (
+            select(model.User)
+            .where(model.User.email == request.session['user'])
+            .options(selectinload(model.User.permissions))
+        )
+
         result = await request.scope['_connection'].execute(query)
-        user = result.scalar()
+        user: model.User = result.scalar()
 
-        return AuthCredentials(["authenticated"]), user
+        credentials = {'authenticated', }
+
+        target = getattr(request.scope['_parsed'], get_check_attr(request.url.path), None)
+        if target:
+            for permission in user.permissions:
+                if str(permission.service_id) == target or permission.organization_id == target:
+                    credentials |= permission.permissions_list
+
+        return AuthCredentials(list(credentials)), user
 
 
 class Proto2JsonMiddleware(BaseHTTPMiddleware):
@@ -106,6 +122,6 @@ middleware = [
     Middleware(CORSMiddleware, allow_origins=['*'], allow_methods=['*'], allow_headers=['*'], expose_headers=['session']),
     Middleware(DBSessionMiddleware),
     Middleware(SessionMiddleware, secret_key=Config.SECRET_KEY),
-    Middleware(AuthenticationMiddleware, backend=BasicAuthBackend()),
     Middleware(Proto2JsonMiddleware),
+    Middleware(AuthenticationMiddleware, backend=BasicAuthBackend()),
 ]

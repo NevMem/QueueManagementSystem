@@ -8,12 +8,13 @@ from google.protobuf import empty_pb2
 from google.protobuf.json_format import MessageToJson
 
 from starlette.applications import Starlette
-from starlette.routing import Route
 from starlette.requests import Request as StarletteRequest
 from starlette.responses import Response
+from starlette.routing import Route
 
 _routes = []
 _signatures: tp.Dict[str, tp.Tuple[Message, Message]] = {}
+_check_attrs: tp.Dict[str, str] = {}
 
 
 class Request(StarletteRequest):
@@ -45,7 +46,7 @@ class ProtobufResponse(Response):
         await super().__call__(scope, receive, send)
 
 
-def route(path: str, request_type: Message = empty_pb2.Empty, response_type: Message = empty_pb2.Empty, **kwargs):
+def route(path: str, request_type: Message = empty_pb2.Empty, response_type: Message = empty_pb2.Empty, permission_check_attr: str = 'id', **kwargs):
     def _decorator(func):
 
         @functools.wraps(func)
@@ -55,6 +56,7 @@ def route(path: str, request_type: Message = empty_pb2.Empty, response_type: Mes
             return await func(request, **fn_kwargs)
 
         _signatures[path] = (request_type, response_type)
+        _check_attrs[path] = permission_check_attr
         _routes.append(Route(path, _wrapped, **kwargs))
 
         return _wrapped
@@ -65,10 +67,15 @@ def route(path: str, request_type: Message = empty_pb2.Empty, response_type: Mes
 def prepare_app(*args, **kwargs):
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
-    #handler = logging.handlers.SysLogHandler(address='/dev/log')
-    #logger.addHandler(handler)
+    # handler = logging.handlers.SysLogHandler(address='/dev/log')
+    # logger.addHandler(handler)
+
     return Starlette(*args, routes=_routes, **kwargs)
 
 
 def get_signature(path: str):
     return _signatures.get(path, (empty_pb2.Empty, empty_pb2.Empty))
+
+
+def get_check_attr(path: str):
+    return _check_attrs.get(path, 'id')

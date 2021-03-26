@@ -2,10 +2,11 @@
 from google.protobuf import empty_pb2
 from sqlalchemy.sql import select, and_, delete, update, exists
 from sqlalchemy.orm import selectinload
-import qrcode
-import qrcode.image.svg
 import io
 import json
+import qrcode
+import qrcode.image.svg
+import typing as tp
 
 from starlette.authentication import requires
 from starlette.exceptions import HTTPException
@@ -16,6 +17,20 @@ from server.app import model
 from server.app.utils import sha_hash, generate_next_ticket
 from server.app.utils.db_utils import prepare_db
 from server.app.utils.web import route, prepare_app, Request, ProtobufResponse, Response
+from server.app.utils.protobuf import patch_enums
+
+
+patch_enums()
+
+
+def user_from_permission(permission):
+    return user_pb2.User(
+        name=permission.user.name,
+        surname=permission.user.surname,
+        email=permission.user.email,
+        id=str(permission.user.id),
+        permission_type=permission.permission_type,
+    )
 
 
 def organization_from_model(organization):
@@ -33,9 +48,17 @@ def organization_from_model(organization):
                     name=service.name,
                     data=service.data
                 ),
+                admins=[
+                    user_from_permission(permission)
+                    for permission in service.admins
+                ],
             )
             for service in organization.services
-        ]
+        ],
+        admins=[
+            user_from_permission(permission)
+            for permission in organization.admins
+        ],
     )
 
 
@@ -157,7 +180,7 @@ async def create_organization(request: Request):
 
     new_permission = model.Permission(
         user_id=request.user.id,
-        permission_type='Owner',
+        permission_type='OWNER',
     )
 
     new_organization.admins.append(new_permission)
@@ -200,7 +223,13 @@ async def get_organizations_list(request: Request):
         .where(model.User.id == request.user.id)
         .join(model.Permission, model.Permission.organization_id == model.Organization.id)
         .join(model.User, model.User.id == model.Permission.user_id)
-        .options(selectinload(model.Organization.services))
+        .options(
+            selectinload(model.Organization.services),
+            selectinload(model.Organization.admins),
+            selectinload(model.Organization.admins, model.Permission.user),
+            selectinload(model.Organization.services, model.Service.admins),
+            selectinload(model.Organization.services, model.Service.admins, model.Permission.user)
+        )
     )
 
     result = await request.connection.execute(query)
@@ -220,7 +249,14 @@ async def fetch_organization(request: Request):
     query = (
         select(model.Organization)
         .where(model.Organization.id == request.parsed.id)
-        .options(selectinload(model.Organization.services))
+        .options(
+            selectinload(model.Organization.services),
+            selectinload(model.Organization.admins),
+            selectinload(model.Organization.admins, model.Permission.user),
+            selectinload(model.Organization.admins, model.Permission.user),
+            selectinload(model.Organization.services, model.Service.admins),
+            selectinload(model.Organization.services, model.Service.admins, model.Permission.user)
+        )
     )
 
     result = await request.connection.execute(query)
@@ -232,8 +268,8 @@ async def fetch_organization(request: Request):
     return ProtobufResponse(organization_from_model(organization))
 
 
-@route('/admin/create_service', methods=['POST'], request_type=service_pb2.ServiceInfo)
-@requires('authenticated')
+@route('/admin/create_service', methods=['POST'], request_type=service_pb2.ServiceInfo, permission_check_attr='organization_id')
+@requires(['authenticated', 'create_service'])
 async def create_service(request: Request):
     new_service = model.Service(
         name=request.parsed.name,
@@ -243,7 +279,7 @@ async def create_service(request: Request):
 
     new_permission = model.Permission(
         user_id=request.user.id,
-        permission_type='Owner',
+        permission_type='OWNER',
     )
 
     new_service.admins.append(new_permission)
@@ -280,21 +316,13 @@ async def update_organization(request: Request) -> empty_pb2.Empty:
 
 
 @route('/admin/remove_service', methods=['POST'], request_type=service_pb2.ServiceInfo)
-@requires('authenticated')
+@requires(['authenticated', 'delete'])
 async def remove_service(request: Request):
-    auth_query = (
-        select(model.Permission)
-        .where(and_(model.Permission.user_id == request.user.id,
-                    model.Permission.service_id == request.parsed.id))
-        .limit(1)
-    )
-    if len([await request.connection.execute(auth_query)]) == 0:
-        raise HTTPException(403)
-
     delete_query = (
         delete(model.Service)
         .where(model.Service.id == request.parsed.id)
     )
+
     await request.connection.execute(delete_query)
     return ProtobufResponse(empty_pb2.Empty())
 
@@ -331,7 +359,7 @@ async def generate_qr(request: Request):
     return Response(content=resp.getvalue())
 
 
-@route('/client/enter_queue', methods=['POST'], request_type=queue_pb2.Queue)
+@route('/client/enter_queue', methods=['POST'], request_type=service_pb2.ServiceInfo)
 @requires('authenticated')
 async def enter_queue(request: Request):
     query = (
@@ -369,6 +397,173 @@ async def enter_queue(request: Request):
 
     request.connection.add(new_queue_item)
     return ProtobufResponse(queue_pb2.QueueUserInfo(ticket_id=new_queue_item.ticket_id))
+
+
+@route('/admin/add_user', methods=['POST'], request_type=permissions_pb2.AddUserRequest)
+@requires(['authenticated', 'add_admins'])
+async def add_user(request: Request):
+    object_model = (
+        model.Service
+        if request.parsed.target_object == permissions_pb2.TargetObject.SERVICE
+        else model.Organization
+    )
+
+    query_object = (
+        select(object_model)
+        .where(object_model.id == request.parsed.id)
+        .options(selectinload(object_model.admins))
+    )
+
+    result = await request.connection.execute(query_object)
+    permission_object = result.scalars().first()
+
+    if permission_object is None:
+        raise HTTPException(404)
+
+    user_query = (
+        select(model.User)
+        .where(model.User.email == request.parsed.email)
+    )
+
+    result = await request.connection.execute(user_query)
+    user = result.scalars().first()
+
+    if user is None:
+        raise HTTPException(404)
+
+    permission_query = (
+        select(exists(model.Permission))
+        .where(
+            model.Permission.user_id == user.id,
+            (
+                model.Permission.organization_id == request.parsed.id
+                if object_model == model.Organization
+                else model.Permission.service_id == request.parsed.id
+            )
+        )
+    )
+
+    result = await request.connection.execute(permission_query)
+    if result.scalar():
+        raise HTTPException(409)
+
+    new_permission = model.Permission(
+        user_id=user.id,
+        permission_type=permissions_pb2.PermissionType[request.parsed.permission_type],
+    )
+
+    permission_object.admins.append(new_permission)
+    request.connection.add(new_permission)
+    return ProtobufResponse(empty_pb2.Empty())
+
+
+@route('/admin/remove_user', methods=['POST'], request_type=permissions_pb2.RemoveUserRequest)
+@requires(['authenticated', 'remove_admins'])
+async def remove_user(request: Request):
+    object_model = (
+        model.Service
+        if request.parsed.target_object == permissions_pb2.TargetObject.SERVICE
+        else model.Organization
+    )
+
+    query_object = (
+        select(object_model)
+        .where(object_model.id == request.parsed.id)
+        .options(selectinload(object_model.admins))
+    )
+
+    result = await request.connection.execute(query_object)
+    permission_object = result.scalars().first()
+
+    if permission_object is None:
+        raise HTTPException(404)
+
+    user_query = (
+        select(model.User)
+        .where(model.User.email == request.parsed.email)
+    )
+
+    result = await request.connection.execute(user_query)
+    user = result.scalars().first()
+
+    if user is None:
+        raise HTTPException(404)
+
+    permission_filter = (
+        model.Permission.user_id == user.id,
+        (
+            model.Permission.organization_id == request.parsed.id
+            if object_model == model.Organization
+            else model.Permission.service_id == request.parsed.id
+        )
+    )
+
+    permission_query = (
+        select(exists(model.Permission))
+        .where(*permission_filter)
+    )
+
+    result = await request.connection.execute(permission_query)
+    if not result.scalar():
+        raise HTTPException(404)
+
+    delete_query = (
+        delete(model.Permission)
+        .where(*permission_filter)
+    )
+
+    await request.connection.execute(delete_query)
+    return ProtobufResponse(empty_pb2.Empty())
+
+
+@route('/admin/update_user_privilege', methods=['POST'], request_type=permissions_pb2.AddUserRequest)
+@requires(['authenticated', 'remove_admins', 'add_admins'])
+async def update_user_privilege(request: Request):
+    object_model = (
+        model.Service
+        if request.parsed.target_object == permissions_pb2.TargetObject.SERVICE
+        else model.Organization
+    )
+
+    query_object = (
+        select(object_model)
+        .where(object_model.id == request.parsed.id)
+        .options(selectinload(object_model.admins))
+    )
+
+    result = await request.connection.execute(query_object)
+    permission_object = result.scalars().first()
+
+    if permission_object is None:
+        raise HTTPException(404)
+
+    user_query = (
+        select(model.User)
+        .where(model.User.email == request.parsed.email)
+    )
+
+    result = await request.connection.execute(user_query)
+    user = result.scalars().first()
+
+    if user is None:
+        raise HTTPException(404)
+
+    permission_query = (
+        select(model.Permission)
+        .where(
+            model.Permission.user_id == user.id,
+            (
+                model.Permission.organization_id == request.parsed.id
+                if object_model == model.Organization
+                else model.Permission.service_id == request.parsed.id
+            )
+        )
+    )
+
+    result = await request.connection.execute(permission_query)
+    permission = result.scalars().first()
+    permission.permission_type = permissions_pb2.PermissionType[request.parsed.permission_type]
+    return ProtobufResponse(empty_pb2.Empty())
 
 
 @route('/client/get_current_queue_info', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
