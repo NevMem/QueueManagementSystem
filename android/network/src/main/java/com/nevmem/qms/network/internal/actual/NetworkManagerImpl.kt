@@ -4,6 +4,9 @@ import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.ServiceProto
 import com.nevmem.qms.data.NewPushTokenRequest
+import com.nevmem.qms.data.feedback.Feedback
+import com.nevmem.qms.data.feedback.LoadFeedbacksRequest
+import com.nevmem.qms.data.feedback.PublishFeedbackRequest
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.data.RegisterResponse
@@ -43,7 +46,7 @@ internal class NetworkManagerImpl(
             .build()
     }
 
-    private val pushRetrofit by lazy {
+    private val javaBackendRetrofit by lazy {
         createDefaultRetrofitBuilder()
             .baseUrl("http://84.201.128.37:8002")
             .build()
@@ -57,7 +60,7 @@ internal class NetworkManagerImpl(
 
     private val service by lazy { retrofit.create(BackendService::class.java) }
     private val featuresService by lazy { featuresRetrofit.create(FeaturesService::class.java) }
-    private val pushService by lazy { pushRetrofit.create(PushRegistrationService::class.java) }
+    private val javaBackendService by lazy { javaBackendRetrofit.create(JavaBackendService::class.java) }
 
     override suspend fun fetchDataForInvite(token: String, invite: String): OrganizitionProto.Organization = suspendCoroutine { continuation ->
         suspend fun wrap() = suspendCoroutine<Organization> { wrapRequest(service.getOrganization(token, OrganizationInfo(invite)), it) }
@@ -168,7 +171,7 @@ internal class NetworkManagerImpl(
     }
 
     override suspend fun registerNewPushToken(request: NewPushTokenRequest) = suspendCoroutine<Unit> { continuation ->
-        pushService.registerNewPushToken(request).enqueue(object : Callback<Unit> {
+        javaBackendService.registerNewPushToken(request).enqueue(object : Callback<Unit> {
             override fun onFailure(call: Call<Unit>, t: Throwable) {
                 continuation.resumeWith(Result.failure(t))
             }
@@ -181,6 +184,14 @@ internal class NetworkManagerImpl(
                 }
             }
         })
+    }
+
+    override suspend fun publishFeedback(request: PublishFeedbackRequest, token: String) = suspendCoroutine<Unit> { continuation ->
+        wrapRequest(javaBackendService.publishFeedback(request, token), continuation)
+    }
+
+    override suspend fun loadFeedback(entityId: String, token: String): List<Feedback> = suspendCoroutine { continuation ->
+        wrapRequest(javaBackendService.loadFeedback(token, LoadFeedbacksRequest(entityId)), continuation)
     }
 
     private fun User.toApiClass(): ClientApiProto.User {
