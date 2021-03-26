@@ -3,6 +3,8 @@ package com.nevmem.qms.network
 import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.data.NewPushTokenRequest
+import com.nevmem.qms.data.feedback.Feedback
+import com.nevmem.qms.data.feedback.PublishFeedbackRequest
 import com.nevmem.qms.network.data.RegisterResponse
 
 interface NetworkManager {
@@ -16,4 +18,7 @@ interface NetworkManager {
     suspend fun getUser(token: String): ClientApiProto.User
 
     suspend fun registerNewPushToken(request: NewPushTokenRequest)
+
+    suspend fun publishFeedback(request: PublishFeedbackRequest, token: String)
+    suspend fun loadFeedback(entityId: String, token: String): List<Feedback>
 }

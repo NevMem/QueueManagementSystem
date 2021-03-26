@@ -1,3 +1,4 @@
+include ':feedback'
 include ':rating'
 include ':common'
 include ':common-data'
