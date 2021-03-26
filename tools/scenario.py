@@ -19,4 +19,5 @@ def scenario(name):
             'scenario_name': '[HTTPS] ' + name,
             'scenario': actual_runner_https,
             'flaky': True})
+        return func
     return wrapper

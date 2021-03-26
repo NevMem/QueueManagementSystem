@@ -30,7 +30,7 @@ def check_default(resp):
 
 
 @scenario('Register')
-def just_login(client):
+def test_just_login(client):
     login, password, name, surname = create_user_data()
 
     code, body = client.register(login, password, name, surname)
@@ -38,7 +38,7 @@ def just_login(client):
 
 
 @scenario('Reg -> Login')
-def reg_log(client):
+def test_reg_log(client):
     login, password, name, surname = create_user_data()
 
     code, body = client.register(login, password, name, surname)
@@ -48,7 +48,7 @@ def reg_log(client):
     sc_assert(code == 200, body, code)
 
 @scenario('Reg -> Login -> GetUser')
-def reg_log_get_user(client):
+def test_reg_log_get_user(client):
     login, password, name, surname = create_user_data()
 
     code, body = client.register(login, password, name, surname)
@@ -66,7 +66,7 @@ def reg_log_get_user(client):
 
 
 @scenario('Reg -> Login -> Create org')
-def reg_log_create_org(client):
+def test_reg_log_create_org(client):
     login, password, name, surname = create_user_data()
     check_registration_successfull(client.register(login, password, name, surname))
     token = check_login_successfull(client.login(login, password))
@@ -75,7 +75,7 @@ def reg_log_create_org(client):
 
 
 @scenario('Reg -> Login -> Create org -> Get orgs')
-def reg_log_create_get(client):
+def test_reg_log_create_get(client):
     login, password, name, surname = create_user_data()
     check_registration_successfull(client.register(login, password, name, surname))
     token = check_login_successfull(client.login(login, password))
@@ -88,7 +88,7 @@ def reg_log_create_get(client):
     sc_assert(data['organizations'][0]['info']['name'] == org_name, body, code)
 
 @scenario('Reg -> Login -> Create org -> Add service -> Get orgs')
-def reg_log_create_org_add_service_get(client):
+def test_reg_log_create_org_add_service_get(client):
     login, password, name, surname = create_user_data()
     check_registration_successfull(client.register(login, password, name, surname))
     token = check_login_successfull(client.login(login, password))
