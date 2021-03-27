@@ -18,6 +18,7 @@ import com.nevmem.qms.fragments.join.step.services.ServiceItem
 import com.nevmem.qms.fragments.join.step.services.ServiceItemFactory
 import com.nevmem.qms.inflate
 import com.nevmem.qms.knownfeatures.KnownFeatures
+import com.nevmem.qms.rating.RatingsManager
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.status.FetchStatus
 import kotlinx.android.synthetic.main.fragment_step_do_join.*
@@ -32,6 +33,7 @@ class DoJoinStep : JoinStep {
 
             private val usecase: JoinUsecase by inject()
             private val featureManager: FeatureManager by inject()
+            private val ratingsManager: RatingsManager by inject()
 
             override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                 super.onViewCreated(view, savedInstanceState)
@@ -48,6 +50,7 @@ class DoJoinStep : JoinStep {
                 inviteAddress.text = org.info.address
                 inviteDescription.isVisible = false
                 ratingView.setRatingId("organization_${org.info.id}")
+                ratingView.setRatingsManager(ratingsManager)
                 ratingView.isVisible = featureManager.isFeatureEnabled(KnownFeatures.RatingsForOrganizations.value)
 
                 shareButton.isVisible = featureManager.isFeatureEnabled(KnownFeatures.EnableOrganizationSharing.value)
@@ -72,7 +75,7 @@ class DoJoinStep : JoinStep {
 
                 services.adapter = BaseRecyclerAdapter(
                     org.servicesList.map { ServiceItem(it) },
-                    ServiceItemFactory(requireContext(), parentFragmentManager, featureManager))
+                    ServiceItemFactory(requireContext(), parentFragmentManager, featureManager, ratingsManager))
             }
 
             private fun updateMediaLinks(data: Map<String, String>) {

@@ -68,7 +68,7 @@ class RatingView : LinearLayoutCompat {
     }
 
     fun setRatingId(ratingId: String) {
-        rating = Rating(4.9, 5.0)
+        rating = Rating(4.9f, 5.0f)
     }
 
     private fun updateUi() {
