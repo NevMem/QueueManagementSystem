@@ -4,9 +4,7 @@ import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.ServiceProto
 import com.nevmem.qms.data.NewPushTokenRequest
-import com.nevmem.qms.data.feedback.Feedback
-import com.nevmem.qms.data.feedback.LoadFeedbacksRequest
-import com.nevmem.qms.data.feedback.PublishFeedbackRequest
+import com.nevmem.qms.data.feedback.*
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.data.RegisterResponse
@@ -192,6 +190,20 @@ internal class NetworkManagerImpl(
 
     override suspend fun loadFeedback(entityId: String, token: String): List<Feedback> = suspendCoroutine { continuation ->
         wrapRequest(javaBackendService.loadFeedback(token, LoadFeedbacksRequest(entityId)), continuation)
+    }
+
+    override suspend fun loadRating(entityId: String, token: String): Float = suspendCoroutine { continuation ->
+        suspend fun wrap() = suspendCoroutine<LoadRatingResponse> {
+            wrapRequest(javaBackendService.loadRating(token, LoadRatingRequest(entityId)), it)
+        }
+        GlobalScope.launch {
+            try {
+                val result = wrap()
+                continuation.resumeWith(Result.success(result.rating))
+            } catch (exception: Exception) {
+                continuation.resumeWith(Result.failure(exception))
+            }
+        }
     }
 
     private fun User.toApiClass(): ClientApiProto.User {
