@@ -36,6 +36,7 @@ dependencies {
     implementation "androidx.core:core-ktx:$versions.coreKtx"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutinesCore"
 
+    implementation project(':auth')
     implementation project(':common-data')
     implementation project(':common-ui')
     implementation project(':network')
