@@ -10,6 +10,7 @@ import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.recycler.RVItemFactory
 import kotlinx.android.synthetic.main.layout_checklist_item.view.*
 import kotlinx.android.synthetic.main.layout_error_feedback_item.view.*
+import kotlinx.android.synthetic.main.layout_feedback_item.view.*
 import kotlinx.android.synthetic.main.layout_service_description.view.*
 
 class DescriptionItemFactory(private val context: Context) : RVItemFactory {
@@ -75,6 +76,8 @@ internal class FeedbackItemFactory(private val context: Context) : RVItemFactory
     inner class Holder(view: View) : RVHolder(view) {
         override fun onBind(item: RVItem) {
             item as FeedbackItem
+            itemView.authorText.text = item.feedback.author
+            itemView.text.text = item.feedback.text
         }
     }
 
