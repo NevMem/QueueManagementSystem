@@ -8,5 +8,6 @@ object ChecklistHeader : RVItem()
 class ChecklistItem(val check: String) : RVItem()
 
 object LoadingFeedbackItem : RVItem()
+object NoFeedbackItem : RVItem()
 data class ErrorFeedbackItem(val error: String) : RVItem()
 data class FeedbackItem(val feedback: Feedback) : RVItem()

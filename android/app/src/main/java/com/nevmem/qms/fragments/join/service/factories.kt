@@ -70,3 +70,25 @@ internal class ErrorFeedbackItemFactory(private val context: Context) : RVItemFa
     override fun createHolder(root: ViewGroup): RVHolder
         = Holder(context.inflate(R.layout.layout_error_feedback_item, root))
 }
+
+internal class FeedbackItemFactory(private val context: Context) : RVItemFactory {
+    inner class Holder(view: View) : RVHolder(view) {
+        override fun onBind(item: RVItem) {
+            item as FeedbackItem
+        }
+    }
+
+    override fun isAppropriateType(item: RVItem): Boolean = item is FeedbackItem
+    override fun createHolder(root: ViewGroup): RVHolder
+        = Holder(context.inflate(R.layout.layout_feedback_item, root))
+}
+
+internal class NoFeedbackItemFactory(private val context: Context) : RVItemFactory {
+    inner class Holder(view: View) : RVHolder(view) {
+        override fun onBind(item: RVItem) = Unit
+    }
+
+    override fun isAppropriateType(item: RVItem): Boolean = item is NoFeedbackItem
+    override fun createHolder(root: ViewGroup): RVHolder
+        = Holder(context.inflate(R.layout.layout_no_feedback_item, root))
+}

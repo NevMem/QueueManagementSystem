@@ -95,7 +95,8 @@ class ServiceFragment : BottomSheetDialogFragment() {
             listItems,
             DescriptionItemFactory(requireContext()),
             ChecklistHeaderFactory(requireContext()),
-            ChecklistItemFactory(requireContext()))
+            ChecklistItemFactory(requireContext()),
+            NoFeedbackItemFactory(requireContext()))
     }
 
     private fun updateFeedback() {
@@ -112,6 +113,9 @@ class ServiceFragment : BottomSheetDialogFragment() {
                     feedback.feedback.forEach {
                         add(FeedbackItem(it))
                     }
+                    if (feedback.feedback.isEmpty()) {
+                        add(NoFeedbackItem)
+                    }
                 }
             }
         }
@@ -119,7 +123,9 @@ class ServiceFragment : BottomSheetDialogFragment() {
         feedbackRecycler.adapter = BaseRecyclerAdapter(
             items,
             LoadingFeedbackItemFactory(requireContext()),
-            ErrorFeedbackItemFactory(requireContext()))
+            ErrorFeedbackItemFactory(requireContext()),
+            FeedbackItemFactory(requireContext()),
+            NoFeedbackItemFactory(requireContext()))
     }
 
     companion object {
