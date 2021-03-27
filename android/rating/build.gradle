@@ -35,5 +35,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$versions.appcompat"
     implementation "androidx.core:core-ktx:$versions.coreKtx"
 
+    implementation project(':common-data')
     implementation project(':common-ui')
+    implementation project(':network')
 }
