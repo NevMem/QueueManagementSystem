@@ -78,6 +78,7 @@ internal class FeedbackItemFactory(private val context: Context) : RVItemFactory
             item as FeedbackItem
             itemView.authorText.text = item.feedback.author
             itemView.text.text = item.feedback.text
+            itemView.ratingBar.rating = item.feedback.score.toFloat()
         }
     }
 

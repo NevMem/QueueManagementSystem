@@ -1,38 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/indent">
+    android:layout_margin="@dimen/indent"
+    app:cardCornerRadius="@dimen/indent_double">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/authorText"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/light"
-        android:textSize="20sp"
-        android:layout_marginTop="@dimen/indent"
-        android:layout_marginStart="@dimen/indent_double"
-        android:layout_marginEnd="@dimen/indent_double"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="Some dumbass"/>
+        android:paddingBottom="@dimen/indent_double">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/indent"
-        android:layout_marginStart="@dimen/indent_double"
-        android:layout_marginEnd="@dimen/indent_double"
-        android:fontFamily="@font/light"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/authorText"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="Some feedback" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/authorText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/light"
+            android:textSize="18sp"
+            android:layout_marginTop="@dimen/indent_double"
+            android:layout_marginStart="@dimen/indent_double"
+            android:layout_marginEnd="@dimen/indent_double"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Some dumbass"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatRatingBar
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:numStars="5"
+            android:stepSize="0.1"
+            android:layout_marginTop="@dimen/indent"
+            android:layout_marginStart="@dimen/indent_double"
+            android:progressTint="@color/colorPrimary"
+            android:secondaryProgressTint="#00000000"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/authorText"
+            tools:rating="4.2" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/indent"
+            android:layout_marginStart="@dimen/indent_double"
+            android:layout_marginEnd="@dimen/indent_double"
+            android:fontFamily="@font/light"
+            android:textSize="16sp"
+            android:textColor="@color/secondaryTextColor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ratingBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Some feedback" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
