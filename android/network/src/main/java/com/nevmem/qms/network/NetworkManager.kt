@@ -21,4 +21,5 @@ interface NetworkManager {
 
     suspend fun publishFeedback(request: PublishFeedbackRequest, token: String)
     suspend fun loadFeedback(entityId: String, token: String): List<Feedback>
+    suspend fun loadRating(entityId: String, token: String): Float
 }

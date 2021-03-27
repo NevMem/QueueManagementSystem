@@ -19,6 +19,7 @@ import com.nevmem.qms.notifications.createNotificationsManager
 import com.nevmem.qms.permissions.createPermissionsManager
 import com.nevmem.qms.push.PushProcessor
 import com.nevmem.qms.push.ToastPushProcessor
+import com.nevmem.qms.rating.createRatingsManager
 import com.nevmem.qms.status.StatusProvider
 import com.nevmem.qms.status.createStatusProvider
 import com.nevmem.qms.suggests.createDebugSuggestsManager
@@ -66,6 +67,7 @@ class QMSApplication : Application() {
             ToastPushProcessor(get())
         }
         single { createFeedbackManager(get(), get()) }
+        single { createRatingsManager(get(), get()) }
     }
 
     private val viewModelsModule = module {
