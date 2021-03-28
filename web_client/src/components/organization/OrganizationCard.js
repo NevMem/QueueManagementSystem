@@ -36,7 +36,7 @@ export default function OrganizationCard({organizationData, ...props}) {
                     <AddServiceDialog open={open} onClose={handleClose} organization={organizationData} />
                 </Grid>
             </Grid>
-            <Grid conttainer>
+            <Grid container>
                 <Typography style={{color: '#a0a0a0', fontSize: '20px'}} variant='body2'>
                     {address}
                 </Typography>
