@@ -11,9 +11,13 @@ import android.view.LayoutInflater
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
+import com.nevmem.qms.common.utils.runOnUi
 import com.nevmem.qms.rating.R
 import com.nevmem.qms.rating.Rating
 import com.nevmem.qms.rating.RatingsManager
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 class RatingView : LinearLayoutCompat {
@@ -22,6 +26,10 @@ class RatingView : LinearLayoutCompat {
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
 
     private lateinit var ratingsManager: RatingsManager
+
+    private var ratingId: String? = null
+
+    private var job: Job? = null
 
     private var rating: Rating? = null
         set(value) {
@@ -63,12 +71,42 @@ class RatingView : LinearLayoutCompat {
         updateUi()
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        startLoadIfPossible()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        job?.cancel()
+    }
+
     fun setRatingsManager(ratingsManager: RatingsManager) {
         this.ratingsManager = ratingsManager
+        startLoadIfPossible()
     }
 
     fun setRatingId(ratingId: String) {
-        rating = Rating(4.9f, 5.0f)
+        this.ratingId = ratingId
+        startLoadIfPossible()
+    }
+
+    private fun startLoadIfPossible() {
+        val id = ratingId
+        if (id != null && ::ratingsManager.isInitialized) {
+            job?.cancel()
+            job = GlobalScope.launch {
+                val result = try {
+                    val result = ratingsManager.loadRating(id)
+                    result
+                } catch (exception: Exception) {
+                    Rating(null, 5.0f)
+                }
+                runOnUi {
+                    rating = result
+                }
+            }
+        }
     }
 
     private fun updateUi() {
