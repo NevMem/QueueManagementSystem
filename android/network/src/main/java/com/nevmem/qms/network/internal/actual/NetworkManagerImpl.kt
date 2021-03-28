@@ -192,7 +192,7 @@ internal class NetworkManagerImpl(
         wrapRequest(javaBackendService.loadFeedback(token, LoadFeedbacksRequest(entityId)), continuation)
     }
 
-    override suspend fun loadRating(entityId: String, token: String): Float = suspendCoroutine { continuation ->
+    override suspend fun loadRating(entityId: String, token: String): Float? = suspendCoroutine { continuation ->
         suspend fun wrap() = suspendCoroutine<LoadRatingResponse> {
             wrapRequest(javaBackendService.loadRating(token, LoadRatingRequest(entityId)), it)
         }
