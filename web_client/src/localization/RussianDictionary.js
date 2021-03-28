@@ -20,6 +20,7 @@ const dictionary = {
     'logout': 'Выйти',
     'new_organization': 'Новая организация',
     'new_service': 'Новый сервис',
+    'no_rating_yet': 'Еще нет рейтинга',
     'ok': 'Ок',
     'password_label': 'Пароль',
     'permission_MANAGER': 'Менеджер',

@@ -3,10 +3,11 @@ import { withStyles } from '@material-ui/core/styles'
 import AddManagerRow from '../manager-row/AddManagerRow'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Grid from '@material-ui/core/Grid'
+import ManagerRow from '../manager-row/ManagerRow'
 import MuiAccordion from '@material-ui/core/Accordion'
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails'
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary'
-import ManagerRow from '../manager-row/ManagerRow'
+import SimpleRatingView from '../rating/SimpleRatingView'
 import Typography from '@material-ui/core/Typography'
 
 const Accordion = withStyles({
@@ -79,7 +80,7 @@ const ServiceRow = ({ serviceData }) => {
                         </Grid>
                         <Grid item xs={3}>
                             <Typography style={{color: '#a0a0a0', fontSize: '20px', textAlign: 'right'}} variant='body2'>
-                                {serviceData.rating}
+                                <SimpleRatingView entityId={'service_' + serviceData.id} />
                             </Typography>
                         </Grid>
                     </Grid>
