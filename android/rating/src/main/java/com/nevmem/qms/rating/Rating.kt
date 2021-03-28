@@ -1,3 +1,3 @@
 package com.nevmem.qms.rating
 
-data class Rating(val score: Double?, val maxScore: Double)
+data class Rating(val score: Float?, val maxScore: Float)

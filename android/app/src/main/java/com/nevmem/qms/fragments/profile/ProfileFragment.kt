@@ -12,7 +12,6 @@ import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.knownfeatures.KnownFeatures
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
-import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.toast.manager.ShowToastManager
 import com.nevmem.qms.utils.livedata.mergeLatestWithEmpty
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -45,6 +44,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 ProfileAddDocumentFactory(requireContext(), showToastManager),
                 HeaderFactory(findNavController(), requireContext(), authManager),
                 SpaceStubFactory(requireContext()),
+                ProfileLoadingStubFactory(requireContext()),
                 useAnimation = featureManager.isFeatureEnabled(KnownFeatures.UseAnimationsOnProfilePage.value))
         })
     }

@@ -9,6 +9,8 @@ import com.nevmem.qms.recycler.RVHolder
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.recycler.RVItemFactory
 import kotlinx.android.synthetic.main.layout_checklist_item.view.*
+import kotlinx.android.synthetic.main.layout_error_feedback_item.view.*
+import kotlinx.android.synthetic.main.layout_feedback_item.view.*
 import kotlinx.android.synthetic.main.layout_service_description.view.*
 
 class DescriptionItemFactory(private val context: Context) : RVItemFactory {
@@ -45,4 +47,52 @@ class ChecklistItemFactory(private val context: Context) : RVItemFactory {
     override fun isAppropriateType(item: RVItem): Boolean = item is ChecklistItem
     override fun createHolder(root: ViewGroup): RVHolder
         = Holder(context.inflate(R.layout.layout_checklist_item, root))
+}
+
+internal class LoadingFeedbackItemFactory(private val context: Context) : RVItemFactory {
+    inner class Holder(view: View) : RVHolder(view) {
+        override fun onBind(item: RVItem) = Unit
+    }
+
+    override fun isAppropriateType(item: RVItem): Boolean = item is LoadingFeedbackItem
+    override fun createHolder(root: ViewGroup): RVHolder
+        = Holder(context.inflate(R.layout.layout_loading_feedback_item, root))
+}
+
+internal class ErrorFeedbackItemFactory(private val context: Context) : RVItemFactory {
+    inner class Holder(view: View) : RVHolder(view) {
+        override fun onBind(item: RVItem) {
+            item as ErrorFeedbackItem
+            itemView.errorText.text = item.error
+        }
+    }
+
+    override fun isAppropriateType(item: RVItem): Boolean = item is ErrorFeedbackItem
+    override fun createHolder(root: ViewGroup): RVHolder
+        = Holder(context.inflate(R.layout.layout_error_feedback_item, root))
+}
+
+internal class FeedbackItemFactory(private val context: Context) : RVItemFactory {
+    inner class Holder(view: View) : RVHolder(view) {
+        override fun onBind(item: RVItem) {
+            item as FeedbackItem
+            itemView.authorText.text = item.feedback.author
+            itemView.text.text = item.feedback.text
+            itemView.ratingBar.rating = item.feedback.score.toFloat()
+        }
+    }
+
+    override fun isAppropriateType(item: RVItem): Boolean = item is FeedbackItem
+    override fun createHolder(root: ViewGroup): RVHolder
+        = Holder(context.inflate(R.layout.layout_feedback_item, root))
+}
+
+internal class NoFeedbackItemFactory(private val context: Context) : RVItemFactory {
+    inner class Holder(view: View) : RVHolder(view) {
+        override fun onBind(item: RVItem) = Unit
+    }
+
+    override fun isAppropriateType(item: RVItem): Boolean = item is NoFeedbackItem
+    override fun createHolder(root: ViewGroup): RVHolder
+        = Holder(context.inflate(R.layout.layout_no_feedback_item, root))
 }

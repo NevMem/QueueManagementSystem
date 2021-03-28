@@ -11,6 +11,7 @@ import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.fragments.join.service.ServiceFragment
 import com.nevmem.qms.inflate
 import com.nevmem.qms.knownfeatures.KnownFeatures
+import com.nevmem.qms.rating.RatingsManager
 import com.nevmem.qms.recycler.RVHolder
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.recycler.RVItemFactory
@@ -19,7 +20,8 @@ import kotlinx.android.synthetic.main.layout_service_item.view.*
 class ServiceItemFactory(
     private val context: Context,
     private val fragmentManager: FragmentManager,
-    private val featureManager: FeatureManager
+    private val featureManager: FeatureManager,
+    private val ratingsManager: RatingsManager
 ) : RVItemFactory {
     inner class ServiceItemHolder(view: View) : RVHolder(view) {
         override fun onBind(item: RVItem) {
@@ -27,6 +29,7 @@ class ServiceItemFactory(
             itemView.serviceName.text = item.service.info.name
             itemView.ratingView.isVisible = featureManager.isFeatureEnabled(KnownFeatures.RatingsForServices.value)
             itemView.ratingView.setRatingId("service_${item.service.info.id}")
+            itemView.ratingView.setRatingsManager(ratingsManager)
 
             itemView.setOnClickListener {
                 val fragment = ServiceFragment.newInstance()

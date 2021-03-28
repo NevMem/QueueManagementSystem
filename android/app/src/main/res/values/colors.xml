@@ -9,4 +9,7 @@
 
     <color name="defaultTextColor">#D2FFFFFF</color>
     <color name="secondaryTextColor">#90FFFFFF</color>
+
+    <color name="errorBackground">#823131</color>
+    <color name="infoBackground">#353565</color>
 </resources>

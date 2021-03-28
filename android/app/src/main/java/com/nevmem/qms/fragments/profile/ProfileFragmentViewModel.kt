@@ -36,6 +36,7 @@ class ProfileFragmentViewModel(
         }
 
     init {
+        profileList.postValue(listOf(ProfileLoadingStub))
         viewModelScope.launch {
             authManager.currentUser().collect {
                 if (it is UserLoadingState.Error) {
