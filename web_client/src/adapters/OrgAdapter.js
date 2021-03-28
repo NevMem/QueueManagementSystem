@@ -55,6 +55,7 @@ class OrgAdapter {
     }
 
     setOrganizations(orgs) {
+        console.log(orgs)
         this.organizations = orgs
     }
 

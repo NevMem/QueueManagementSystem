@@ -10,6 +10,7 @@ const dictionary = {
     'cancel': 'Отмена',
     'checklist_header': 'Чеклист',
     'edit': 'Редактировать',
+    'employee': 'сотрудников',
     'login_form_title': 'Войдите чтобы управлять своими очередями',
     'login_label': 'Логин',
     'login': 'Войти',
