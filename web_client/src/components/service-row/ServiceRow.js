@@ -85,8 +85,8 @@ const ServiceRow = ({ serviceData }) => {
                     </Grid>
                 </AccordionSummary>
                 <AccordionDetails>
-                    {serviceData.queues && serviceData.queues.map(queue => {                    
-                        return <ManagerRow key={queue.id} queueData={queue} />
+                    {serviceData.admins && serviceData.admins.map(admin => {                    
+                        return <ManagerRow key={admin.id} adminData={admin} />
                     })}
                     <AddManagerRow service={serviceData} />
                 </AccordionDetails>
