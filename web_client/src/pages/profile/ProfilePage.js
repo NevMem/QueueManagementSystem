@@ -1,5 +1,6 @@
 import { Fragment, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import Alert from '@material-ui/lab/Alert'
 import authAdapter from '../../adapters/AuthAdapter'
 import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
@@ -41,6 +42,54 @@ const ProfileRow = ({ titleRes, value, isEditing, setEditedValue, ...props }) =>
   )
 }
 
+const ServicePermissionRow = ({ permission }) => {
+  return (
+    <Grid container justify='space-between' style={{marginTop: '16px'}}>
+      <Typography style={{lineHeight: '38px'}}>{localizedString('service')}</Typography>
+      <Typography style={{lineHeight: '38px'}}>{permission.id}</Typography>
+      <Alert icon={false} variant='outlined' severity='info' style={{paddingTop: '0px', paddingBottom: '0px'}}>
+        {localizedString('permission_' + permission['permissionType'])}
+      </Alert>
+    </Grid>
+  )
+}
+
+const OrganizationPermissionRow = ({ permission }) => {
+  return (
+    <Grid container justify='space-between' style={{marginTop: '16px'}}>
+      <Typography style={{lineHeight: '38px'}}>{localizedString('organization')}</Typography>
+      <Typography style={{lineHeight: '38px'}}>{permission.id}</Typography>
+      <Alert icon={false} variant='outlined' severity='info' style={{paddingTop: '0px', paddingBottom: '0px'}}>
+        {localizedString('permission_' + permission['permissionType'])}
+      </Alert>
+    </Grid>
+  )
+}
+
+const PermissionRow = ({ permission }) => {
+  if ('serviceId' in permission) {
+    return <ServicePermissionRow permission={permission} />
+  }
+  return <OrganizationPermissionRow permission={permission} />
+}
+
+const createPermissionRows = () => {
+  if (!authAdapter.user.wholeUserJson) {
+    return null
+  }
+  if (!authAdapter.user.wholeUserJson['permissions']) {
+    return null
+  }
+  const permissions = authAdapter.user.wholeUserJson['permissions']
+  const result = []
+  for (const elem of permissions) {
+    if ('serviceId' in elem || 'organizationId' in elem) {
+      result.push(elem)
+    }
+  }
+  return result
+}
+
 export default function ProfilePage() {
   const classes = useStyles()
 
@@ -80,8 +129,7 @@ export default function ProfilePage() {
                       titleRes={elem.titleRes}
                       setEditedValue={elem.updater}
                       value={elem.value} />
-                  )
-                  )
+                  ))
                 }
               </CardContent>
               <CardActions>
@@ -92,6 +140,15 @@ export default function ProfilePage() {
                   </Button>
                 }
               </CardActions>
+            </Card>
+
+            <Card className={classes.card} variant='outlined'>
+              <CardContent>
+                <Typography variant='h5'>{localizedString('profile_page_permissions')}</Typography>
+                { createPermissionRows().map((elem, index) => {
+                  return <PermissionRow permission={elem} key={index} />
+                }) }
+              </CardContent>
             </Card>
           </Grid>
         </Grid>

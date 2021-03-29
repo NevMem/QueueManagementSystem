@@ -26,6 +26,7 @@ const dictionary = {
     'permission_MANAGER': 'Менеджер',
     'permission_OWNER': 'Владелец',
     'permission_USER': 'Пользователь',
+    'profile_page_permissions': 'Доступы',
     'profile_user_email': 'email',
     'profile_user_name': 'Имя',
     'profile_user_surname': 'Фамилия',
