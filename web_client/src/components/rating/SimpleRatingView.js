@@ -21,7 +21,7 @@ export default function SimpleRatingView({ entityId }) {
     return (
         <Typography variant='body1'>
             { loading && 'Loading...'}
-            { rating !== localizedString('no_rating_yet') && localizedString('rating') + ' ' + rating }
+            { rating !== localizedString('no_rating_yet') && !loading && localizedString('rating') + ' ' + rating }
             { rating === localizedString('no_rating_yet') && rating }
         </Typography>
     )
