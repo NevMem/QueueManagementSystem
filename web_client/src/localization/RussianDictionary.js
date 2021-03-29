@@ -29,6 +29,7 @@ const dictionary = {
     'profile_user_email': 'email',
     'profile_user_name': 'Имя',
     'profile_user_surname': 'Фамилия',
+    'rating': 'Рейтинг:',
     'register': 'Регистрация',
     'your_organizations': 'Ваши организации',
     'zero_organizations_card_desc': 'Нажмите на кнопку выше чтобы создать!',
