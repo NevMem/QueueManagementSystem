@@ -3,18 +3,22 @@ import authAdapter from './AuthAdapter'
 
 class FeedbackAdapter {
     constructor() {
-        this.cachedValues = {}
+        this.cached = {}
     }
 
     loadRating(entityId) {
         return new Promise((res, rej) => {
-            if (entityId in this.cachedValues) {
-                res(this.cachedValues[entityId])
+            if (entityId in this.cached) {
+                this.cached[entityId]
+                    .then(data => data.data)
+                    .then(data => res(data))
             } else {
-                loadRating(authAdapter.token, entityId)
+                const promise = loadRating(authAdapter.token, entityId)
+                
+                this.cached[entityId] = promise
+                promise
                     .then(data => data.data)
                     .then(data => {
-                        this.cachedValues[entityId] = data
                         res(data)
                     })
             }

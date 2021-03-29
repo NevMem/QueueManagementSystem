@@ -9,9 +9,7 @@ export default function SimpleRatingView({ entityId }) {
 
     feedbackAdapter.loadRating(entityId)
         .then(data => {
-            console.log(data)
             setLoading(false)
-            console.log(data)
             const rating = data.rating
             if (rating) {
                 setRating(rating)
