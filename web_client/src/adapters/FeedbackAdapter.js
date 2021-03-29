@@ -18,9 +18,7 @@ class FeedbackAdapter {
                 this.cached[entityId] = promise
                 promise
                     .then(data => data.data)
-                    .then(data => {
-                        res(data)
-                    })
+                    .then(data => res(data))
             }
         })
     }
