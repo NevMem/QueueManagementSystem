@@ -3,6 +3,8 @@ import pytest
 from server.app.main import app
 from starlette.testclient import TestClient
 from server.app.utils.db_utils import drop_db, prepare_db
+from tools.network.network_layer import NetworkLayer
+from tools.client.client import Client
 
 from proto.organization_pb2 import OrganizationList, OrganizationInfo
 from proto.service_pb2 import ServiceInfo
@@ -15,6 +17,11 @@ def server():
     return Server()
 
 
+@pytest.fixture(scope='function')
+def client():
+    return AnotherClient()
+
+
 @pytest.fixture(scope='function', autouse=True)
 def clean_db():
     try:
@@ -24,6 +31,22 @@ def clean_db():
 
     loop.run_until_complete(drop_db())
     loop.run_until_complete(prepare_db())
+
+
+class MockNetworkLayer(NetworkLayer):
+    def __init__(self):
+        super(MockNetworkLayer, self).__init__("Mock")
+        self.client = TestClient(app)
+
+    def post(self, *args, **kwargs):
+        return self.client.post(*args, **kwargs)
+
+
+class AnotherClient(Client):
+    def __init__(self):
+        super(AnotherClient, self).__init__("Mock", use_https=False)
+        self.base_url = ''
+        self.layer = MockNetworkLayer()
 
 
 class Server(TestClient):
