@@ -55,7 +55,7 @@ export default function OrganizationCard({organizationData, ...props}) {
                 </Grid>
             </Grid>
             { services.map(elem => {
-                return <ServiceRow key={elem.id} serviceData={elem} />
+                return <ServiceRow key={elem.id} organizationId={organizationData.id} serviceData={elem} />
             }) }
         </div>
     )

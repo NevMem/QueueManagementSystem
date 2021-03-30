@@ -7,6 +7,7 @@ import ManagerRow from '../manager-row/ManagerRow'
 import MuiAccordion from '@material-ui/core/Accordion'
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails'
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary'
+import qrAdapter from '../../adapters/QrAdapter'
 import SimpleRatingView from '../rating/SimpleRatingView'
 import Typography from '@material-ui/core/Typography'
 
@@ -53,7 +54,7 @@ const AccordionDetails = withStyles((theme) => ({
     },
 }))(MuiAccordionDetails)
 
-const ServiceRow = ({ serviceData }) => {
+const ServiceRow = ({ organizationId, serviceData }) => {
     return (
         <Fragment>
             <Accordion>
@@ -74,9 +75,14 @@ const ServiceRow = ({ serviceData }) => {
                             </Typography>
                         </Grid>
                         <Grid item xs={3}>
-                            <Typography style={{color: '#a0a0a0', fontSize: '16px', textAlign: 'right'}} variant='body2'>
-                                {serviceData.avgServiceTime}
-                            </Typography>
+                            <object
+                                    type="image/svg+xml"
+                                    data={qrAdapter.imageSrc(organizationId, serviceData.id)}
+                                    width="32px"
+                                    height="32px"
+                                    style={{objectFit: 'cover'}}>
+                                Your browser does not support SVG.
+                            </object>
                         </Grid>
                         <Grid item xs={3}>
                             <Typography style={{color: '#a0a0a0', fontSize: '20px', textAlign: 'right'}} variant='body2'>
