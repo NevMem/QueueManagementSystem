@@ -1,8 +1,10 @@
-import backendUrl from './backendUrl'
+import backendUrl, { feedbackBackendUrl } from './backendUrl'
 
-export const withBackendUrl = (paths) => {
+export const withBackendUrl = (paths, useJavaBackend = false) => {
+    const prefix = useJavaBackend ? feedbackBackendUrl : backendUrl
+
     for (let key of Object.keys(paths)) {
-        paths[key] = backendUrl + paths[key]
+        paths[key] = prefix + paths[key]
     }
     console.log(paths)
     return paths

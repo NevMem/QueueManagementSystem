@@ -1,23 +1,19 @@
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
+import localizedString from '../../localization/localizedString'
 
-const ManagerRow = ({ queueData }) => {
-    const { name, waiting, avgServiceTime } = queueData
+const ManagerRow = ({ adminData }) => {
+    const { name, surname, permissionType } = adminData
     return (
-        <Grid container style={{paddingLeft: '16px', marginTop: '16px'}}>
-            <Grid item xs={2}>
+        <Grid container style={{paddingLeft: '16px', marginTop: '16px'}} justify='space-between'>
+            <Grid item>
                 <Typography style={{color: '#a0a0a0', fontSize: '20px'}} variant='body2'>
-                    {name}
+                    {name} {surname}
                 </Typography>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item>
                 <Typography style={{color: '#a0a0a0', fontSize: '16px', textAlign: 'right'}} variant='body2'>
-                    {waiting}
-                </Typography>
-            </Grid>
-            <Grid item xs={5}>
-                <Typography style={{color: '#a0a0a0', fontSize: '16px', textAlign: 'right'}} variant='body2'>
-                    {avgServiceTime}
+                    {localizedString('permission_' + permissionType)}
                 </Typography>
             </Grid>
         </Grid>

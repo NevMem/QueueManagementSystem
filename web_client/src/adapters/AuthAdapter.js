@@ -2,11 +2,12 @@ import { makeAutoObservable } from 'mobx'
 import { processLogin, processRegistration, loadUser, checkAuth } from '../api/authApi'
 
 class User {
-    constructor(name, surname, login, token) {
+    constructor(name, surname, login, token, wholeUserJson) {
         this.name = name
         this.surname = surname
         this.login = login
         this.token = token
+        this.wholeUserJson = wholeUserJson
     }
 }
 
@@ -25,7 +26,12 @@ class AuthAdapter {
         const savedUser = localStorage.getItem('user')
         if (savedUser) {
             const jsonUser = JSON.parse(savedUser)
-            this.user = new User(jsonUser['name'], jsonUser['surname'], jsonUser['login'], jsonUser['token'])
+            this.user = new User(
+                jsonUser['name'],
+                jsonUser['surname'],
+                jsonUser['login'],
+                jsonUser['token'],
+                jsonUser['wholeUserJson'])
             console.log('loaded user from local storage')
             this.checkAuth()
         }
@@ -86,7 +92,7 @@ class AuthAdapter {
                 .then(resp => {
                     const { email, name, surname } = resp.data
                     if (resp.status === 200) {
-                        this.user = new User(name, surname, email, this.token)
+                        this.user = new User(name, surname, email, this.token, resp.data)
                         this.saveUser()
                         res()
                     } else {
