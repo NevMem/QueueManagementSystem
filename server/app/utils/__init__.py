@@ -2,6 +2,7 @@ import random
 import string
 import sys
 import traceback
+import typing as tp
 
 from Crypto.Hash import SHA256
 
@@ -39,13 +40,21 @@ def fixed_uuid(length=6) -> str:
     return ''.join(random.choice(uuid_letters) for i in range(length))
 
 
-def generate_next_ticket(previous_ticket: str) -> str:
-    letter = previous_ticket[0]
-    number = int(previous_ticket[1:])
+def number_to_base(n: int, b: int) -> tp.List[int]:
+    if n == 0:
+        return [0]
 
-    number += 1
-    if number == 100:
-        number = 1
-        letter = string.ascii_uppercase[(string.ascii_uppercase.index(letter) + 1) % len(string.ascii_uppercase)]
+    digits = []
+    while n:
+        digits.append(int(n % b))
+        n //= b
 
-    return f'{letter}{number:02d}'
+    return digits[::-1]
+
+
+def generate_next_ticket(previous_ticket: str, service_index: int) -> str:
+    number = (int(previous_ticket[-3:]) + 1) % 1000
+
+    letter_digits = number_to_base(service_index, 26)
+
+    return f'{"".join(string.ascii_uppercase[d] for d in letter_digits)}{number:03d}'

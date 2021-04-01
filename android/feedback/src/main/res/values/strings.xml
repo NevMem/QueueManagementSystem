@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feedback_string">Feedback</string>
+    <string name="leave_feedback_button_label">Save</string>
+    <string name="leave_feedback">Leave feedback</string>
+</resources>

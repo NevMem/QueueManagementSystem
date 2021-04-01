@@ -39,4 +39,5 @@
     <string name="description_string">Description</string>
     <string name="before_visit_string">Before visit</string>
     <string name="no_feedback_yet_string">No feedback yet</string>
+    <string name="leave_feedback_string">Leave feedback</string>
 </resources>

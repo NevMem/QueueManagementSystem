@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/indent_quadruple">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/leave_feedback"
+        android:fontFamily="@font/medium"
+        android:textSize="24sp"
+        android:padding="@dimen/indent_double"
+        android:textColor="@color/defaultTextColor"
+        android:gravity="center" />
+
+    <androidx.appcompat.widget.AppCompatRatingBar
+        style="@style/Widget.AppCompat.RatingBar"
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:stepSize="1"
+        android:progressTint="@color/successColor"
+        android:secondaryProgressTint="@color/successColor"
+        android:numStars="5"
+        tools:rating="4" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/indent_double"
+        android:layout_marginRight="@dimen/indent_double"
+        android:layout_marginTop="@dimen/indent"
+        android:layout_marginBottom="@dimen/indent_double"
+        android:hint="@string/feedback_string"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/feedbackText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="2"
+            android:maxLines="4" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/leaveFeedbackButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/medium"
+        android:layout_gravity="center"
+        android:textSize="16sp"
+        android:text="@string/leave_feedback_button_label" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

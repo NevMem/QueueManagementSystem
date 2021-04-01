@@ -1,7 +1,9 @@
 
 from google.protobuf import empty_pb2
-from sqlalchemy.sql import select, and_, delete, update, exists
+from sqlalchemy.sql import select, delete, update, exists
 from sqlalchemy.orm import selectinload
+from sqlalchemy import func
+
 import io
 import json
 import qrcode
@@ -11,7 +13,7 @@ import typing as tp
 from starlette.authentication import requires
 from starlette.exceptions import HTTPException
 
-from proto import user_pb2, permissions_pb2, organization_pb2, queue_pb2, service_pb2
+from proto import user_pb2, permissions_pb2, organization_pb2, queue_pb2, service_pb2, ticket_pb2
 from server.app.middleware import middleware
 from server.app import model
 from server.app.utils import sha_hash, generate_next_ticket
@@ -23,7 +25,7 @@ from server.app.utils.protobuf import patch_enums
 patch_enums()
 
 
-def user_from_permission(permission):
+def user_from_permission(permission: model.Permission) -> user_pb2.User:
     return user_pb2.User(
         name=permission.user.name,
         surname=permission.user.surname,
@@ -33,7 +35,30 @@ def user_from_permission(permission):
     )
 
 
-def organization_from_model(organization):
+def user_from_model(user: model.User) -> user_pb2.User:
+    return user_pb2.User(
+        name=user.name,
+        surname=user.surname,
+        email=user.email,
+        id=str(user.id),
+    )
+
+
+def service_from_model(service: model.Service) -> service_pb2.Service:
+    return service_pb2.Service(
+        info=service_pb2.ServiceInfo(
+            id=str(service.id),
+            name=service.name,
+            data=service.data
+        ),
+        admins=[
+            user_from_permission(permission)
+            for permission in service.admins
+        ],
+    )
+
+
+def organization_from_model(organization: model.Organization, with_services: bool = True) -> organization_pb2.Organization:
     return organization_pb2.Organization(
         info=organization_pb2.OrganizationInfo(
             id=str(organization.id),
@@ -42,23 +67,28 @@ def organization_from_model(organization):
             data=organization.data
         ),
         services=[
-            service_pb2.Service(
-                info=service_pb2.ServiceInfo(
-                    id=str(service.id),
-                    name=service.name,
-                    data=service.data
-                ),
-                admins=[
-                    user_from_permission(permission)
-                    for permission in service.admins
-                ],
-            )
+            service_from_model(service)
             for service in organization.services
-        ],
+        ] if with_services else [],
         admins=[
             user_from_permission(permission)
             for permission in organization.admins
         ],
+    )
+
+
+def ticket_from_model(ticket: model.Ticket, with_user=False) -> ticket_pb2.Ticket:
+    return ticket_pb2.Ticket(
+        id=str(ticket.id),
+        user_id=str(ticket.user_id),
+        service_id=str(ticket.service_id),
+        organization_id=ticket.service.organization_id,
+        ticket_id=ticket.ticket_id,
+        enqueue_at=ticket.enqueue_at.timestamp(),
+        accepted_at=ticket.enqueue_at.timestamp(),
+        state=ticket_pb2.Ticket.State[ticket.state],
+        window=ticket.window,
+        user=user_from_model(ticket.user) if with_user else user_pb2.User()
     )
 
 
@@ -190,18 +220,8 @@ async def create_organization(request: Request):
 
 
 @route('/admin/update_organization', methods=['POST'], request_type=organization_pb2.OrganizationInfo)
-@requires('authenticated')
+@requires(['authenticated', 'update'])
 async def update_organization(request: Request) -> empty_pb2.Empty:
-    auth_query = (
-        select(exists(model.Permission))
-        .where(and_(
-            model.Permission.organization_id == request.parsed.id,
-            model.Permission.user_id == request.user.id
-        ))
-    )
-    if not (await request.connection.execute(auth_query)).scalar():
-        raise HTTPException(403)
-
     query = (
         update(model.Organization)
         .where(model.Organization.id == request.parsed.id)
@@ -211,6 +231,7 @@ async def update_organization(request: Request) -> empty_pb2.Empty:
             model.Organization.data: dict(**request.parsed.data)
         })
     )
+
     await request.connection.execute(query)
     return ProtobufResponse(empty_pb2.Empty())
 
@@ -218,7 +239,7 @@ async def update_organization(request: Request) -> empty_pb2.Empty:
 @route('/admin/get_organizations_list', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
 @requires('authenticated')
 async def get_organizations_list(request: Request):
-    query = (
+    query_organizations = (
         select(model.Organization)
         .where(model.User.id == request.user.id)
         .join(model.Permission, model.Permission.organization_id == model.Organization.id)
@@ -232,16 +253,42 @@ async def get_organizations_list(request: Request):
         )
     )
 
-    result = await request.connection.execute(query)
+    result = await request.connection.execute(query_organizations)
     organizations = result.scalars().all()
 
-    result = []
+    response: tp.List[organization_pb2.Organization] = []
     for organization in organizations:
-        result.append(
+        response.append(
             organization_from_model(organization)
         )
 
-    return ProtobufResponse(organization_pb2.OrganizationList(organizations=result))
+    query_service = (
+        select(model.Service)
+        .where(
+            model.User.id == request.user.id,
+            model.Organization.id.notin_((organization.info.id for organization in response))
+        )
+        .join(model.Permission, model.Permission.service_id == model.Service.id)
+        .join(model.User, model.User.id == model.Permission.user_id)
+        .join(model.Organization, model.Organization.id == model.Service.organization_id)
+        .options(
+            selectinload(model.Service.organization),
+            selectinload(model.Service.organization, model.Organization.admins),
+            selectinload(model.Service.organization, model.Organization.admins, model.Permission.user),
+            selectinload(model.Service.admins),
+            selectinload(model.Service.admins, model.Permission.user),
+        )
+    )
+
+    result = await request.connection.execute(query_service)
+    services = result.scalars().all()
+
+    for service in services:
+        organization = organization_from_model(service.organization, with_services=False)
+        organization.services.extend((service_from_model(service), ))
+        response.append(organization)
+
+    return ProtobufResponse(organization_pb2.OrganizationList(organizations=response))
 
 
 @route('/client/fetch_organization', methods=['POST', 'GET'], request_type=organization_pb2.OrganizationInfo)
@@ -271,10 +318,25 @@ async def fetch_organization(request: Request):
 @route('/admin/create_service', methods=['POST'], request_type=service_pb2.ServiceInfo, permission_check_attr='organization_id')
 @requires(['authenticated', 'create_service'])
 async def create_service(request: Request):
+    query = (
+        select(model.Service)
+        .where(
+            model.Service.organization_id == request.parsed.organization_id
+        )
+        .order_by(model.Service.index.desc())
+    )
+    result = await request.connection.execute(query)
+    service = result.scalars().first()
+
+    next_index = 0
+    if service is not None:
+        next_index = service.index + 1
+
     new_service = model.Service(
         name=request.parsed.name,
         organization_id=request.parsed.organization_id,
         data=dict(request.parsed.data),
+        index=next_index,
     )
 
     new_permission = model.Permission(
@@ -289,20 +351,8 @@ async def create_service(request: Request):
 
 
 @route('/admin/update_service', methods=['POST'], request_type=service_pb2.ServiceInfo)
-@requires('authenticated')
-async def update_organization(request: Request) -> empty_pb2.Empty:
-    auth_query = (
-        select(exists(model.Permission))
-        .where(
-            and_(
-                model.Permission.service_id == request.parsed.id,
-                model.Permission.user_id == request.user.id
-            )
-    )
-    )
-    if not (await request.connection.execute(auth_query)).scalar():
-        raise HTTPException(403)
-
+@requires(['authenticated', 'update'])
+async def update_service(request: Request) -> empty_pb2.Empty:
     query = (
         update(model.Service)
         .where(model.Service.id == request.parsed.id)
@@ -311,6 +361,7 @@ async def update_organization(request: Request) -> empty_pb2.Empty:
             model.Service.data: dict(**request.parsed.data)
         })
     )
+
     await request.connection.execute(query)
     return ProtobufResponse(empty_pb2.Empty())
 
@@ -329,19 +380,20 @@ async def remove_service(request: Request):
 
 @route('/admin/generate_qr', methods=['GET'])
 async def generate_qr(request: Request):
-    payload = {'organization': request.query_params['organization']}
     if 'organization' not in request.query_params:
         raise HTTPException(400)
+
+    payload = {'organization': request.query_params['organization']}
 
     if 'service' in request.query_params:
         payload['service'] = request.query_params['service']
         query = (
-            select(model.Service)
-            .where(and_(
+            select(exists(model.Service))
+            .where(
                 model.Service.id == request.query_params['service'],
                 model.Service.organization_id == request.query_params['organization']
-                )
-            ).limit(1)
+            )
+            .limit(1)
         )
     else:
         query = (
@@ -350,13 +402,13 @@ async def generate_qr(request: Request):
             .limit(1)
         )
 
-    if len([await request.connection.execute(query)]) == 0:
+    if not (await request.connection.execute(query)).scalar():
         raise HTTPException(404)
 
     img = qrcode.make(json.dumps(payload), image_factory=qrcode.image.svg.SvgImage)
     resp = io.BytesIO()
     img.save(resp)
-    return Response(content=resp.getvalue())
+    return Response(content=resp.getvalue(), headers={'Content-type': 'image/svg+xml'})
 
 
 @route('/client/enter_queue', methods=['POST'], request_type=service_pb2.ServiceInfo)
@@ -374,7 +426,7 @@ async def enter_queue(request: Request):
     last_queue_item = result.scalars().first()
 
     if last_queue_item is None:
-        last_ticket_id = 'A00'
+        last_ticket_id = '000'
     else:
         last_ticket_id = last_queue_item.ticket_id
 
@@ -385,18 +437,51 @@ async def enter_queue(request: Request):
         .limit(1)
     )
 
-    last_ticket = (await request.connection.execute(query)).scalars().first()
-    if last_ticket and not last_ticket.processed:
+    last_ticket: model.Ticket = (await request.connection.execute(query)).scalars().first()
+    if last_ticket and last_ticket.state != 'PROCESSED':
         raise HTTPException(409)
+
+    query = (
+        select(model.Service.index)
+        .where(model.Service.id == request.parsed.id)
+    )
+
+    service_index = (await request.connection.execute(query)).scalar()
 
     new_queue_item = model.Ticket(
         user_id=request.user.id,
         service_id=request.parsed.id,
-        ticket_id=generate_next_ticket(last_ticket_id),
+        ticket_id=generate_next_ticket(last_ticket_id, service_index),
     )
 
     request.connection.add(new_queue_item)
     return ProtobufResponse(queue_pb2.QueueUserInfo(ticket_id=new_queue_item.ticket_id))
+
+
+@route('/admin/queue_tickets', methods=['POST'], request_type=organization_pb2.OrganizationInfo)
+async def queue_tickets(request: Request):
+    query = (
+        select(model.Ticket)
+        .where(
+            model.Organization.id == request.parsed.id,
+            model.Ticket.state != 'PROCESSED',
+        )
+        .join(model.Service, model.Ticket.service_id == model.Service.id)
+        .join(model.Organization, model.Organization.id == model.Service.organization_id)
+        .order_by(model.Ticket.enqueue_at.desc())
+        .options(
+            selectinload(model.Ticket.service)
+        )
+    )
+
+    result = await request.connection.execute(query)
+    tickets = result.scalars().all()
+
+    response = []
+    for ticket in tickets:
+        response.append(ticket_from_model(ticket))
+
+    return ProtobufResponse(ticket_pb2.TicketList(tickets=response))
 
 
 @route('/admin/add_user', methods=['POST'], request_type=permissions_pb2.AddUserRequest)
@@ -567,12 +652,46 @@ async def update_user_privilege(request: Request):
 
 
 @route('/client/get_current_queue_info', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
+@requires('authenticated')
 async def get_current_queue_info(request: Request):
-    # fixme: plug
-    return ProtobufResponse(queue_pb2.QueueUserInfo(
-        user_count=2,
-        user_queue_position=1,
-        approximate_time=10,
+    query = (
+        select(model.Ticket)
+        .where(
+            model.Ticket.user_id == request.user.id,
+        )
+        .order_by(model.Ticket.enqueue_at.desc())
+        .options(
+            selectinload(model.Ticket.service)
+        )
+    )
+
+    result = await request.connection.execute(query)
+    ticket = result.scalars().first()
+
+    if not ticket:
+        raise HTTPException(404)
+
+    if ticket.state == 'PROCESSED':
+        return ProtobufResponse(ticket_pb2.TicketInfo(
+            ticket=ticket_from_model(ticket),
+        ))
+
+    query = (
+        select(func.count(model.Ticket.id))
+        .where(
+            model.Ticket.service_id == ticket.service_id,
+            model.Ticket.state != 'PROCESSED',
+            model.Ticket.enqueue_at < ticket.enqueue_at,
+        )
+    )
+
+    result = await request.connection.execute(query)
+
+    people_count = result.scalar()
+    return ProtobufResponse(ticket_pb2.TicketInfo(
+        ticket=ticket_from_model(ticket),
+        people_in_front_count=people_count,
+        remaining_time=60 * 5 * people_count,  # FIXME: statistic
     ))
 
 

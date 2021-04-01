@@ -22,10 +22,13 @@ class Service(BaseModel):
     __tablename__ = 'Services'
 
     id = sqlalchemy.Column(UUID(), primary_key=True, default=uuid.uuid4)
+    index = sqlalchemy.Column(types.Integer, server_default='0')
+
     name = sqlalchemy.Column(types.Text, nullable=False)
     organization_id = sqlalchemy.Column(types.String, sqlalchemy.ForeignKey('Organizations.id'))
 
     admins = relationship('Permission', cascade='all, delete-orphan')
+    tickets = relationship('Ticket', backref='service')
 
     data = sqlalchemy.Column(postgresql.JSONB, default={})
 
@@ -34,7 +37,7 @@ class Organization(BaseModel):
     __tablename__ = 'Organizations'
 
     id = sqlalchemy.Column(types.String, primary_key=True, default=fixed_uuid)
-    services = relationship(Service, cascade='all, delete-orphan')
+    services = relationship(Service, cascade='all, delete-orphan', backref='organization')
 
     name = sqlalchemy.Column(types.Text, nullable=False)
     admins = relationship('Permission', cascade='all, delete-orphan')
@@ -74,8 +77,12 @@ class Ticket(BaseModel):
     service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Services.id'), index=True)
 
     ticket_id = sqlalchemy.Column(types.Text, nullable=False)
+    state = sqlalchemy.Column(types.String, default='WAITING', index=True)
+
     enqueue_at = sqlalchemy.Column(types.DateTime, server_default=func.now())
-    processed = sqlalchemy.Column(types.Boolean, default=False)
+    accepted_at = sqlalchemy.Column(types.DateTime)
+
+    window = sqlalchemy.Column(types.String)
 
 
 class User(BaseModel):
@@ -91,5 +98,6 @@ class User(BaseModel):
 
     permissions = relationship(Permission, backref='user')
     attachments = relationship(UserAttachments)
-    current_queue = relationship(Ticket, uselist=False)
+    tickets = relationship(Ticket, backref='user')
+
     data = sqlalchemy.Column(types.JSON, default={})

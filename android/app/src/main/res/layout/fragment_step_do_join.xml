@@ -131,6 +131,14 @@
                     android:overScrollMode="never"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:id="@+id/leaveFeedbackButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/indent"
+                    android:text="@string/leave_feedback_string" />
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         

@@ -10,6 +10,8 @@ import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.R
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.features.isFeatureEnabled
+import com.nevmem.qms.feedback.FeedbackManager
+import com.nevmem.qms.feedback.ui.FeedbackFragment
 import com.nevmem.qms.fragments.join.JoinStep
 import com.nevmem.qms.fragments.join.JoinUsecase
 import com.nevmem.qms.fragments.join.step.gallery.GalleryItem
@@ -34,6 +36,7 @@ class DoJoinStep : JoinStep {
             private val usecase: JoinUsecase by inject()
             private val featureManager: FeatureManager by inject()
             private val ratingsManager: RatingsManager by inject()
+            private val feedbackManager: FeedbackManager by inject()
 
             override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                 super.onViewCreated(view, savedInstanceState)
@@ -76,6 +79,13 @@ class DoJoinStep : JoinStep {
                 services.adapter = BaseRecyclerAdapter(
                     org.servicesList.map { ServiceItem(it) },
                     ServiceItemFactory(requireContext(), parentFragmentManager, featureManager, ratingsManager))
+
+                leaveFeedbackButton.setOnClickListener {
+                    parentFragmentManager.let { fragmentManager ->
+                        FeedbackFragment.newInstance(
+                            feedbackManager, "organization_${org.info.id}").show(fragmentManager, "feedback")
+                    }
+                }
             }
 
             private fun updateMediaLinks(data: Map<String, String>) {

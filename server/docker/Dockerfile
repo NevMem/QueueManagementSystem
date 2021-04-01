@@ -12,7 +12,9 @@ RUN apt update && \
  telnet \
  lsof \
  nginx \
- syslog-ng
+ syslog-ng \
+ curl \
+ less
 
 
 RUN python3 -m pip install -r /usr/lib/qms/server/app/requirenments.txt
