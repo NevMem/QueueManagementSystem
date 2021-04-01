@@ -11,6 +11,8 @@ from starlette.applications import Starlette
 from starlette.requests import Request as StarletteRequest
 from starlette.responses import Response
 from starlette.routing import Route
+from starlette_prometheus import metrics, PrometheusMiddleware
+
 
 _routes = []
 _signatures: tp.Dict[str, tp.Tuple[Message, Message]] = {}
@@ -67,10 +69,9 @@ def route(path: str, request_type: Message = empty_pb2.Empty, response_type: Mes
 def prepare_app(*args, **kwargs):
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
-    # handler = logging.handlers.SysLogHandler(address='/dev/log')
-    # logger.addHandler(handler)
-
-    return Starlette(*args, routes=_routes, **kwargs)
+    app = Starlette(*args, routes=_routes, **kwargs)
+    app.add_middleware(PrometheusMiddleware)
+    app.add_route("/metrics/", metrics)
 
 
 def get_signature(path: str):
