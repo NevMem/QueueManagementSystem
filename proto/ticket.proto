@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package qms;
+
+option java_package = "com.nevmem.qms";
+option java_outer_classname = "TicketProto";
+
+import "proto/user.proto";
+
+
+message Ticket {
+    string id = 1;
+
+    string user_id = 2;
+    string service_id = 3;
+    string ticket_id = 4;
+
+    uint32 enqueue_at = 5;
+    bool processed = 6;
+
+    User user = 7;
+}
+
+message TicketList {
+    repeated Ticket tickets = 1;
+}

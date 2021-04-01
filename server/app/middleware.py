@@ -9,7 +9,7 @@ from sqlalchemy.orm import selectinload
 
 from starlette.datastructures import MutableHeaders
 from starlette.middleware import Middleware
-from starlette.middleware.authentication import AuthenticationMiddleware, AuthenticationBackend, AuthCredentials
+from starlette.middleware.authentication import AuthenticationMiddleware, AuthenticationBackend, AuthCredentials, UnauthenticatedUser
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import HTTPConnection
@@ -25,8 +25,8 @@ class BasicAuthBackend(AuthenticationBackend):
     logger = logging.getLogger('app')
 
     async def authenticate(self, request):
-        if 'user' not in request.session:
-            return AuthCredentials([]), None
+        if not request.session.get('user'):
+            return AuthCredentials([]), UnauthenticatedUser()
 
         query = (
             select(model.User)
