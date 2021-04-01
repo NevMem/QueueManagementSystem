@@ -126,6 +126,7 @@ const ChecklistBlock = observer(({ checklist }) => {
 export default function AddServiceDialog({ organization, open, onClose, ...rest }) {
 
     const { value: serviceName, bind: bindServiceName } = useInput('')
+    const { value: description, bind: bindDescription } = useInput('')
     const [ error, setError ] = useState('')
 
     const handleCancel = () => { onClose() }
@@ -134,7 +135,8 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
 
     const handleOk = () => {
         let data = {
-            checklistItems: checklist.getList().map(elem => elem.name).join(',')
+            checklistItems: checklist.getList().map(elem => elem.name).join(','),
+            description: description
         }
         orgAdapter.addService(organization.id, serviceName, data)
             .then(data => {
@@ -169,6 +171,14 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
                     variant="outlined"
                     label={localizedString('add_new_service_dialog_label')}
                     {...bindServiceName} />
+
+                <TextField
+                    style={{width: '100%', marginTop: '16px'}}
+                    color="primary"
+                    variant="outlined"
+                    size='small'
+                    label={localizedString('add_new_service_dialog_description_label')}
+                    {...bindDescription} />
 
                 { useChecklist && <ChecklistBlock checklist={checklist} /> }
                 { !useChecklist &&
