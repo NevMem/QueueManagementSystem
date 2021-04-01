@@ -455,7 +455,7 @@ async def enter_queue(request: Request):
     )
 
     request.connection.add(new_queue_item)
-    return ProtobufResponse(queue_pb2.QueueUserInfo(ticket_id=new_queue_item.ticket_id))
+    return ProtobufResponse(ticket_pb2.Ticket(ticket_id=new_queue_item.ticket_id))
 
 
 @route('/admin/queue_tickets', methods=['POST'], request_type=organization_pb2.OrganizationInfo)
