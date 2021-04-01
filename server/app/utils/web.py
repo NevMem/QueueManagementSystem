@@ -72,6 +72,7 @@ def prepare_app(*args, **kwargs):
     app = Starlette(*args, routes=_routes, **kwargs)
     app.add_middleware(PrometheusMiddleware)
     app.add_route("/metrics/", metrics)
+    return app
 
 
 def get_signature(path: str):
