@@ -40,8 +40,8 @@ class OrgAdapter {
         }
     }
 
-    addOrganization(name, address) {
-        return createOrganization(authAdapter.token, name, address)
+    addOrganization(name, address, data) {
+        return createOrganization(authAdapter.token, name, address, data)
             .then(data => {
                 this.loadOrganizations()
             })

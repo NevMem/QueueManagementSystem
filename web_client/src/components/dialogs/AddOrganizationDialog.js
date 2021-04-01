@@ -36,6 +36,7 @@ export default function AddOrganizationDialog({ open, onClose, ...rest }) {
 
     const { value: organizationName, bind: bindOrganizationName } = useInput('')
     const { value: organizationAddress, bind: bindOrganizationAddress } = useInput('')
+    const { value: description, bind: bindDescription } = useInput('')
     const [ error, setError ] = useState(undefined)
 
     const handleCancel = () => {
@@ -43,7 +44,10 @@ export default function AddOrganizationDialog({ open, onClose, ...rest }) {
     }
 
     const handleOk = () => {
-        orgAdapter.addOrganization(organizationName, organizationAddress)
+        const data = {
+            description: description
+        }
+        orgAdapter.addOrganization(organizationName, organizationAddress, data)
             .then(() => {
                 onClose()
             })
@@ -63,12 +67,21 @@ export default function AddOrganizationDialog({ open, onClose, ...rest }) {
                     variant="outlined"
                     label={localizedString('add_new_organization_dialog_name_label')}
                     {...bindOrganizationName} />
+
                 <TextField
                     style={{width: '100%', marginTop: '16px'}}
                     color="primary"
                     variant="outlined"
                     label={localizedString('add_new_organization_dialog_address_label')}
                     {...bindOrganizationAddress} />
+
+                <TextField
+                    style={{width: '100%', marginTop: '16px'}}
+                    color="primary"
+                    variant="outlined"
+                    size='small'
+                    label={localizedString('add_new_organization_dialog_description_label')}
+                    {...bindDescription} />
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleCancel} color="default">

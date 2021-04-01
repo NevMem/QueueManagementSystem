@@ -2,6 +2,8 @@ const dictionary = {
     'about_checklist': 'Добавить чеклист для пользователей',
     'add_new_manager_dialog_email_label': 'Email менеджера',
     'add_new_manager_dialog_title': 'Добавить менеджера',
+    'add_new_organization_dialog_address_label': 'Адрес организации',
+    'add_new_organization_dialog_description_label': 'Описание',
     'add_new_organization_dialog_name_label': 'Имя новой организации',
     'add_new_organization_dialog_title': 'Добавляем новую организацию',
     'add_new_service_dialog_description_label': 'Описание',
