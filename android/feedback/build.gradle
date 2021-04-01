@@ -31,12 +31,17 @@ android {
 }
 
 dependencies {
+    implementation "androidx.appcompat:appcompat:$versions.appcompat"
     implementation "androidx.core:core-ktx:$versions.coreKtx"
+    implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
+    implementation "com.google.android.material:material:$versions.material"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutinesCore"
 
     implementation project(':auth')
+    implementation project(':common')
     implementation project(':common-data')
+    implementation project(':common-ui')
     implementation project(':logger')
     implementation project(':network')
 }
