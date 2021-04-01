@@ -8,7 +8,7 @@ import qrAdapter from '../../adapters/QrAdapter'
 export default function QrCodeGroup({ organizationId, serviceId, ...props }) {
     const [ open, setOpen ] = useState(false)
 
-    const handleOpen = (ev) => { setOpen(true) }
+    const handleOpen = () => { setOpen(true) }
     const handleClose = () => { setOpen(false) }
 
     return (
