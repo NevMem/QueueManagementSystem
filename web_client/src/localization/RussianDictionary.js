@@ -1,5 +1,8 @@
 const dictionary = {
     'about_checklist': 'Добавить чеклист для пользователей',
+    'add_image': 'Добавить картинку',
+    'add_item_to_image_gallery_image_url_label': 'Ссылка на картинку',
+    'add_item_too_image_gallery_image_url_label': 'Ссылка на картинку',
     'add_new_manager_dialog_email_label': 'Email менеджера',
     'add_new_manager_dialog_title': 'Добавить менеджера',
     'add_new_organization_dialog_address_label': 'Адрес организации',
