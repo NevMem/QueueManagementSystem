@@ -2,6 +2,8 @@
 from google.protobuf import empty_pb2
 from sqlalchemy.sql import select, delete, update, exists
 from sqlalchemy.orm import selectinload
+from sqlalchemy import func
+
 import io
 import json
 import qrcode
@@ -80,9 +82,12 @@ def ticket_from_model(ticket: model.Ticket, with_user=False) -> ticket_pb2.Ticke
         id=str(ticket.id),
         user_id=str(ticket.user_id),
         service_id=str(ticket.service_id),
+        organization_id=ticket.service.organization_id,
         ticket_id=ticket.ticket_id,
-        enqueue_at=int(ticket.enqueue_at.timestamp()),
-        processed=ticket.processed,
+        enqueue_at=ticket.enqueue_at.timestamp(),
+        accepted_at=ticket.enqueue_at.timestamp(),
+        state=ticket_pb2.Ticket.State[ticket.state],
+        window=ticket.window,
         user=user_from_model(ticket.user) if with_user else user_pb2.User()
     )
 
@@ -432,8 +437,8 @@ async def enter_queue(request: Request):
         .limit(1)
     )
 
-    last_ticket = (await request.connection.execute(query)).scalars().first()
-    if last_ticket and not last_ticket.processed:
+    last_ticket: model.Ticket = (await request.connection.execute(query)).scalars().first()
+    if last_ticket and last_ticket.state != 'PROCESSED':
         raise HTTPException(409)
 
     query = (
@@ -459,10 +464,14 @@ async def queue_tickets(request: Request):
         select(model.Ticket)
         .where(
             model.Organization.id == request.parsed.id,
-            model.Ticket.processed.is_(False),
+            model.Ticket.state != 'PROCESSED',
         )
         .join(model.Service, model.Ticket.service_id == model.Service.id)
         .join(model.Organization, model.Organization.id == model.Service.organization_id)
+        .order_by(model.Ticket.enqueue_at.desc())
+        .options(
+            selectinload(model.Ticket.service)
+        )
     )
 
     result = await request.connection.execute(query)
@@ -643,12 +652,46 @@ async def update_user_privilege(request: Request):
 
 
 @route('/client/get_current_queue_info', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
+@requires('authenticated')
 async def get_current_queue_info(request: Request):
-    # fixme: plug
-    return ProtobufResponse(queue_pb2.QueueUserInfo(
-        user_count=2,
-        user_queue_position=1,
-        approximate_time=10,
+    query = (
+        select(model.Ticket)
+        .where(
+            model.Ticket.user_id == request.user.id,
+        )
+        .order_by(model.Ticket.enqueue_at.desc())
+        .options(
+            selectinload(model.Ticket.service)
+        )
+    )
+
+    result = await request.connection.execute(query)
+    ticket = result.scalars().first()
+
+    if not ticket:
+        raise HTTPException(404)
+
+    if ticket.state == 'PROCESSED':
+        return ProtobufResponse(ticket_pb2.TicketInfo(
+            ticket=ticket_from_model(ticket),
+        ))
+
+    query = (
+        select(func.count(model.Ticket.id))
+        .where(
+            model.Ticket.service_id == ticket.service_id,
+            model.Ticket.state != 'PROCESSED',
+            model.Ticket.enqueue_at < ticket.enqueue_at,
+        )
+    )
+
+    result = await request.connection.execute(query)
+
+    people_count = result.scalar()
+    return ProtobufResponse(ticket_pb2.TicketInfo(
+        ticket=ticket_from_model(ticket),
+        people_in_front_count=people_count,
+        remaining_time=60 * 5 * people_count,  # FIXME: statistic
     ))
 
 

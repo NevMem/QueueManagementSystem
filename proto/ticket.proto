@@ -9,17 +9,34 @@ import "proto/user.proto";
 
 
 message Ticket {
+    enum State {
+        WAITING = 0;
+        PROCESSING = 1;
+        PROCESSED = 2;
+    }
+
     string id = 1;
 
     string user_id = 2;
     string service_id = 3;
     string ticket_id = 4;
+    string organization_id = 8;
+    string window = 11;
 
-    uint32 enqueue_at = 5;
-    bool processed = 6;
+    float enqueue_at = 5;
+    float accepted_at = 9;
 
     User user = 7;
+    State state = 10;
 }
+
+message TicketInfo {
+    Ticket ticket = 1;
+
+    uint32 remaining_time = 2;
+    uint32 people_in_front_count = 3;
+}
+
 
 message TicketList {
     repeated Ticket tickets = 1;

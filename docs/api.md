@@ -153,3 +153,23 @@ Response:  google.protobuf.Empty
 Удалить пользователя из организации
 
 
+#### Список тикетов в очереди в организации
+
+POST `admin/queue_tickets`
+
+Request:  proto.organization.OrganizationInfo
+
+Response:  proto.ticket.TicketList
+
+Возвращает список всех незакрытых тикетов в организации
+
+
+#### Текущий статус в очереди
+
+POST `/client/get_current_queue_info`
+
+Request:  google.protobuf.Empty
+
+Response:  proto.ticket.TicketInfo
+
+Возвращает статус по последнему тикету

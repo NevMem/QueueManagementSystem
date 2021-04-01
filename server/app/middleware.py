@@ -37,6 +37,9 @@ class BasicAuthBackend(AuthenticationBackend):
         result = await request.scope['_connection'].execute(query)
         user: model.User = result.scalar()
 
+        if user is None:
+            return AuthCredentials([]), UnauthenticatedUser()
+
         credentials = {'authenticated', }
 
         target = getattr(request.scope['_parsed'], get_check_attr(request.url.path), None)

@@ -77,8 +77,12 @@ class Ticket(BaseModel):
     service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Services.id'), index=True)
 
     ticket_id = sqlalchemy.Column(types.Text, nullable=False)
+    state = sqlalchemy.Column(types.String, default='WAITING', index=True)
+
     enqueue_at = sqlalchemy.Column(types.DateTime, server_default=func.now())
-    processed = sqlalchemy.Column(types.Boolean, default=False, index=True)
+    accepted_at = sqlalchemy.Column(types.DateTime)
+
+    window = sqlalchemy.Column(types.String)
 
 
 class User(BaseModel):
