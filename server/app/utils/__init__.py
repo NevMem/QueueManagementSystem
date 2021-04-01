@@ -53,7 +53,8 @@ def number_to_base(n: int, b: int) -> tp.List[int]:
 
 
 def generate_next_ticket(previous_ticket: str, service_index: int) -> str:
-    number = int(previous_ticket[-3:])
+    number = (int(previous_ticket[-3:]) + 1) % 1000
+
     letter_digits = number_to_base(service_index, 26)
 
-    return f'{"".join(string.ascii_uppercase[d] for d in letter_digits)}{number + 1:03d}'
+    return f'{"".join(string.ascii_uppercase[d] for d in letter_digits)}{number:03d}'
