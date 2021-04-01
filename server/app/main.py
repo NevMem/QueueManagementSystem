@@ -356,7 +356,8 @@ async def generate_qr(request: Request):
     img = qrcode.make(json.dumps(payload), image_factory=qrcode.image.svg.SvgImage)
     resp = io.BytesIO()
     img.save(resp)
-    return Response(content=resp.getvalue())
+    return Response(content=resp.getvalue(),
+                    headers={'Content-type': 'image/svg+xml'})
 
 
 @route('/client/enter_queue', methods=['POST'], request_type=service_pb2.ServiceInfo)
