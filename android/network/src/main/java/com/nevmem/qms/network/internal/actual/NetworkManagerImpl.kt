@@ -3,6 +3,7 @@ package com.nevmem.qms.network.internal.actual
 import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.ServiceProto
+import com.nevmem.qms.TicketProto
 import com.nevmem.qms.data.NewPushTokenRequest
 import com.nevmem.qms.data.feedback.*
 import com.nevmem.qms.logger.Logger
@@ -46,7 +47,7 @@ internal class NetworkManagerImpl(
 
     private val javaBackendRetrofit by lazy {
         createDefaultRetrofitBuilder()
-            .baseUrl("http://84.201.128.37:8002")
+            .baseUrl("https://nevmem.com/qms/")
             .build()
     }
 
@@ -209,6 +210,26 @@ internal class NetworkManagerImpl(
     override suspend fun join(token: String, serviceInfo: ServiceProto.ServiceInfo) = suspendCoroutine<Unit> { continuation ->
         val info = ServiceInfo(serviceInfo.id, serviceInfo.name, serviceInfo.organizationId)
         wrapRequest(service.join(token, info), continuation)
+    }
+
+    override suspend fun currentTicketInfo(
+        token: String
+    ): TicketProto.TicketInfo = suspendCoroutine { continuation ->
+        suspend fun wrap() = suspendCoroutine<TicketInfo> {
+            wrapRequest(service.currentTicketInfo(token), it)
+        }
+        GlobalScope.launch {
+            try {
+                val result = wrap()
+                val info = TicketProto.TicketInfo.newBuilder()
+                    .setRemainingTime(result.remainingTime)
+                    .setPeopleInFrontCount(result.peopleInFront)
+                    .build()
+                continuation.resumeWith(Result.success(info))
+            } catch (exception: Exception) {
+                continuation.resumeWith(Result.failure(exception))
+            }
+        }
     }
 
     private fun User.toApiClass(): ClientApiProto.User {
