@@ -12,6 +12,7 @@ done
 rm /etc/nginx/sites-enabled/default
 
 if [[ -f "/run/secrets/SSL_KEY" ]]; then
+    python3 configs_generator.py
     supervisorctl start uvicorn-nginx
     supervisorctl start nginx
 else
