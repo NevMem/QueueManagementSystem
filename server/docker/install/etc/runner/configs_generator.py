@@ -35,6 +35,7 @@ server {
 
 def generate_nginx():
     handles = [route.path for route in _routes]
+    handles += ['/metrics']
     with open('/etc/nginx/sites-enabled/qms.conf', 'w') as config:
         config.write(NGINX_TEMPLATE.render(routes=handles))
 
