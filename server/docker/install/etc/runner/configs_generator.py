@@ -6,13 +6,13 @@ import jinja2
 
 NGINX_TEMPLATE = jinja2.Template("""\
 upstream uvicorn {
-    server unix:/var/run/qms.sock;
+    server localhost:9824;
 }
 
 server {
   listen 80;
   listen 443 ssl;
-  server_name         "" ~^.*$;
+  server_name         "qms-back.nikitonsky.tk";
   ssl_certificate     /run/secrets/SSL_CERT;
   ssl_certificate_key /run/secrets/SSL_KEY;
 
@@ -35,7 +35,6 @@ server {
 
 def generate_nginx():
     handles = [route.path for route in _routes]
-    handles += ['/metrics']
     with open('/etc/nginx/sites-enabled/qms.conf', 'w') as config:
         config.write(NGINX_TEMPLATE.render(routes=handles))
 
