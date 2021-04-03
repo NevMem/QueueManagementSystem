@@ -206,6 +206,11 @@ internal class NetworkManagerImpl(
         }
     }
 
+    override suspend fun join(token: String, serviceInfo: ServiceProto.ServiceInfo) = suspendCoroutine<Unit> { continuation ->
+        val info = ServiceInfo(serviceInfo.id, serviceInfo.name, serviceInfo.organizationId)
+        wrapRequest(service.join(token, info), continuation)
+    }
+
     private fun User.toApiClass(): ClientApiProto.User {
         val builder = ClientApiProto.User.newBuilder()
         if (email != null) {

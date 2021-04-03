@@ -1,6 +1,6 @@
 package com.nevmem.qms.status.internal
 
-import com.nevmem.qms.QueueProto
+import com.nevmem.qms.ServiceProto
 import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.notifications.Channel
@@ -10,8 +10,6 @@ import com.nevmem.qms.status.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.util.*
-import kotlin.math.abs
 
 internal class NetworkStatusProvider(
     private val networkManager: NetworkManager,
@@ -42,8 +40,15 @@ internal class NetworkStatusProvider(
         notificationsManager.registerChannelIfNeeded(channel)
     }
 
-    override fun join(queue: QueueProto.Queue): Flow<JoinStatus> = flow {
-        job?.cancel()
+    override fun join(serviceInfo: ServiceProto.ServiceInfo): Flow<JoinStatus> = flow {
+        emit(JoinStatus.Pending)
+        try {
+            networkManager.join(authManager.token, serviceInfo)
+            emit(JoinStatus.Success)
+        } catch (exception: Exception) {
+            emit(JoinStatus.Error(exception.message ?: ""))
+        }
+        /* job?.cancel()
         emit(JoinStatus.Pending)
         delay(1000)
         emit(JoinStatus.Success)
@@ -75,7 +80,7 @@ internal class NetworkStatusProvider(
                     queueStatus = null
                 }
             }
-        }
+        } */
     }
 
     override fun fetchDataForInvite(invite: String): Flow<FetchStatus> = flow {
