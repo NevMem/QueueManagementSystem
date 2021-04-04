@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.nevmem.qms.R
 import com.nevmem.qms.ServiceProto
 import com.nevmem.qms.common.utils.runOnUi
 import com.nevmem.qms.data.feedback.Feedback
 import com.nevmem.qms.feedback.FeedbackManager
+import com.nevmem.qms.fragments.join.JoinFragmentDirections
 import com.nevmem.qms.fragments.join.JoinUsecase
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
@@ -89,6 +91,7 @@ class ServiceFragment : BottomSheetDialogFragment() {
                     when (it) {
                         is JoinStatus.Success -> {
                             runOnUi {
+                                findNavController().navigate(JoinFragmentDirections.moveToStatusPage())
                                 joinButton.isEnabled = true
                             }
                         }
