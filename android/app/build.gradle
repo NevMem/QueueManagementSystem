@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion globalCompileSdkVersion
@@ -64,6 +65,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$versions.navigationUIKtx"
     implementation "com.github.bumptech.glide:glide:$versions.glide"
     implementation "com.google.android.material:material:$versions.material"
+    implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     implementation "com.yandex.android:mobmetricalib:$versions.metrica"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
