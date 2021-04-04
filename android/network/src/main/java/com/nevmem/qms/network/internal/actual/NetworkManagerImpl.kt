@@ -222,8 +222,8 @@ internal class NetworkManagerImpl(
             try {
                 val result = wrap()
                 val info = TicketProto.TicketInfo.newBuilder()
-                    .setRemainingTime(result.remainingTime)
-                    .setPeopleInFrontCount(result.peopleInFront)
+                    .setRemainingTime(result.remainingTime ?: 0)
+                    .setPeopleInFrontCount(result.peopleInFront ?: 0)
                     .build()
                 continuation.resumeWith(Result.success(info))
             } catch (exception: Exception) {

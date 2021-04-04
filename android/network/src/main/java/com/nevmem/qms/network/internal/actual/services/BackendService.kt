@@ -28,8 +28,8 @@ data class Ticket(
     var window: String = "")
 data class TicketInfo(
     var ticket: Ticket? = null,
-    var remainingTime: Int = Int.MAX_VALUE,
-    var peopleInFront: Int = Int.MAX_VALUE)
+    var remainingTime: Int?,
+    var peopleInFront: Int?)
 
 interface BackendService {
     @POST("/client/login")
