@@ -35,12 +35,26 @@ def user_from_permission(permission: model.Permission) -> user_pb2.User:
     )
 
 
-def user_from_model(user: model.User) -> user_pb2.User:
+def permission_from_model(permission: model.Permission) -> permissions_pb2.Permission:
+    return permissions_pb2.Permission(
+        id=str(permission.id),
+        organization_id=str(permission.organization_id) if permission.organization_id else None,
+        service_id=str(permission.service_id) if permission.service_id else None,
+        permission_type=permission.permission_type,
+    )
+
+
+def user_from_model(user: model.User, with_permissions=True) -> user_pb2.User:
     return user_pb2.User(
         name=user.name,
         surname=user.surname,
         email=user.email,
         id=str(user.id),
+        data=user.data,
+        permissions=[
+            permission_from_model(permission)
+            for permission in user.permissions
+        ] if with_permissions else []
     )
 
 
@@ -106,24 +120,7 @@ async def ping(_: Request):
 @route('/client/get_user', methods=['POST'], request_type=empty_pb2.Empty)
 @requires('authenticated')
 async def get_user(request: Request):
-    response = user_pb2.User(
-        id=str(request.user.id),
-        name=request.user.name,
-        surname=request.user.surname,
-        email=request.user.email,
-        permissions=[
-            permissions_pb2.Permission(
-                id=str(permission.id),
-                organization_id=str(permission.organization_id) if permission.organization_id else None,
-                service_id=str(permission.service_id) if permission.service_id else None,
-                permission_type=permission.permission_type,
-            )
-            for permission in request.user.permissions
-        ],
-        data=request.user.data
-    )
-
-    return ProtobufResponse(response)
+    return ProtobufResponse(user_from_model(request.user))
 
 
 @route('/client/register', methods=['POST'], request_type=user_pb2.RegisterRequest)
@@ -688,8 +685,12 @@ async def get_current_queue_info(request: Request):
     result = await request.connection.execute(query)
 
     people_count = result.scalar()
+
+    ticket_proto = ticket_from_model(ticket)
+    ticket_proto.user.CopyFrom(user_from_model(request.user, with_permissions=False))
+
     return ProtobufResponse(ticket_pb2.TicketInfo(
-        ticket=ticket_from_model(ticket),
+        ticket=ticket_proto,
         people_in_front_count=people_count,
         remaining_time=60 * 5 * people_count,  # FIXME: statistic
     ))

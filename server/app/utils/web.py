@@ -40,7 +40,7 @@ class ProtobufResponse(Response):
 
         if content_type != b'application/protobuf':
             self.headers['content-type'] = 'application/json'
-            self.body = self.render(MessageToJson(self.proto))
+            self.body = self.render(MessageToJson(self.proto, including_default_value_fields=True))
 
         else:
             self.body = self.proto.SerializeToString()
