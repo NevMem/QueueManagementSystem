@@ -11,9 +11,15 @@ import com.nevmem.qms.ServiceProto
 import com.nevmem.qms.common.utils.runOnUi
 import com.nevmem.qms.data.feedback.Feedback
 import com.nevmem.qms.feedback.FeedbackManager
+import com.nevmem.qms.feedback.recycler.ErrorFeedbackItem
+import com.nevmem.qms.feedback.recycler.FeedbackItem
+import com.nevmem.qms.feedback.recycler.LoadingFeedbackItem
+import com.nevmem.qms.feedback.recycler.NoFeedbackItem
+import com.nevmem.qms.feedback.recycler.factory.ErrorFeedbackItemFactory
+import com.nevmem.qms.feedback.recycler.factory.FeedbackItemFactory
+import com.nevmem.qms.feedback.recycler.factory.LoadingFeedbackItemFactory
+import com.nevmem.qms.feedback.recycler.factory.NoFeedbackItemFactory
 import com.nevmem.qms.fragments.join.JoinFragmentDirections
-import com.nevmem.qms.fragments.join.JoinUsecase
-import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.status.JoinStatus
