@@ -65,7 +65,7 @@ const GalleryBlock = ({ setImageUrls, ...props }) => {
                 )
             }) }
 
-            <img onClick={handleOpen} src={addIcon} width='48px' height='48px' />
+            <img onClick={handleOpen} src={addIcon} width='48px' height='48px' alt='' />
 
             <Dialog open={open} onClose={handleClose}>
                 <DialogContent>
