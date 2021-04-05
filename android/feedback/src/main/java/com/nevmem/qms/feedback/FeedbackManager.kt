@@ -7,4 +7,6 @@ interface FeedbackManager {
     suspend fun loadFeedback(entityId: String): List<Feedback>
 
     suspend fun publishFeedback(request: PublishFeedbackRequest)
+
+    fun createFeedbackAdapter(entityId: String): FeedbackAdapter
 }

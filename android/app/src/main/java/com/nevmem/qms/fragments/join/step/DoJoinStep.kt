@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.R
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.feedback.FeedbackManager
+import com.nevmem.qms.feedback.recycler.factory.feedbackFactories
 import com.nevmem.qms.feedback.ui.FeedbackFragment
 import com.nevmem.qms.fragments.join.JoinStep
 import com.nevmem.qms.fragments.join.JoinUsecase
@@ -79,6 +81,14 @@ class DoJoinStep : JoinStep {
                 services.adapter = BaseRecyclerAdapter(
                     org.servicesList.map { ServiceItem(it) },
                     ServiceItemFactory(requireContext(), parentFragmentManager, featureManager, ratingsManager))
+
+                val feedbackAdapter = feedbackManager.createFeedbackAdapter("organization_${org.info.id}")
+                    feedbackAdapter.liveState.observe(viewLifecycleOwner, Observer {
+                        feedbackRecycler.adapter = BaseRecyclerAdapter(
+                            feedbackAdapter.stateToItems(it),
+                            *feedbackFactories(requireContext()).toTypedArray()
+                        )
+                    })
 
                 leaveFeedbackButton.setOnClickListener {
                     parentFragmentManager.let { fragmentManager ->
