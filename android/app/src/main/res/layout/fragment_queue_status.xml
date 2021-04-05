@@ -67,14 +67,6 @@
                 android:fontFamily="@font/light"
                 tools:text="~23 min"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/showScheme"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:fontFamily="@font/medium"
-                android:text="@string/show_scheme"
-                tools:text="Показать схему" />
-
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

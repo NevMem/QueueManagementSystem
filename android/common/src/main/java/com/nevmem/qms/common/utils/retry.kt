@@ -8,6 +8,7 @@ suspend fun infiniteRetry(block: suspend () -> Unit) {
     while (true) {
         try {
             block()
+            return
         } catch (exception: Exception) {
             println(exception.message)
             delay(min(attempt * 1000L, 10000L))
@@ -23,7 +24,7 @@ suspend fun <T>retry(block: suspend () -> T, maxRetries: Int = 3): T {
             return block()
         } catch (exception: Exception) {
             if (attempt == maxRetries) {
-                throw exception;
+                throw exception
             }
             attempt += 1
         }

@@ -22,6 +22,8 @@ import com.google.mlkit.vision.barcode.Barcode
 import com.nevmem.qms.permissions.Permission
 import com.nevmem.qms.permissions.PermissionsManager
 import com.nevmem.qms.scanner.internal.QRCodeAnalyzer
+import com.nevmem.qms.scanner.internal.parser.JsonParser
+import com.nevmem.qms.scanner.internal.parser.SimpleParser
 
 
 class QRScannerFragment : BottomSheetDialogFragment() {
@@ -34,6 +36,11 @@ class QRScannerFragment : BottomSheetDialogFragment() {
         PERMISSION_DENIED,
         PERMISSION_DENIED_OUTSIDE_APP_RETRY,
     }
+
+    private val parsers = listOf(
+        SimpleParser(),
+        JsonParser()
+    )
 
     private var state: State = State.NONE
         set(value) {
@@ -195,9 +202,8 @@ class QRScannerFragment : BottomSheetDialogFragment() {
         barcodes.forEach {
             val rawValue = it.rawValue
             if (rawValue != null) {
-                if (rawValue.startsWith("invite: ", ignoreCase = true)) {
-                    val invite = rawValue.replace("invite: ", "", ignoreCase = true)
-                    onFound(invite)
+                parsers.forEach { parser ->
+                    parser.parse(rawValue)?.let { value -> onFound(value) }
                 }
             }
         }

@@ -1,6 +1,6 @@
 package com.nevmem.qms.status
 
-import com.nevmem.qms.QueueProto
+import com.nevmem.qms.ServiceProto
 import kotlinx.coroutines.flow.Flow
 
 interface StatusProvider {
@@ -13,7 +13,7 @@ interface StatusProvider {
     /**
      * Internally will be using auth manager to provide some data about user
      */
-    fun join(queue: QueueProto.Queue): Flow<JoinStatus>
+    fun join(serviceInfo: ServiceProto.ServiceInfo): Flow<JoinStatus>
 
     fun fetchDataForInvite(invite: String): Flow<FetchStatus>
 

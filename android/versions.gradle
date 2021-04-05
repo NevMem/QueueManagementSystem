@@ -19,6 +19,7 @@ ext.versions = [
     'firebaseBom': '26.7.0',
     'flexbox': '2.0.1',
     'glide': '4.11.0',
+    'gradleCrashlytics': '2.5.2',
     'googleServices': '4.3.5',
     'gson': '2.8.6',
     'koin': '2.1.3',

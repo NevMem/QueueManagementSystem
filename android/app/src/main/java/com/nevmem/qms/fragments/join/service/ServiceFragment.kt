@@ -4,16 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.nevmem.qms.R
 import com.nevmem.qms.ServiceProto
 import com.nevmem.qms.common.utils.runOnUi
 import com.nevmem.qms.data.feedback.Feedback
 import com.nevmem.qms.feedback.FeedbackManager
+import com.nevmem.qms.fragments.join.JoinFragmentDirections
+import com.nevmem.qms.fragments.join.JoinUsecase
+import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.recycler.RVItem
+import com.nevmem.qms.status.JoinStatus
+import com.nevmem.qms.status.StatusProvider
+import com.nevmem.qms.toast.manager.ShowToastManager
 import kotlinx.android.synthetic.main.fragment_service.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import org.koin.android.ext.android.inject
 
 class ServiceFragment : BottomSheetDialogFragment() {
@@ -38,6 +46,8 @@ class ServiceFragment : BottomSheetDialogFragment() {
         }
 
     private val feedbackManager: FeedbackManager by inject()
+    private val statusProvider: StatusProvider by inject()
+    private val showToastManager: ShowToastManager by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,6 +83,29 @@ class ServiceFragment : BottomSheetDialogFragment() {
         serviceName.text = service.info.name
 
         updateRecyclerItems(service.info.dataMap)
+
+        joinButton.setOnClickListener {
+            joinButton.isEnabled = false
+            GlobalScope.launch(Dispatchers.IO) {
+                statusProvider.join(service.info).collect {
+                    when (it) {
+                        is JoinStatus.Success -> {
+                            runOnUi {
+                                findNavController().navigate(JoinFragmentDirections.moveToStatusPage())
+                                joinButton.isEnabled = true
+                            }
+                        }
+                        is JoinStatus.Error -> {
+                            runOnUi {
+                                showToastManager.error(it.message)
+                                joinButton.isEnabled = true
+                            }
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
     }
 
     private fun updateRecyclerItems(data: Map<String, String>) {

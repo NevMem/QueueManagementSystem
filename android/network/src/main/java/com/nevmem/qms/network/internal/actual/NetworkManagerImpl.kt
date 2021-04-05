@@ -3,6 +3,7 @@ package com.nevmem.qms.network.internal.actual
 import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.ServiceProto
+import com.nevmem.qms.TicketProto
 import com.nevmem.qms.data.NewPushTokenRequest
 import com.nevmem.qms.data.feedback.*
 import com.nevmem.qms.logger.Logger
@@ -17,6 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.protobuf.ProtoConverterFactory
 import kotlin.coroutines.suspendCoroutine
 
 internal class NetworkManagerImpl(
@@ -34,6 +36,15 @@ internal class NetworkManagerImpl(
         }
         .build()
 
+    private val protobufClient = OkHttpClient.Builder()
+            .addInterceptor {
+                val newRequest = it.request().newBuilder()
+                    .addHeader("Content-Type", "application/protobuf")
+                    .build()
+                it.proceed(newRequest)
+            }
+            .build()
+
     private fun createDefaultRetrofitBuilder() = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
@@ -44,9 +55,17 @@ internal class NetworkManagerImpl(
             .build()
     }
 
+    private val protoRetrofit by lazy {
+        Retrofit.Builder()
+            .addConverterFactory(ProtoConverterFactory.create())
+            .baseUrl("http://qms-back.nikitonsky.tk")
+            .client(protobufClient)
+            .build()
+    }
+
     private val javaBackendRetrofit by lazy {
         createDefaultRetrofitBuilder()
-            .baseUrl("http://84.201.128.37:8002")
+            .baseUrl("https://nevmem.com/qms/")
             .build()
     }
 
@@ -57,6 +76,7 @@ internal class NetworkManagerImpl(
     }
 
     private val service by lazy { retrofit.create(BackendService::class.java) }
+    private val protoService by lazy { protoRetrofit.create(ProtoBackendService::class.java) }
     private val featuresService by lazy { featuresRetrofit.create(FeaturesService::class.java) }
     private val javaBackendService by lazy { javaBackendRetrofit.create(JavaBackendService::class.java) }
 
@@ -204,6 +224,15 @@ internal class NetworkManagerImpl(
                 continuation.resumeWith(Result.failure(exception))
             }
         }
+    }
+
+    override suspend fun join(token: String, serviceInfo: ServiceProto.ServiceInfo) = suspendCoroutine<Unit> { continuation ->
+        val info = ServiceInfo(serviceInfo.id, serviceInfo.name, serviceInfo.organizationId)
+        wrapRequest(service.join(token, info), continuation)
+    }
+
+    override suspend fun currentTicketInfo(token: String): TicketProto.TicketInfo = suspendCoroutine { continuation ->
+        wrapRequest(protoService.currentTicketInfo(token), continuation)
     }
 
     private fun User.toApiClass(): ClientApiProto.User {

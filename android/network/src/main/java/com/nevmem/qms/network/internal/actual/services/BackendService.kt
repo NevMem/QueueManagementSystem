@@ -15,6 +15,21 @@ data class ServiceInfo(
     var id: String = "", var name: String = "", var organizationId: String = "", var data: Map<String, String> = mapOf())
 data class Service(var info: ServiceInfo)
 data class Organization(var info: OrganizationInfo? = null, var services: List<Service> = listOf())
+enum class TicketState {
+    WAITING, PROCESSING, PROCESSED
+}
+data class Ticket(
+    var state: TicketState? = null,
+    var id: String = "",
+    var userId: String = "",
+    var serviceId: String = "",
+    var ticketId: String = "",
+    var organizationId: String = "",
+    var window: String = "")
+data class TicketInfo(
+    var ticket: Ticket? = null,
+    var remainingTime: Int?,
+    var peopleInFront: Int?)
 
 interface BackendService {
     @POST("/client/login")
@@ -28,4 +43,10 @@ interface BackendService {
 
     @POST("/client/fetch_organization")
     fun getOrganization(@Header("session") session: String, @Body body: OrganizationInfo): Call<Organization>
+
+    @POST("/client/enter_queue")
+    fun join(@Header("session") session: String, @Body body: ServiceInfo): Call<Unit>
+
+    @POST("/client/get_current_queue_info")
+    fun currentTicketInfo(@Header("session") session: String): Call<TicketInfo>
 }
