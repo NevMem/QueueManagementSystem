@@ -19,23 +19,24 @@ internal class FeedbackAdapterImpl(
     private val feedbackManager: FeedbackManager,
     private val entityId: String
 ) : FeedbackAdapter {
-    private val mutableState = MutableLiveData<FeedbackAdapter.State>(FeedbackAdapter.State.None)
 
-    override val state: FeedbackAdapter.State
-        get() = TODO("Not yet implemented")
+    private val mutableState = MutableLiveData<FeedbackAdapter.State>(FeedbackAdapter.State.None)
+    private val listeners = mutableSetOf<FeedbackAdapter.Listener>()
+
+    override var state: FeedbackAdapter.State = FeedbackAdapter.State.None
     override val liveState: LiveData<FeedbackAdapter.State> = mutableState
 
     init {
         GlobalScope.launch(Dispatchers.Default) {
-            runOnUi { mutableState.postValue(FeedbackAdapter.State.Loading) }
+            runOnUi { postState(FeedbackAdapter.State.Loading) }
             runOnIO {
                 try {
                     val result = retry({
                         feedbackManager.loadFeedback(entityId)
                     })
-                    runOnUi { mutableState.postValue(FeedbackAdapter.State.Data(result)) }
+                    runOnUi { postState(FeedbackAdapter.State.Data(result)) }
                 } catch(exception: Exception) {
-                    runOnUi { mutableState.postValue(FeedbackAdapter.State.Error(exception.message ?: "")) }
+                    runOnUi { postState(FeedbackAdapter.State.Error(exception.message ?: "")) }
                 }
             }
         }
@@ -51,10 +52,18 @@ internal class FeedbackAdapterImpl(
     }
 
     override fun addListener(listener: FeedbackAdapter.Listener) {
-        TODO("Not yet implemented")
+        listeners += listener
     }
 
     override fun removeListener(listener: FeedbackAdapter.Listener) {
-        TODO("Not yet implemented")
+        listeners -= listener
+    }
+
+    private fun postState(newState: FeedbackAdapter.State) {
+        runOnUi {
+            state = newState
+            mutableState.postValue(state)
+            listeners.forEach { it.onStateUpdated() }
+        }
     }
 }
