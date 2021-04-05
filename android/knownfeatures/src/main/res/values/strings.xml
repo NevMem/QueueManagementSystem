@@ -9,4 +9,5 @@
     <string name="ratings_for_services">Show ratings for services</string>
     <string name="ratings_for_organizations">Show ratings for organizations</string>
     <string name="enable_organizations_sharing">Enable organizations sharing</string>
+    <string name="feedback_on_service_fragment">Show feedback on service fragment</string>
 </resources>
