@@ -10,5 +10,6 @@ enum class KnownFeatures(val value: String, val textDescriptionResource: Int) {
     RatingsForServices("rating_for_services", R.string.ratings_for_services),
     RatingsForOrganizations("rating_for_organizations", R.string.ratings_for_organizations),
     EnableOrganizationSharing("enable_organizations_sharing", R.string.enable_organizations_sharing),
-    ShowFeedbackOnServiceFragment("show_feedback_on_service_fragment", R.string.feedback_on_service_fragment)
+    ShowFeedbackOnServiceFragment("show_feedback_on_service_fragment", R.string.feedback_on_service_fragment),
+    ShowFeedbackInOrganizationCard("show_feedback_in_organization_card", R.string.show_feedback_in_organization_card)
 }

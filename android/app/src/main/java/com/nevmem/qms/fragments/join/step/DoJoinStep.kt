@@ -82,13 +82,18 @@ class DoJoinStep : JoinStep {
                     org.servicesList.map { ServiceItem(it) },
                     ServiceItemFactory(requireContext(), parentFragmentManager, featureManager, ratingsManager))
 
-                val feedbackAdapter = feedbackManager.createFeedbackAdapter("organization_${org.info.id}")
+                if (featureManager.isFeatureEnabled(KnownFeatures.ShowFeedbackInOrganizationCard.value)) {
+                    val feedbackAdapter =
+                        feedbackManager.createFeedbackAdapter("organization_${org.info.id}")
                     feedbackAdapter.liveState.observe(viewLifecycleOwner, Observer {
                         feedbackRecycler.adapter = BaseRecyclerAdapter(
                             feedbackAdapter.stateToItems(it),
                             *feedbackFactories(requireContext()).toTypedArray()
                         )
                     })
+                } else {
+                    feedbackRecycler.isVisible = false
+                }
 
                 leaveFeedbackButton.setOnClickListener {
                     parentFragmentManager.let { fragmentManager ->
