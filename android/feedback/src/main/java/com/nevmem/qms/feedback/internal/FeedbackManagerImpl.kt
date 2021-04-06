@@ -3,6 +3,7 @@ package com.nevmem.qms.feedback.internal
 import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.data.feedback.Feedback
 import com.nevmem.qms.data.feedback.PublishFeedbackRequest
+import com.nevmem.qms.feedback.FeedbackAdapter
 import com.nevmem.qms.feedback.FeedbackManager
 import com.nevmem.qms.network.NetworkManager
 
@@ -15,4 +16,7 @@ internal class FeedbackManagerImpl(
 
     override suspend fun publishFeedback(request: PublishFeedbackRequest)
         = networkManager.publishFeedback(request, authManager.token)
+
+    override fun createFeedbackAdapter(entityId: String): FeedbackAdapter
+        = FeedbackAdapterImpl(this, entityId)
 }

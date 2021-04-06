@@ -3,4 +3,5 @@
     <string name="feedback_string">Feedback</string>
     <string name="leave_feedback_button_label">Save</string>
     <string name="leave_feedback">Leave feedback</string>
+    <string name="no_feedback_yet_string">No feedback yet</string>
 </resources>

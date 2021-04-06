@@ -4,16 +4,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.nevmem.qms.R
 import com.nevmem.qms.ServiceProto
 import com.nevmem.qms.common.utils.runOnUi
 import com.nevmem.qms.data.feedback.Feedback
+import com.nevmem.qms.features.FeatureManager
+import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.feedback.FeedbackManager
+import com.nevmem.qms.feedback.recycler.ErrorFeedbackItem
+import com.nevmem.qms.feedback.recycler.FeedbackItem
+import com.nevmem.qms.feedback.recycler.LoadingFeedbackItem
+import com.nevmem.qms.feedback.recycler.NoFeedbackItem
+import com.nevmem.qms.feedback.recycler.factory.ErrorFeedbackItemFactory
+import com.nevmem.qms.feedback.recycler.factory.FeedbackItemFactory
+import com.nevmem.qms.feedback.recycler.factory.LoadingFeedbackItemFactory
+import com.nevmem.qms.feedback.recycler.factory.NoFeedbackItemFactory
 import com.nevmem.qms.fragments.join.JoinFragmentDirections
-import com.nevmem.qms.fragments.join.JoinUsecase
-import com.nevmem.qms.network.NetworkManager
+import com.nevmem.qms.knownfeatures.KnownFeatures
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.status.JoinStatus
@@ -48,6 +58,7 @@ class ServiceFragment : BottomSheetDialogFragment() {
     private val feedbackManager: FeedbackManager by inject()
     private val statusProvider: StatusProvider by inject()
     private val showToastManager: ShowToastManager by inject()
+    private val featureManager: FeatureManager by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -153,12 +164,17 @@ class ServiceFragment : BottomSheetDialogFragment() {
             }
         }
 
-        feedbackRecycler.adapter = BaseRecyclerAdapter(
-            items,
-            LoadingFeedbackItemFactory(requireContext()),
-            ErrorFeedbackItemFactory(requireContext()),
-            FeedbackItemFactory(requireContext()),
-            NoFeedbackItemFactory(requireContext()))
+        if (featureManager.isFeatureEnabled(KnownFeatures.ShowFeedbackOnServiceFragment.value)) {
+            feedbackRecycler.adapter = BaseRecyclerAdapter(
+                items,
+                LoadingFeedbackItemFactory(requireContext()),
+                ErrorFeedbackItemFactory(requireContext()),
+                FeedbackItemFactory(requireContext()),
+                NoFeedbackItemFactory(requireContext())
+            )
+        } else {
+            feedbackRecycler.isVisible = false
+        }
     }
 
     companion object {

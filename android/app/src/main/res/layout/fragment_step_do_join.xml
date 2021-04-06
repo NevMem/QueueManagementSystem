@@ -131,6 +131,16 @@
                     android:overScrollMode="never"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/feedbackRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    android:layout_marginTop="@dimen/indent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:id="@+id/leaveFeedbackButton"
