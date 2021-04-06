@@ -98,9 +98,9 @@ export default function ProfilePage() {
   const startEdit = () => setEdit(true)
   const stopEdit = () => setEdit(false)
 
-  const [editedName, setEditedName] = useState(authAdapter.user.name)
-  const [editedSurname, setEditedSurname] = useState(authAdapter.user.surname)
-  const [editedEmail, setEditedEmail] = useState(authAdapter.user.login)
+  const [setEditedName] = useState(authAdapter.user.name)
+  const [setEditedSurname] = useState(authAdapter.user.surname)
+  const [setEditedEmail] = useState(authAdapter.user.login)
 
   const handleEdited = () => {
     stopEdit()
