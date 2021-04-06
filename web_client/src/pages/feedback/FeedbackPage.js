@@ -8,6 +8,16 @@ import localizedString from '../../localization/localizedString'
 import RatingTextView from '../../components/rating/RatingTextView'
 import Typography from '@material-ui/core/Typography'
 
+const NoFeedbackRow = ({ ...props }) => {
+    return (
+        <Card {...props}>
+            <CardContent style={{paddingBottom: '16px'}}>
+                <Typography variant='h6'>{localizedString('no_feedback_yet')}</Typography>
+            </CardContent>
+        </Card>
+    )
+}
+
 const FeedbackLoadingRow = ({ ...props }) => {
     return (
         <Card {...props}>
@@ -70,6 +80,15 @@ export default class FeedbackPage extends Component {
                         })}
                         { this.state.loading &&
                             <FeedbackLoadingRow
+                                variant='outlined'
+                                style={{
+                                    marginTop: '16px',
+                                    width: '100%',
+                                    backgroundColor: 'rgba(0, 132, 173, 0.07)'
+                                }} />
+                        }
+                        { this.state.loading === false && this.state.feedback.length === 0 &&
+                            <NoFeedbackRow
                                 variant='outlined'
                                 style={{
                                     marginTop: '16px',
