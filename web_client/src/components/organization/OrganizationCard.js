@@ -45,7 +45,7 @@ class FeedbackCountRow extends Component {
 
         return (
             <Typography style={loadedStyle} variant='h6'>
-                <Link style={loadedStyle} to={'feedback/' + this.props.entityId}>
+                <Link style={loadedStyle} to={'/feedback/' + this.props.entityId}>
                     {this.state.count} {localizedString('feedback')}
                 </Link>
             </Typography>
