@@ -1,11 +1,57 @@
 import './OrganizationCard.css'
-import { useState } from 'react'
+import { useState, Component } from 'react'
 import AddButton from '../../components/buttons/add_button/AddButton'
 import AddServiceDialog from '../dialogs/AddServiceDialog'
+import feedbackAdapter from '../../adapters/FeedbackAdapter'
 import Grid from '@material-ui/core/Grid'
+import { Link } from 'react-router-dom'
 import localizedString from '../../localization/localizedString'
 import ServiceRow from '../service-row/ServiceRow'
 import Typography from '@material-ui/core/Typography'
+
+class FeedbackCountRow extends Component {
+
+    constructor(prps) {
+        super(prps)
+        this.state = {
+            loading: true,
+            count: undefined
+        }
+    }
+
+    componentDidMount() {
+        feedbackAdapter.loadFeedback(this.props.entityId)
+            .then(data => {
+                this.setState(state => { return { ...state, count: data.length, loading: false } })
+            })
+    }
+
+    render() {
+        const commonStyle = {
+            fontSize: '16px',
+            color: '#a0a0a0',
+            marginTop: '8px'
+        }
+
+        const loadedStyle = {
+            ...commonStyle,
+            color: '#3070ff',
+            textDecoration: 'none'
+        }
+
+        if (this.state.loading === true) {
+            return <Typography style={commonStyle} variant='h6'>{localizedString('loading')}</Typography>
+        }
+
+        return (
+            <Typography style={loadedStyle} variant='h6'>
+                <Link style={loadedStyle} to={'feedback/' + this.props.entityId}>
+                    {this.state.count} {localizedString('feedback')}
+                </Link>
+            </Typography>
+        )
+    }
+}
 
 export default function OrganizationCard({organizationData, ...props}) {
     const { name, address, services, admins } = organizationData
@@ -45,6 +91,9 @@ export default function OrganizationCard({organizationData, ...props}) {
                 <Typography style={{color: '#a0a0a0', fontSize: '18px'}} variant='body2'>
                     {admins.length} {localizedString('employee')}
                 </Typography>
+            </Grid>
+            <Grid container>
+                <FeedbackCountRow entityId={'organization_' + organizationData.id} />
             </Grid>
             <Grid container style={{marginTop: '20px', marginBottom: '20px'}}>
                 <Grid item>
