@@ -54,7 +54,6 @@ export default class FeedbackPage extends Component {
     componentDidMount() {
         feedbackAdapter.loadFeedback(this.state.entityId)
             .then(data => {
-                console.log(data)
                 this.setState(state => { return { ...state, loading: false, feedback: data } })
             })
     }
