@@ -2,6 +2,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 import { HashRouter as Router, Switch, Route } from 'react-router-dom'
 import { PrivateRoute } from './utils/PrivateRoute'
 import DemoPage from './pages/DemoPage'
+import FeedbackPage from './pages/feedback/FeedbackPage'
 import HomePage from './pages/home/HomePage'
 import ProfilePage from './pages/profile/ProfilePage'
 import SettingsPage from './pages/settings/SettingsPage'
@@ -27,6 +28,7 @@ function App() {
                     <PrivateRoute path='/demo' component={DemoPage} />
                     <PrivateRoute path='/settings' component={SettingsPage} />
                     <PrivateRoute path='/profile' component={ProfilePage} />
+                    <PrivateRoute path='/feedback' component={FeedbackPage} />
                     <PrivateRoute path='/' component={HomePage} />
                 </Switch>
             </Router>

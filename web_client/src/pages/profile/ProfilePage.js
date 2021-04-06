@@ -103,7 +103,6 @@ export default function ProfilePage() {
   const [editedEmail, setEditedEmail] = useState(authAdapter.user.login)
 
   const handleEdited = () => {
-    console.log(editedName, editedSurname, editedEmail)
     stopEdit()
   }
 
