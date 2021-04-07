@@ -37,7 +37,9 @@
             android:orientation="vertical"
             android:gravity="center"
             android:paddingTop="@dimen/indent_quadruple"
-            android:paddingBottom="@dimen/indent_quadruple">
+            android:paddingBottom="@dimen/indent_quadruple"
+            android:paddingStart="@dimen/indent_double"
+            android:paddingEnd="@dimen/indent_double">
 
             <TextView
                 android:id="@+id/numberInLine"
