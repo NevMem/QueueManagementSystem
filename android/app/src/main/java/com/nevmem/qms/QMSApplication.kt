@@ -46,7 +46,7 @@ class QMSApplication : Application() {
         single<ShowToastManager> { get<ToastManager>() }
         single<ToastProvider> { get<ToastManager>() }
         single<NetworkManager> { createNetworkManager(get()) }
-        single<StatusProvider> { createStatusProvider(get(), get(), get()) }
+        single<StatusProvider> { createStatusProvider(get(), get(), get(), get()) }
         single {
             createFeatureManager(
                 get(),

@@ -94,7 +94,7 @@ internal class NetworkStatusProvider(
 
     private fun showNotificationIfNeeded() {
         queueStatus?.let { status ->
-            if (status.etaInSeconds ?: Int.MAX_VALUE < 60 * 5 && lastNotifiedTicket != status.ticket) {
+            if (status.etaInSeconds < 60 * 5 && lastNotifiedTicket != status.ticket) {
                 lastNotifiedTicket = status.ticket
                 notificationsManager.showNotificationInChannel(
                     channel.channelName,
