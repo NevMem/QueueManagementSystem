@@ -11,4 +11,6 @@
         <item quantity="one">You are next in the line</item>
         <item quantity="other">You are %dth in the line</item>
     </plurals>
+
+    <string name="minutes_remaining">~%d minutes</string>
 </resources>
