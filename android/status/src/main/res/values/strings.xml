@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="time_of_appointment">Time of appointment</string>
+    <string name="no_ticket">No ticket</string>
+    <string name="status">Status</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="appointment_is_soon">Your appointment is soon</string>
+    <string name="appointment_is_soon_body">It\'s less then 5 minutes till your appointment</string>
+</resources>
