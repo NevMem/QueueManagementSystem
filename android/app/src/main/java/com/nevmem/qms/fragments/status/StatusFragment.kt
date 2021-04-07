@@ -48,9 +48,9 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
         hideSuggestsUi()
         statusCard.isVisible = true
         queueStatus.let {
-            numberInLine.text = "Вы ${it.numberInLine}-ый в очереди"
+            numberInLine.text = resources.getQuantityString(R.plurals.numberInTheLine, it.numberInLine, it.numberInLine)
             ticketNumber.text = it.ticket
-            eta.text = "~${(it.etaInSeconds ?: 0 + 59) / 60} минут"
+            eta.text = "~${(it.etaInSeconds + 59) / 60} минут"
         }
     }
 

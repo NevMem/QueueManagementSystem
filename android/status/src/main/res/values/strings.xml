@@ -6,4 +6,9 @@
     <string name="unknown_error">Unknown error</string>
     <string name="appointment_is_soon">Your appointment is soon</string>
     <string name="appointment_is_soon_body">It\'s less then 5 minutes till your appointment</string>
+
+    <plurals name="numberInTheLine">
+        <item quantity="one">You are next in the line</item>
+        <item quantity="other">You are %dth in the line</item>
+    </plurals>
 </resources>
