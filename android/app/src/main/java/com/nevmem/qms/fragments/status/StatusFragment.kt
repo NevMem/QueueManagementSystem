@@ -25,6 +25,10 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
         model.content.observe(viewLifecycleOwner, Observer {
             updateUiWith(it)
         })
+
+        model.smallServiceViewState.observe(viewLifecycleOwner, Observer {
+            serviceInfo.state = it
+        })
     }
 
     private fun updateUiWith(content: StatusFragmentViewModel.Content) {

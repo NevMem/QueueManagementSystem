@@ -10,7 +10,7 @@ import com.nevmem.qms.data.feedback.PublishFeedbackRequest
 import com.nevmem.qms.network.data.RegisterResponse
 
 interface NetworkManager {
-    suspend fun fetchDataForInvite(token: String, invite: String): OrganizitionProto.Organization
+    suspend fun fetchOrganization(token: String, invite: String): OrganizitionProto.Organization
 
     suspend fun join(token: String, serviceInfo: ServiceProto.ServiceInfo)
     suspend fun currentTicketInfo(token: String): TicketProto.TicketInfo

@@ -3,6 +3,7 @@ package com.nevmem.qms.status.internal
 import android.content.Context
 import com.nevmem.qms.ServiceProto
 import com.nevmem.qms.auth.AuthManager
+import com.nevmem.qms.common.utils.runOnUi
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.notifications.Channel
 import com.nevmem.qms.notifications.Notification
@@ -28,7 +29,9 @@ internal class NetworkStatusProvider(
             }
             field = value
             showNotificationIfNeeded()
-            notifyChanged()
+            runOnUi {
+                notifyChanged()
+            }
         }
 
     private val listeners = mutableSetOf<StatusProvider.Listener>()
@@ -49,10 +52,20 @@ internal class NetworkStatusProvider(
                 try {
                     val info = networkManager.currentTicketInfo(authManager.token)
 
+                    val orgId = info.ticket.organizationId
+                    val serviceId = info.ticket.serviceId
+
+                    var serviceInfo: QueueStatus.ServiceInfo? = null
+
+                    if (orgId != null && serviceId != null) {
+                        serviceInfo = QueueStatus.ServiceInfo(orgId, serviceId)
+                    }
+
                     val newQueueStatus = QueueStatus(
                         info.peopleInFrontCount + 1,
                         info.ticket?.ticketId ?: context.getString(R.string.no_ticket),
-                        info.remainingTime)
+                        info.remainingTime,
+                        serviceInfo)
 
                     queueStatus = newQueueStatus
                 } catch (exception: Exception) {
@@ -77,7 +90,7 @@ internal class NetworkStatusProvider(
     override fun fetchDataForInvite(invite: String): Flow<FetchStatus> = flow {
         emit(FetchStatus.Pending)
         try {
-            val result = networkManager.fetchDataForInvite(authManager.token, invite)
+            val result = networkManager.fetchOrganization(authManager.token, invite)
             emit(FetchStatus.Success(result))
         } catch (ex: Exception) {
             emit(FetchStatus.Error(ex.message ?: context.getString(R.string.unknown_error)))

@@ -75,7 +75,7 @@ class QMSApplication : Application() {
         viewModel { ProfileFragmentViewModel(get(), get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
         viewModel { DeveloperSettingsFragmentViewModel(get()) }
-        viewModel { StatusFragmentViewModel(get(), get()) }
+        viewModel { StatusFragmentViewModel(get(), get(), get(), get()) }
     }
 
     override fun onCreate() {
