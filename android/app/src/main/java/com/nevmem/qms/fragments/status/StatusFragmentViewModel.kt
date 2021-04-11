@@ -1,16 +1,19 @@
 package com.nevmem.qms.fragments.status
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.nevmem.qms.auth.AuthManager
+import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.status.QueueStatus
 import com.nevmem.qms.status.StatusProvider
 import com.nevmem.qms.suggests.Suggest
 import com.nevmem.qms.suggests.SuggestsManager
+import com.nevmem.qms.ui.service.SmallServiceViewViewModelDelegate
 
 class StatusFragmentViewModel(
     private val statusProvider: StatusProvider,
-    private val suggestsManager: SuggestsManager
+    private val suggestsManager: SuggestsManager,
+    private val authManager: AuthManager,
+    private val networkManager: NetworkManager
 ) : ViewModel(), StatusProvider.Listener, SuggestsManager.Listener {
 
     sealed class Content {
@@ -20,6 +23,11 @@ class StatusFragmentViewModel(
 
     private val mContent by lazy { MutableLiveData<Content>() }
     val content: LiveData<Content> by lazy { mContent }
+
+    private val mSmallServiceViewState = MediatorLiveData<SmallServiceViewViewModelDelegate.State>()
+    val smallServiceViewState: LiveData<SmallServiceViewViewModelDelegate.State> = mSmallServiceViewState
+
+    private var smallServiceInfoDelegate: SmallServiceViewViewModelDelegate? = null
 
     init {
         statusProvider.addListener(this)
@@ -31,6 +39,7 @@ class StatusFragmentViewModel(
         super.onCleared()
         statusProvider.removeListener(this)
         suggestsManager.removeListener(this)
+        smallServiceInfoDelegate?.dismiss()
     }
 
     override fun onStatusChanged() {
@@ -43,7 +52,25 @@ class StatusFragmentViewModel(
 
     private fun updateContent() {
         val queueStatus = statusProvider.queueStatus
+        smallServiceInfoDelegate?.apply {
+            mSmallServiceViewState.removeSource(state)
+            dismiss()
+        }
         if (queueStatus != null) {
+            val orgId = queueStatus.serviceInfo?.organizationId
+            val serviceId = queueStatus.serviceInfo?.serviceId
+            if (orgId != null && serviceId != null) {
+                smallServiceInfoDelegate = SmallServiceViewViewModelDelegate(
+                        authManager,
+                        networkManager,
+                        orgId,
+                        serviceId,
+                        viewModelScope).apply {
+                    mSmallServiceViewState.addSource(state) {
+                        mSmallServiceViewState.postValue(it)
+                    }
+                }
+            }
             mContent.postValue(Content.Status(queueStatus))
         } else {
             mContent.postValue(Content.Suggests(suggestsManager.suggests))

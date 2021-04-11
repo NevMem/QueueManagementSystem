@@ -46,7 +46,7 @@ class QMSApplication : Application() {
         single<ShowToastManager> { get<ToastManager>() }
         single<ToastProvider> { get<ToastManager>() }
         single<NetworkManager> { createNetworkManager(get()) }
-        single<StatusProvider> { createStatusProvider(get(), get(), get()) }
+        single<StatusProvider> { createStatusProvider(get(), get(), get(), get()) }
         single {
             createFeatureManager(
                 get(),
@@ -75,7 +75,7 @@ class QMSApplication : Application() {
         viewModel { ProfileFragmentViewModel(get(), get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
         viewModel { DeveloperSettingsFragmentViewModel(get()) }
-        viewModel { StatusFragmentViewModel(get(), get()) }
+        viewModel { StatusFragmentViewModel(get(), get(), get(), get()) }
     }
 
     override fun onCreate() {

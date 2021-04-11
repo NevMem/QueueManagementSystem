@@ -25,6 +25,10 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
         model.content.observe(viewLifecycleOwner, Observer {
             updateUiWith(it)
         })
+
+        model.smallServiceViewState.observe(viewLifecycleOwner, Observer {
+            serviceInfo.state = it
+        })
     }
 
     private fun updateUiWith(content: StatusFragmentViewModel.Content) {
@@ -48,9 +52,9 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
         hideSuggestsUi()
         statusCard.isVisible = true
         queueStatus.let {
-            numberInLine.text = "Вы ${it.numberInLine}-ый в очереди"
+            numberInLine.text = resources.getQuantityString(R.plurals.numberInTheLine, it.numberInLine, it.numberInLine)
             ticketNumber.text = it.ticket
-            eta.text = "~${(it.etaInSeconds ?: 0 + 59) / 60} минут"
+            eta.text = resources.getString(R.string.minutes_remaining, (it.etaInSeconds + 59) / 60)
         }
     }
 

@@ -80,7 +80,7 @@ internal class NetworkManagerImpl(
     private val featuresService by lazy { featuresRetrofit.create(FeaturesService::class.java) }
     private val javaBackendService by lazy { javaBackendRetrofit.create(JavaBackendService::class.java) }
 
-    override suspend fun fetchDataForInvite(token: String, invite: String): OrganizitionProto.Organization = suspendCoroutine { continuation ->
+    override suspend fun fetchOrganization(token: String, invite: String): OrganizitionProto.Organization = suspendCoroutine { continuation ->
         suspend fun wrap() = suspendCoroutine<Organization> { wrapRequest(service.getOrganization(token, OrganizationInfo(invite)), it) }
         GlobalScope.launch {
             try {

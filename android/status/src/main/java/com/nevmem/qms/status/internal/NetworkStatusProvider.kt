@@ -1,7 +1,9 @@
 package com.nevmem.qms.status.internal
 
+import android.content.Context
 import com.nevmem.qms.ServiceProto
 import com.nevmem.qms.auth.AuthManager
+import com.nevmem.qms.common.utils.runOnUi
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.notifications.Channel
 import com.nevmem.qms.notifications.Notification
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.flow
 private const val updateTime = 1000L
 
 internal class NetworkStatusProvider(
+    private val context: Context,
     private val networkManager: NetworkManager,
     private val notificationsManager: NotificationsManager,
     private val authManager: AuthManager
@@ -25,16 +28,21 @@ internal class NetworkStatusProvider(
                 return
             }
             field = value
-            notifyChanged()
+            showNotificationIfNeeded()
+            runOnUi {
+                notifyChanged()
+            }
         }
 
     private val listeners = mutableSetOf<StatusProvider.Listener>()
 
     private val channel = Channel(
         "status-channel",
-        "Status",
-        "Time to appointment"
+        context.getString(R.string.status),
+        context.getString(R.string.time_of_appointment)
     )
+
+    private var lastNotifiedTicket: String? = null
 
     init {
         notificationsManager.registerChannelIfNeeded(channel)
@@ -44,10 +52,20 @@ internal class NetworkStatusProvider(
                 try {
                     val info = networkManager.currentTicketInfo(authManager.token)
 
+                    val orgId = info.ticket.organizationId
+                    val serviceId = info.ticket.serviceId
+
+                    var serviceInfo: QueueStatus.ServiceInfo? = null
+
+                    if (orgId != null && serviceId != null) {
+                        serviceInfo = QueueStatus.ServiceInfo(orgId, serviceId)
+                    }
+
                     val newQueueStatus = QueueStatus(
-                            info.peopleInFrontCount + 1,
-                            info.ticket?.ticketId ?: "No ticket",
-                            info.remainingTime)
+                        info.peopleInFrontCount + 1,
+                        info.ticket?.ticketId ?: context.getString(R.string.no_ticket),
+                        info.remainingTime,
+                        serviceInfo)
 
                     queueStatus = newQueueStatus
                 } catch (exception: Exception) {
@@ -72,10 +90,10 @@ internal class NetworkStatusProvider(
     override fun fetchDataForInvite(invite: String): Flow<FetchStatus> = flow {
         emit(FetchStatus.Pending)
         try {
-            val result = networkManager.fetchDataForInvite(authManager.token, invite)
+            val result = networkManager.fetchOrganization(authManager.token, invite)
             emit(FetchStatus.Success(result))
         } catch (ex: Exception) {
-            emit(FetchStatus.Error(ex.message ?: "Unknown error"))
+            emit(FetchStatus.Error(ex.message ?: context.getString(R.string.unknown_error)))
         }
     }
 
@@ -85,6 +103,20 @@ internal class NetworkStatusProvider(
 
     override fun removeListener(listener: StatusProvider.Listener) {
         listeners.remove(listener)
+    }
+
+    private fun showNotificationIfNeeded() {
+        queueStatus?.let { status ->
+            if (status.etaInSeconds < 60 * 5 && lastNotifiedTicket != status.ticket) {
+                lastNotifiedTicket = status.ticket
+                notificationsManager.showNotificationInChannel(
+                    channel.channelName,
+                    Notification(
+                        R.drawable.icon_status_notification,
+                        context.getString(R.string.appointment_is_soon),
+                        context.getString(R.string.appointment_is_soon_body)))
+            }
+        }
     }
 
     private fun notifyChanged() {
