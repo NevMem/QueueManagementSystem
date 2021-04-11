@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.ServiceProto
 import com.nevmem.qms.auth.AuthManager
+import com.nevmem.qms.common.utils.defaultRetry
+import com.nevmem.qms.common.utils.retry
 import com.nevmem.qms.network.NetworkManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -34,7 +36,7 @@ class SmallServiceViewViewModelDelegate(
         job = viewModelScope.launch {
             mutableState.postValue(State.Loading)
             try {
-                val org = networkManager.fetchOrganization(authManager.token, organizationId)
+                val org = defaultRetry { networkManager.fetchOrganization(authManager.token, organizationId) }
                 val service = org.servicesList.find { it.info.id == serviceId }
                 if (service != null) {
                     mutableState.postValue(State.Data(org.info, service))

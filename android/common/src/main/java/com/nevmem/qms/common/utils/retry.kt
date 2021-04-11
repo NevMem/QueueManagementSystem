@@ -31,3 +31,7 @@ suspend fun <T>retry(block: suspend () -> T, maxRetries: Int = 3): T {
     }
     throw IllegalStateException("Something strange happened")
 }
+
+suspend fun <T>defaultRetry(block: suspend () -> T): T {
+    return retry(block)
+}
