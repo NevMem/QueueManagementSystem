@@ -69,18 +69,11 @@
                 android:fontFamily="@font/light"
                 tools:text="~23 min"/>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/aboutServiceCard"
+            <com.nevmem.qms.ui.service.SmallServiceInfoView
+                android:id="@+id/serviceInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/about_service_card_background">
-
-                <com.nevmem.qms.ui.service.SmallServiceInfoView
-                    android:id="@+id/serviceInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.card.MaterialCardView>
+                android:background="@drawable/about_service_card_background" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

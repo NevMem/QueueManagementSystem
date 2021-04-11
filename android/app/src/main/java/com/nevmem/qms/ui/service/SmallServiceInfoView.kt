@@ -2,10 +2,13 @@ package com.nevmem.qms.ui.service
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatTextView
+import com.nevmem.qms.R
+import kotlinx.android.synthetic.main.layout_small_service_info_view_loaded.view.*
 
 class SmallServiceInfoView : FrameLayout {
     constructor(context: Context) : super(context)
@@ -41,13 +44,10 @@ class SmallServiceInfoView : FrameLayout {
                     ViewGroup.LayoutParams.WRAP_CONTENT))
             }
             is SmallServiceViewViewModelDelegate.State.Data -> {
-                val name = curState.service.info.name
-                addView(AppCompatTextView(context).apply {
-                        text = name
-                    },
-                    ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT))
+                addView(LayoutInflater.from(context).inflate(R.layout.layout_small_service_info_view_loaded, this, false).apply {
+                    organizationName.text = curState.organizationInfo.name
+                    serviceName.text = curState.service.info.name
+                })
             }
         }
     }
