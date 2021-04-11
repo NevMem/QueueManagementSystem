@@ -6,15 +6,20 @@ import com.google.gson.Gson
 import com.nevmem.qms.data.feedback.Feedback
 import com.nevmem.qms.data.feedback.LoadFeedbacksRequest
 import com.nevmem.qms.data.feedback.PublishFeedbackRequest
+import com.nevmem.qms.push.client.BackendClient
 import com.nevmem.qms.push.service.FeedbacksService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import javax.xml.ws.Response
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("api/feedback")
 class FeedbackController @Autowired constructor(
-    private val service: FeedbacksService
+    private val service: FeedbacksService,
+    private val client: BackendClient
 ) {
 
     data class SessionData(var user: String = "")
@@ -23,9 +28,8 @@ class FeedbackController @Autowired constructor(
     fun load(
         @RequestHeader("session") session: String,
         @RequestBody body: LoadFeedbacksRequest
-    ): List<Feedback> {
-        val data = parseSession(session)
-        return service.loadFeedbacksForEntityId(body.entityId)
+    ): ResponseEntity<List<Feedback>> = client.withCheckAuth(session) {
+        service.loadFeedbacksForEntityId(body.entityId)
     }
 
     @PostMapping("/publish")
@@ -33,6 +37,7 @@ class FeedbackController @Autowired constructor(
         @RequestHeader("session") session: String,
         @RequestBody body: PublishFeedbackRequest
     ) {
+        client.checkAuth(session)
         val data = parseSession(session)
         val feedback = Feedback(body.entityId, data.user, body.text, body.score)
         service.publishFeedback(feedback)
