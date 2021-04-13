@@ -21,6 +21,13 @@ export default class Checklist {
         this.id += 1
     }
 
+    resetItemsWith(list) {
+        this.list = []
+        for (const elem of list) {
+            this.addItem(elem)
+        }
+    }
+
     removeItem(item) {
         const index = this.list.indexOf(item)
         if (index < 0) {
