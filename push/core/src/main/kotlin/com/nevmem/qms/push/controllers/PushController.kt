@@ -1,6 +1,5 @@
 package com.nevmem.qms.push.controllers
 
-import com.nevmem.qms.push.data.BroadcastMessageConfig
 import com.nevmem.qms.push.data.SendToOneRequest
 import com.nevmem.qms.push.data.SpecifiedBroadcastMessageConfig
 import com.nevmem.qms.push.service.FbPushService
@@ -17,14 +16,6 @@ class PushController @Autowired constructor(
     private val storageService: TokenStorageService,
     private val fbService: FbPushService
 ) {
-
-    @PostMapping("/all")
-    fun broadcast(@RequestBody body: BroadcastMessageConfig) {
-        fbService.broadcastAll(
-            body.data,
-            body.notificationConfig)
-    }
-
     @PostMapping("/specified")
     fun specified(@RequestBody body: SpecifiedBroadcastMessageConfig) {
         fbService.broadcast(

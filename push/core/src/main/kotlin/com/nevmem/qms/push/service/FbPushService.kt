@@ -24,21 +24,6 @@ class FbPushService {
         FirebaseApp.initializeApp(options)
     }
 
-    fun broadcastAll(data: Map<String, String>, notification: NotificationConfig?) {
-        val builder = Message.builder()
-            .putAllData(data)
-            .setCondition("!('something' in topics)")
-
-        if (notification != null) {
-            builder.setNotification(Notification.builder()
-                .setTitle(notification.title)
-                .setBody(notification.body)
-                .build())
-        }
-
-        FirebaseMessaging.getInstance().send(builder.build())
-    }
-
     fun broadcast(tokens: List<String>, data: Map<String, String>, notification: NotificationConfig?) {
         val builder = MulticastMessage.builder()
             .putAllData(data)

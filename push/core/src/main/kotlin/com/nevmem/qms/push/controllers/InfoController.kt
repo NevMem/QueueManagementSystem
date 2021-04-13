@@ -20,4 +20,7 @@ class InfoController @Autowired constructor(
     fun loadTokens(): List<String> = tokenStorageService.fetchTokens().map {
         it.dropLast(it.length - 10)
     }
+
+    @RequestMapping("/loadEmails")
+    fun loadEmails() = tokenStorageService.fetchEmails()
 }
