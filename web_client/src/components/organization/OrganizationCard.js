@@ -1,10 +1,13 @@
 import './OrganizationCard.css'
+import { Link } from 'react-router-dom'
 import { useState, Component } from 'react'
 import AddButton from '../../components/buttons/add_button/AddButton'
 import AddServiceDialog from '../dialogs/AddServiceDialog'
+import Edit from '@material-ui/icons/Edit'
+import EditOrganizationDialog from '../dialogs/EditOrganizationDialog'
 import feedbackAdapter from '../../adapters/FeedbackAdapter'
 import Grid from '@material-ui/core/Grid'
-import { Link } from 'react-router-dom'
+import IconButton from '@material-ui/core/IconButton'
 import localizedString from '../../localization/localizedString'
 import ServiceRow from '../service-row/ServiceRow'
 import Typography from '@material-ui/core/Typography'
@@ -57,6 +60,7 @@ export default function OrganizationCard({organizationData, ...props}) {
     const { name, address, services, admins } = organizationData
 
     const [open, setOpen] = useState(false)
+    const [editDialogOpen, setOpenEditDialog] = useState(false)
 
     const handleOpen = () => {
         setOpen(true)
@@ -66,13 +70,28 @@ export default function OrganizationCard({organizationData, ...props}) {
         setOpen(false)
     }
 
+    const handleStartEdit = () => {
+        setOpenEditDialog(true)
+    }
+
+    const handleStopEdit = () => {
+        setOpenEditDialog(false)
+    }
+
     return (
         <div className = 'organizationCard' {...props}>
             <Grid container justify='space-between'>
-                <Grid item xs={6}>
+                <Grid item xs={6} style={{display: 'flex', flexDirection: 'row'}}>
                     <Typography style={{color: '#c0c0c0', fontSize: '30px'}} variant='body2'>
                         {name}
                     </Typography>
+                    <IconButton onClick={handleStartEdit}>
+                        <Edit style={{width: '16px', height: '16px'}} />
+                    </IconButton>
+                    <EditOrganizationDialog
+                        open={editDialogOpen}
+                        onClose={handleStopEdit}
+                        organization={organizationData} />
                 </Grid>
                 <Grid item>
                     <AddButton

@@ -58,7 +58,8 @@ const parseOrganization = (json) => {
         name: json.info.name,
         address: json.info.address,
         services: parseServices(json.services),
-        admins: parseAdmins(json.admins)
+        admins: parseAdmins(json.admins),
+        data: json.info.data
     }
     return organization
 }
