@@ -3,7 +3,8 @@ import {
     createOrganization,
     createService,
     addManagerToService,
-    updateOrganization
+    updateOrganization,
+    updateService
 } from '../api/orgApi'
 import { makeAutoObservable, autorun } from 'mobx'
 import authAdapter from './AuthAdapter'
@@ -62,6 +63,13 @@ class OrgAdapter {
 
     addService(organizationId, name, data) {
         return createService(authAdapter.token, name, organizationId, data)
+            .then(() => {
+                this.loadOrganizations()
+            })
+    }
+
+    updateService(id, organizationId, name, data) {
+        return updateService(authAdapter.token, id, name, organizationId, data)
             .then(() => {
                 this.loadOrganizations()
             })

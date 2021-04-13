@@ -15,10 +15,10 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import useInput from '../../utils/useInput'
 
-export default function AddServiceDialog({ organization, open, onClose, ...rest }) {
+export default function EditServiceDialog({ service, organizationId, open, onClose, ...rest }) {
 
-    const { value: serviceName, bind: bindServiceName } = useInput('')
-    const { value: description, bind: bindDescription } = useInput('')
+    const { value: serviceName, bind: bindServiceName } = useInput(service.name)
+    const { value: description, bind: bindDescription } = useInput(service.data['description'])
     const [ error, setError ] = useState('')
 
     const handleCancel = () => { onClose() }
@@ -30,8 +30,8 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
             checklistItems: checklist.getList().map(elem => elem.name).join(','),
             description: description
         }
-        orgAdapter.addService(organization.id, serviceName, data)
-            .then(data => {
+        orgAdapter.updateService(service.id, organizationId, serviceName, data)
+            .then(() => {
                 onClose()
             })
             .catch(err => {
@@ -51,9 +51,9 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
                 {...rest}
                 open={open}
                 onClose={onClose}
-                aria-labelledby={"add-service-dialog-" + organization.id}>
-            <DialogTitle id={"add-service-dialog" + organization.id} style={{minWidth: '400px'}}>
-                {localizedString('add_new_service_dialog_title')}
+                aria-labelledby={"edit-service-dialog-" + organizationId}>
+            <DialogTitle id={"edit-service-dialog" + organizationId} style={{minWidth: '400px'}}>
+                {localizedString('edit_service_dialog_title')}
             </DialogTitle>
             <DialogContent>
                 {error && <Typography style={{color: 'red', marginBottom: '16px'}}>{error}</Typography> }
@@ -61,7 +61,7 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
                     style={{width: '100%'}}
                     color="primary"
                     variant="outlined"
-                    label={localizedString('add_new_service_dialog_label')}
+                    label={localizedString('edit_service_dialog_label')}
                     {...bindServiceName} />
 
                 <TextField
@@ -69,7 +69,7 @@ export default function AddServiceDialog({ organization, open, onClose, ...rest 
                     color="primary"
                     variant="outlined"
                     size='small'
-                    label={localizedString('add_new_service_dialog_description_label')}
+                    label={localizedString('edit_service_dialog_description_label')}
                     {...bindDescription} />
 
                 { useChecklist && <ChecklistBlock checklist={checklist} /> }

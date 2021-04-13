@@ -1,8 +1,10 @@
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import AddManagerRow from '../manager-row/AddManagerRow'
+import Edit from '@material-ui/icons/Edit'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
 import ManagerRow from '../manager-row/ManagerRow'
 import MuiAccordion from '@material-ui/core/Accordion'
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails'
@@ -10,6 +12,7 @@ import MuiAccordionSummary from '@material-ui/core/AccordionSummary'
 import QrCodeGroup from '../qr/QrCodeGroup'
 import SimpleRatingView from '../rating/SimpleRatingView'
 import Typography from '@material-ui/core/Typography'
+import EditServiceDialog from '../dialogs/EditServiceDialog'
 
 const Accordion = withStyles({
     root: {
@@ -55,6 +58,17 @@ const AccordionDetails = withStyles((theme) => ({
 }))(MuiAccordionDetails)
 
 const ServiceRow = ({ organizationId, serviceData }) => {
+
+    const [edit, setEdit] = useState(false)
+
+    const handleStartEdit = () => {
+        setEdit(true)
+    }
+
+    const handleStopEdit = () => {
+        setEdit(false)
+    }
+
     return (
         <Fragment>
             <Accordion>
@@ -64,10 +78,18 @@ const ServiceRow = ({ organizationId, serviceData }) => {
                     id={serviceData.id + '_key'}
                 >
                     <Grid container style={{paddingLeft: '16px', marginTop: '4px'}}>
-                        <Grid item xs={2}>
+                        <Grid item xs={2} style={{display: 'flex', flexDirection: 'row'}}>
                             <Typography style={{color: '#a0a0a0', fontSize: '20px'}} variant='body2'>
                                 {serviceData.name}
                             </Typography>
+                            <IconButton onClick={handleStartEdit} style={{width: '32px', height: '32px'}}>
+                                <Edit style={{width: '16px', height: '16px'}} />
+                            </IconButton>
+                            <EditServiceDialog
+                                open={edit}
+                                onClose={handleStopEdit}
+                                service={serviceData}
+                                organizationId={organizationId} />
                         </Grid>
                         <Grid item xs={4}>
                             <Typography style={{color: '#a0a0a0', fontSize: '16px', textAlign: 'right'}} variant='body2'>
