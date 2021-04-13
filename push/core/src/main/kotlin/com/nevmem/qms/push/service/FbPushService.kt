@@ -4,6 +4,7 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.Message
 import com.google.firebase.messaging.MulticastMessage
 import com.google.firebase.messaging.Notification
 import com.nevmem.qms.push.data.NotificationConfig
@@ -23,6 +24,21 @@ class FbPushService {
         FirebaseApp.initializeApp(options)
     }
 
+    fun broadcastAll(data: Map<String, String>, notification: NotificationConfig?) {
+        val builder = Message.builder()
+            .putAllData(data)
+            .setCondition("!('something' in topics)")
+
+        if (notification != null) {
+            builder.setNotification(Notification.builder()
+                .setTitle(notification.title)
+                .setBody(notification.body)
+                .build())
+        }
+
+        FirebaseMessaging.getInstance().send(builder.build())
+    }
+
     fun broadcast(tokens: List<String>, data: Map<String, String>, notification: NotificationConfig?) {
         val builder = MulticastMessage.builder()
             .putAllData(data)
@@ -35,6 +51,21 @@ class FbPushService {
                 .build())
         }
 
-        val response = FirebaseMessaging.getInstance().sendMulticast(builder.build())
+        FirebaseMessaging.getInstance().sendMulticast(builder.build())
+    }
+
+    fun sendToOne(token: String, data: Map<String, String>, notification: NotificationConfig?) {
+        val builder = Message.builder()
+            .putAllData(data)
+            .setToken(token)
+
+        if (notification != null) {
+            builder.setNotification(Notification.builder()
+                .setTitle(notification.title)
+                .setBody(notification.body)
+                .build())
+        }
+
+        FirebaseMessaging.getInstance().send(builder.build())
     }
 }

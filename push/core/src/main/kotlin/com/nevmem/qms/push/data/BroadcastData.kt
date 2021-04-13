@@ -9,3 +9,7 @@ data class SpecifiedBroadcastMessageConfig(
     var tokens: List<String>,
     var data: Map<String, String> = mapOf(),
     var notificationConfig: NotificationConfig? = null)
+data class SendToOneRequest(
+    var email: String,
+    var data: Map<String, String> = mapOf(),
+    var notificationConfig: NotificationConfig? = null)

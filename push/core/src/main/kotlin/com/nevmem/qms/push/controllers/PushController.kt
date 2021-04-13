@@ -1,6 +1,7 @@
 package com.nevmem.qms.push.controllers
 
 import com.nevmem.qms.push.data.BroadcastMessageConfig
+import com.nevmem.qms.push.data.SendToOneRequest
 import com.nevmem.qms.push.data.SpecifiedBroadcastMessageConfig
 import com.nevmem.qms.push.service.FbPushService
 import com.nevmem.qms.push.service.TokenStorageService
@@ -12,15 +13,14 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/broadcast")
-class BroadcastController @Autowired constructor(
+class PushController @Autowired constructor(
     private val storageService: TokenStorageService,
     private val fbService: FbPushService
 ) {
 
     @PostMapping("/all")
     fun broadcast(@RequestBody body: BroadcastMessageConfig) {
-        fbService.broadcast(
-            storageService.fetchTokens(),
+        fbService.broadcastAll(
             body.data,
             body.notificationConfig)
     }
@@ -33,4 +33,9 @@ class BroadcastController @Autowired constructor(
             body.notificationConfig)
     }
 
+    @PostMapping("/one")
+    fun sendToOne(@RequestBody body: SendToOneRequest) {
+        val token = storageService.tokenByEmail(body.email)
+        fbService.sendToOne(token!!, body.data, body.notificationConfig)
+    }
 }

@@ -11,8 +11,6 @@ import com.nevmem.qms.push.service.FeedbacksService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.reactive.function.client.WebClientResponseException
-import javax.xml.ws.Response
 
 @RestController
 @CrossOrigin("*")
