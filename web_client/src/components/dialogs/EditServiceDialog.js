@@ -17,13 +17,15 @@ import useInput from '../../utils/useInput'
 
 export default function EditServiceDialog({ service, organizationId, open, onClose, ...rest }) {
 
+    const checklist = useState(new Checklist())[0]
+    const [useChecklist, setUseChecklist] = useState(false)
+    const enableChecklist = () => { setUseChecklist(true) }
+
     const { value: serviceName, bind: bindServiceName } = useInput(service.name)
     const { value: description, bind: bindDescription } = useInput(service.data['description'])
     const [ error, setError ] = useState('')
 
     const handleCancel = () => { onClose() }
-
-    const checklist = new Checklist()
 
     const handleOk = () => {
         let data = {
@@ -42,9 +44,6 @@ export default function EditServiceDialog({ service, organizationId, open, onClo
                 }
             })
     }
-
-    const [useChecklist, setUseChecklist] = useState(false)
-    const enableChecklist = () => { setUseChecklist(true) }
 
     return (
         <Dialog
