@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react'
+import { useState } from 'react'
 import addIcon from '../../images/add.svg'
 import Button from '@material-ui/core/Button'
 import Delete from '@material-ui/icons/Delete'
@@ -9,7 +9,7 @@ import StyledDialog from '../dialogs/StyledDialog'
 import TextField from '@material-ui/core/TextField'
 import useInput from '../../utils/useInput'
 
-const ImageWithDeleteIcon = ({ imgSrc }) => {
+const ImageWithDeleteIcon = ({ imgSrc, handleDelete }) => {
     return (
         <div style={{width: '48px', marginRight: '16px'}}>
             <img
@@ -17,7 +17,9 @@ const ImageWithDeleteIcon = ({ imgSrc }) => {
                 height='48px'
                 src={imgSrc}
                 alt='some kek' />
-            <Delete style={{position: 'relative', top: '-64px', left: '34px'}} />
+            <Delete
+                style={{position: 'relative', top: '-64px', left: '34px', cursor: 'pointer'}}
+                onClick={handleDelete} />
         </div>
     )
 }
@@ -40,10 +42,22 @@ export default function SmallGallery({ setImageUrls, nowImages, ...props }) {
         handleClose()
     }
 
+    const deleteImage = (index) => {
+        const newImages = [...images]
+        newImages.splice(index, 1)
+        setImages(newImages)
+        setImageUrls(newImages)
+    }
+
     return (
         <div style={{display: 'flex', flexDirection: 'row', marginTop: '16px'}} {...props}>
             { images.map((elem, index) => {
-                return <ImageWithDeleteIcon imgSrc={elem} key={elem + ' ' + index} />
+                return (
+                    <ImageWithDeleteIcon
+                    imgSrc={elem}
+                    key={elem + ' ' + index}
+                    handleDelete={() => deleteImage(index)} />
+                )
             }) }
 
             <img onClick={handleOpen} src={addIcon} width='48px' height='48px' alt='' />
