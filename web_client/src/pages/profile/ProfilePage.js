@@ -67,7 +67,7 @@ const OrganizationPermissionRow = ({ permission }) => {
 }
 
 const PermissionRow = ({ permission }) => {
-  if ('serviceId' in permission) {
+  if ('serviceId' in permission && permission['serviceId'].length > 0) {
     return <ServicePermissionRow permission={permission} />
   }
   return <OrganizationPermissionRow permission={permission} />
