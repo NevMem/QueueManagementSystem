@@ -96,7 +96,7 @@ export default function OrganizationCard({organizationData, ...props}) {
                 </div>
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                     <IconButton style={{marginRight: '16px'}}>
-                        <img src={Table} style={{width: '16px'}} />
+                        <img src={Table} alt='table button' style={{width: '16px'}} />
                     </IconButton>
 
                     <AddButton
