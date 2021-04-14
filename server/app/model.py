@@ -78,11 +78,15 @@ class Ticket(BaseModel):
 
     ticket_id = sqlalchemy.Column(types.Text, nullable=False)
     state = sqlalchemy.Column(types.String, default='WAITING', index=True)
+    resolution = sqlalchemy.Column(types.String, default='NONE', index=True)
 
     enqueue_at = sqlalchemy.Column(types.DateTime, server_default=func.now())
     accepted_at = sqlalchemy.Column(types.DateTime)
 
     window = sqlalchemy.Column(types.String)
+
+    servicing_by = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Users.id'), index=True)
+    manager = relationship('User', foreign_keys=[servicing_by])
 
 
 class User(BaseModel):
@@ -98,6 +102,6 @@ class User(BaseModel):
 
     permissions = relationship(Permission, backref='user')
     attachments = relationship(UserAttachments)
-    tickets = relationship(Ticket, backref='user')
+    tickets = relationship(Ticket, backref='user', foreign_keys=[Ticket.user_id])
 
     data = sqlalchemy.Column(types.JSON, default={})

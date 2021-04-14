@@ -20,7 +20,9 @@ class UserPermissions(metaclass=_BasePermissions):
 
 
 class ManagerPermissions(UserPermissions):
+    read = True
     update = True
+    serve_users = True
 
 
 class OwnerPermissions(ManagerPermissions):
