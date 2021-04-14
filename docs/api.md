@@ -240,4 +240,4 @@ Request:  proto.management.EndServicingRequest
 
 Response:  google.protobuf.Empty
 
-Заканчивает обработку пользователя
+Заканчивает обработку пользователя. Дефолтная резолюция SERVICED, нельзя поставить NONE

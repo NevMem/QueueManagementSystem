@@ -715,7 +715,10 @@ async def service_next_user(request: Request):
 
     if ticket is not None:
         ticket.state = 'PROCESSED'
-        ticket.resolution = 'SERVICED'
+        ticket.resolution = ticket_pb2.Ticket.Resolution[request.parsed.resolution]
+
+        if ticket.resolution == 'NONE':
+            ticket.resolution = 'SERVICED'
 
     next_ticket_query = (
         select(model.Ticket)
@@ -764,7 +767,10 @@ async def end_servicing(request: Request):
         raise HTTPException(404)
 
     ticket.state = 'PROCESSED'
-    ticket.resolution = 'SERVICED'
+    ticket.resolution = ticket_pb2.Ticket.Resolution[request.parsed.resolution]
+    if ticket.resolution == 'NONE':
+        ticket.resolution = 'SERVICED'
+
     return ProtobufResponse(empty_pb2.Empty())
 
 
