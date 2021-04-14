@@ -7,6 +7,7 @@ import HomePage from './pages/home/HomePage'
 import ProfilePage from './pages/profile/ProfilePage'
 import SettingsPage from './pages/settings/SettingsPage'
 import StartPage from './pages/start/StartPage'
+import TablePage from './pages/table/TablePage'
 
 const theme = createMuiTheme({
     palette: {
@@ -29,6 +30,7 @@ function App() {
                     <PrivateRoute path='/settings' component={SettingsPage} />
                     <PrivateRoute path='/profile' component={ProfilePage} />
                     <PrivateRoute path='/feedback' component={FeedbackPage} />
+                    <PrivateRoute path='/table' component={TablePage} />
                     <PrivateRoute path='/' component={HomePage} />
                 </Switch>
             </Router>

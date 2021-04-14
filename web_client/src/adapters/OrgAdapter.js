@@ -4,7 +4,8 @@ import {
     createService,
     addManagerToService,
     updateOrganization,
-    updateService
+    updateService,
+    queueTickets,
 } from '../api/orgApi'
 import { makeAutoObservable, autorun } from 'mobx'
 import authAdapter from './AuthAdapter'
@@ -80,6 +81,11 @@ class OrgAdapter {
             .then(() => {
                 this.loadOrganizations()
             })
+    }
+
+    tickets(organizationId) {
+        return queueTickets(authAdapter.token, organizationId)
+            .then(data => data.data)
     }
 
     setOrganizations(orgs) {

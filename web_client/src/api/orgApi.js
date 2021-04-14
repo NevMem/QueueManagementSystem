@@ -8,6 +8,7 @@ const paths = withBackendUrl({
     createOrganization: '/admin/create_organization',
     createService: '/admin/create_service',
     organizationsList: '/admin/get_organizations_list',
+    queueTickets: '/admin/queue_tickets',
     updateManageOfOrganizationPrivilege: '/admin/update_user_privilege',
     updateManageOfServicePrivilege: '/admin/update_user_privilege',
     updateOrganization: '/admin/update_organization',
@@ -54,14 +55,19 @@ export const addManagerToService = (token, serviceId, managerEmail) => {
     return authorizedRequestWrapper(axios.post(
         paths.addManagerToService,
         { permissionType: 'MANAGER', targetObject: 'SERVICE', id: serviceId, email: managerEmail },
-        { headers: { session: token } }
-    ))
+        { headers: { session: token } }))
 }
 
 export const addManagerToOrganization = (token, organizationId, managerEmail) => {
     return authorizedRequestWrapper(axios.post(
         paths.addManagerToOrganization,
         { permissionType: 'MANAGER', targetObject: 'ORGANIZATION', id: organizationId, email: managerEmail },
-        { headers: { session: token } }
-    ))
+        { headers: { session: token } }))
+}
+
+export const queueTickets = (token, organizationId) => {
+    return authorizedRequestWrapper(axios.post(
+        paths.queueTickets,
+        { id: organizationId },
+        { headers: { session: token } }))
 }
