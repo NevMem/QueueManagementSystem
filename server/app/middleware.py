@@ -17,6 +17,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from server.app import model
 from server.app.config import Config
+from server.app.utils import isiterable
 from server.app.utils.db_utils import session_scope
 from server.app.utils.web import get_signature, get_check_attr
 
@@ -43,10 +44,17 @@ class BasicAuthBackend(AuthenticationBackend):
         credentials = {'authenticated', }
 
         target = getattr(request.scope['_parsed'], get_check_attr(request.url.path), None)
+
         if target:
-            for permission in user.permissions:
-                if str(permission.service_id) == target or permission.organization_id == target:
-                    credentials |= permission.permissions_list
+            if isinstance(target, str):
+                for permission in user.permissions:
+                    if str(permission.service_id) == target or permission.organization_id == target:
+                        credentials |= permission.permissions_list
+
+            elif isiterable(target):
+                for permission in user.permissions:
+                    if str(permission.service_id) in target or permission.organization_id in target:
+                        credentials |= permission.permissions_list
 
         return AuthCredentials(list(credentials)), user
 

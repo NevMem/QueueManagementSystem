@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\013TicketProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x12proto/ticket.proto\x12\x03qms\x1a\x10proto/user.proto\"\x8e\x02\n\x06Ticket\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x12\n\nservice_id\x18\x03 \x01(\t\x12\x11\n\tticket_id\x18\x04 \x01(\t\x12\x17\n\x0forganization_id\x18\x08 \x01(\t\x12\x0e\n\x06window\x18\x0b \x01(\t\x12\x12\n\nenqueue_at\x18\x05 \x01(\x02\x12\x13\n\x0b\x61\x63\x63\x65pted_at\x18\t \x01(\x02\x12\x17\n\x04user\x18\x07 \x01(\x0b\x32\t.qms.User\x12 \n\x05state\x18\n \x01(\x0e\x32\x11.qms.Ticket.State\"3\n\x05State\x12\x0b\n\x07WAITING\x10\x00\x12\x0e\n\nPROCESSING\x10\x01\x12\r\n\tPROCESSED\x10\x02\"`\n\nTicketInfo\x12\x1b\n\x06ticket\x18\x01 \x01(\x0b\x32\x0b.qms.Ticket\x12\x16\n\x0eremaining_time\x18\x02 \x01(\x02\x12\x1d\n\x15people_in_front_count\x18\x03 \x01(\r\"*\n\nTicketList\x12\x1c\n\x07tickets\x18\x01 \x03(\x0b\x32\x0b.qms.TicketB\x1d\n\x0e\x63om.nevmem.qmsB\x0bTicketProtob\x06proto3'
+  serialized_pb=b'\n\x12proto/ticket.proto\x12\x03qms\x1a\x10proto/user.proto\"\x88\x03\n\x06Ticket\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x12\n\nservice_id\x18\x03 \x01(\t\x12\x11\n\tticket_id\x18\x04 \x01(\t\x12\x17\n\x0forganization_id\x18\x08 \x01(\t\x12\x0e\n\x06window\x18\x0b \x01(\t\x12\x12\n\nenqueue_at\x18\x05 \x01(\x02\x12\x13\n\x0b\x61\x63\x63\x65pted_at\x18\t \x01(\x02\x12\x17\n\x04user\x18\x07 \x01(\x0b\x32\t.qms.User\x12 \n\x05state\x18\n \x01(\x0e\x32\x11.qms.Ticket.State\x12*\n\nresolution\x18\x0c \x01(\x0e\x32\x16.qms.Ticket.Resolution\"3\n\x05State\x12\x0b\n\x07WAITING\x10\x00\x12\x0e\n\nPROCESSING\x10\x01\x12\r\n\tPROCESSED\x10\x02\"L\n\nResolution\x12\x08\n\x04NONE\x10\x00\x12\x0c\n\x08SERVICED\x10\x01\x12\x10\n\x0cNOT_SERVICED\x10\x02\x12\n\n\x06KICKED\x10\x03\x12\x08\n\x04GONE\x10\x04\"`\n\nTicketInfo\x12\x1b\n\x06ticket\x18\x01 \x01(\x0b\x32\x0b.qms.Ticket\x12\x16\n\x0eremaining_time\x18\x02 \x01(\r\x12\x1d\n\x15people_in_front_count\x18\x03 \x01(\r\"*\n\nTicketList\x12\x1c\n\x07tickets\x18\x01 \x03(\x0b\x32\x0b.qms.TicketB\x1d\n\x0e\x63om.nevmem.qmsB\x0bTicketProtob\x06proto3'
   ,
   dependencies=[proto_dot_user__pb2.DESCRIPTOR,])
 
@@ -51,10 +51,50 @@ _TICKET_STATE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=265,
-  serialized_end=316,
+  serialized_start=309,
+  serialized_end=360,
 )
 _sym_db.RegisterEnumDescriptor(_TICKET_STATE)
+
+_TICKET_RESOLUTION = _descriptor.EnumDescriptor(
+  name='Resolution',
+  full_name='qms.Ticket.Resolution',
+  filename=None,
+  file=DESCRIPTOR,
+  create_key=_descriptor._internal_create_key,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='NONE', index=0, number=0,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+    _descriptor.EnumValueDescriptor(
+      name='SERVICED', index=1, number=1,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+    _descriptor.EnumValueDescriptor(
+      name='NOT_SERVICED', index=2, number=2,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+    _descriptor.EnumValueDescriptor(
+      name='KICKED', index=3, number=3,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+    _descriptor.EnumValueDescriptor(
+      name='GONE', index=4, number=4,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+  ],
+  containing_type=None,
+  serialized_options=None,
+  serialized_start=362,
+  serialized_end=438,
+)
+_sym_db.RegisterEnumDescriptor(_TICKET_RESOLUTION)
 
 
 _TICKET = _descriptor.Descriptor(
@@ -135,12 +175,20 @@ _TICKET = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='resolution', full_name='qms.Ticket.resolution', index=10,
+      number=12, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
   nested_types=[],
   enum_types=[
     _TICKET_STATE,
+    _TICKET_RESOLUTION,
   ],
   serialized_options=None,
   is_extendable=False,
@@ -149,7 +197,7 @@ _TICKET = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=46,
-  serialized_end=316,
+  serialized_end=438,
 )
 
 
@@ -170,8 +218,8 @@ _TICKETINFO = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='remaining_time', full_name='qms.TicketInfo.remaining_time', index=1,
-      number=2, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=float(0),
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -194,8 +242,8 @@ _TICKETINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=318,
-  serialized_end=414,
+  serialized_start=440,
+  serialized_end=536,
 )
 
 
@@ -226,13 +274,15 @@ _TICKETLIST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=416,
-  serialized_end=458,
+  serialized_start=538,
+  serialized_end=580,
 )
 
 _TICKET.fields_by_name['user'].message_type = proto_dot_user__pb2._USER
 _TICKET.fields_by_name['state'].enum_type = _TICKET_STATE
+_TICKET.fields_by_name['resolution'].enum_type = _TICKET_RESOLUTION
 _TICKET_STATE.containing_type = _TICKET
+_TICKET_RESOLUTION.containing_type = _TICKET
 _TICKETINFO.fields_by_name['ticket'].message_type = _TICKET
 _TICKETLIST.fields_by_name['tickets'].message_type = _TICKET
 DESCRIPTOR.message_types_by_name['Ticket'] = _TICKET

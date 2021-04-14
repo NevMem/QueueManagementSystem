@@ -13,7 +13,7 @@ import typing as tp
 from starlette.authentication import requires
 from starlette.exceptions import HTTPException
 
-from proto import user_pb2, permissions_pb2, organization_pb2, queue_pb2, service_pb2, ticket_pb2
+from proto import user_pb2, permissions_pb2, organization_pb2, service_pb2, ticket_pb2, management_pb2
 from server.app.middleware import middleware
 from server.app import model
 from server.app.utils import sha_hash, generate_next_ticket
@@ -91,7 +91,7 @@ def organization_from_model(organization: model.Organization, with_services: boo
     )
 
 
-def ticket_from_model(ticket: model.Ticket, with_user=False) -> ticket_pb2.Ticket:
+def ticket_from_model(ticket: model.Ticket, with_user=False, with_permissions=False) -> ticket_pb2.Ticket:
     return ticket_pb2.Ticket(
         id=str(ticket.id),
         user_id=str(ticket.user_id),
@@ -102,7 +102,8 @@ def ticket_from_model(ticket: model.Ticket, with_user=False) -> ticket_pb2.Ticke
         accepted_at=ticket.enqueue_at.timestamp(),
         state=ticket_pb2.Ticket.State[ticket.state],
         window=ticket.window,
-        user=user_from_model(ticket.user) if with_user else user_pb2.User()
+        resolution=ticket_pb2.Ticket.Resolution[ticket.resolution],
+        user=user_from_model(ticket.user, with_permissions=with_permissions) if with_user else user_pb2.User()
     )
 
 
@@ -660,12 +661,13 @@ async def get_current_queue_info(request: Request):
         .options(
             selectinload(model.Ticket.service)
         )
+        .limit(1)
     )
 
     result = await request.connection.execute(query)
     ticket = result.scalars().first()
 
-    if not ticket:
+    if ticket is None:
         raise HTTPException(404)
 
     if ticket.state == 'PROCESSED':
@@ -693,6 +695,171 @@ async def get_current_queue_info(request: Request):
         ticket=ticket_proto,
         people_in_front_count=people_count,
         remaining_time=60 * 5 * people_count,  # FIXME: statistic
+    ))
+
+
+@route('/admin/service_next_user', methods=['POST'], request_type=management_pb2.NextUserRequest, permission_check_attr='service_ids')
+@requires(['authenticated', 'serve_users'])
+async def service_next_user(request: Request):
+    current_ticket_query = (
+        select(model.Ticket)
+        .where(
+            model.Ticket.servicing_by == request.user.id,
+            model.Ticket.state == 'PROCESSING',
+        )
+        .limit(1)
+    )
+
+    result = await request.connection.execute(current_ticket_query)
+    ticket = result.scalars().first()
+
+    if ticket is not None:
+        ticket.state = 'PROCESSED'
+        ticket.resolution = 'SERVICED'
+
+    next_ticket_query = (
+        select(model.Ticket)
+        .where(
+            model.Ticket.service_id.in_(request.parsed.service_ids),
+            model.Ticket.state == 'WAITING',
+        )
+        .order_by(model.Ticket.enqueue_at.desc())
+        .options(
+            selectinload(model.Ticket.user),
+            selectinload(model.Ticket.service),
+        )
+        .limit(1)
+    )
+
+    result = await request.connection.execute(next_ticket_query)
+    ticket = result.scalars().first()
+
+    if ticket is None:
+        await request.connection.commit()
+        raise HTTPException(404)
+
+    ticket.servicing_by = request.user.id
+    ticket.state = 'PROCESSING'
+    ticket.window = request.parsed.window
+
+    return ProtobufResponse(ticket_from_model(ticket, with_user=True))
+
+
+@route('/admin/end_servicing', methods=['POST'], request_type=management_pb2.EndServicingRequest)
+@requires('authenticated')
+async def end_servicing(request: Request):
+    current_ticket_query = (
+        select(model.Ticket)
+        .where(
+            model.Ticket.servicing_by == request.user.id,
+            model.Ticket.state == 'PROCESSING',
+        )
+        .limit(1)
+    )
+
+    result = await request.connection.execute(current_ticket_query)
+    ticket = result.scalars().first()
+
+    if ticket is None:
+        raise HTTPException(404)
+
+    ticket.state = 'PROCESSED'
+    ticket.resolution = 'SERVICED'
+    return ProtobufResponse(empty_pb2.Empty())
+
+
+@route('/admin/get_current_ticket', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
+@requires('authenticated')
+async def get_current_ticket(request: Request):
+    current_ticket_query = (
+        select(model.Ticket)
+        .where(
+            model.Ticket.servicing_by == request.user.id,
+            model.Ticket.state == 'PROCESSING',
+        )
+        .options(
+            selectinload(model.Ticket.user),
+            selectinload(model.Ticket.service),
+        )
+        .limit(1)
+    )
+
+    result = await request.connection.execute(current_ticket_query)
+    ticket = result.scalars().first()
+
+    if ticket is None:
+        raise HTTPException(404)
+
+    return ProtobufResponse(ticket_from_model(ticket, with_user=True))
+
+
+@route('/client/left_queue', methods=['POST'], request_type=empty_pb2.Empty)
+@requires('authenticated')
+async def left_queue(request: Request):
+    current_ticket_query = (
+        select(model.Ticket)
+        .where(
+            model.Ticket.user_id == request.user.id,
+            model.Ticket.state == 'WAITING',
+        )
+        .limit(1)
+    )
+
+    result = await request.connection.execute(current_ticket_query)
+    ticket = result.scalars().first()
+
+    if ticket is None:
+        raise HTTPException(404)
+
+    ticket.state = 'PROCESSED'
+    ticket.resolution = 'GONE'
+
+    return ProtobufResponse(empty_pb2.Empty())
+
+
+@route('/admin/service_tickets_history', methods=['POST'], request_type=service_pb2.ServiceInfo)
+@requires(['authenticated', 'update'])
+async def service_tickets_history(request: Request):
+    tickets_query = (
+        select(model.Ticket)
+        .where(
+            model.Ticket.service_id == request.parsed.id,
+            model.Ticket.state == 'PROCESSED',
+        )
+        .options(
+            selectinload(model.Ticket.user),
+            selectinload(model.Ticket.service),
+        )
+    )
+
+    result = await request.connection.execute(tickets_query)
+    tickets = result.scalars().all()
+
+    return ProtobufResponse(ticket_pb2.TicketList(
+        tickets=[ticket_from_model(ticket, with_user=True) for ticket in tickets]
+    ))
+
+
+@route('/client/tickets_history', methods=['POST'], request_type=empty_pb2.Empty)
+@requires('authenticated')
+async def user_tickets_history(request: Request):
+    tickets_query = (
+        select(model.Ticket)
+        .where(
+            model.Ticket.state == 'PROCESSED',
+            model.Ticket.user_id == request.user.id,
+        )
+        .options(
+            selectinload(model.Ticket.user),
+            selectinload(model.Ticket.service),
+        )
+    )
+
+    result = await request.connection.execute(tickets_query)
+    tickets = result.scalars().all()
+
+    return ProtobufResponse(ticket_pb2.TicketList(
+        tickets=[ticket_from_model(ticket, with_user=True) for ticket in tickets]
     ))
 
 

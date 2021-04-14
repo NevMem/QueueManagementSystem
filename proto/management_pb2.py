@@ -11,6 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+from proto import ticket_pb2 as proto_dot_ticket__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -19,8 +20,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\017ManagementProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x16proto/management.proto\x12\x03qms\"6\n\x0fNextUserRequest\x12\x0e\n\x06window\x18\x01 \x01(\t\x12\x13\n\x0bservice_ids\x18\x02 \x03(\tB!\n\x0e\x63om.nevmem.qmsB\x0fManagementProtob\x06proto3'
-)
+  serialized_pb=b'\n\x16proto/management.proto\x12\x03qms\x1a\x12proto/ticket.proto\"b\n\x0fNextUserRequest\x12\x0e\n\x06window\x18\x01 \x01(\t\x12\x13\n\x0bservice_ids\x18\x02 \x03(\t\x12*\n\nresolution\x18\x03 \x01(\x0e\x32\x16.qms.Ticket.Resolution\"A\n\x13\x45ndServicingRequest\x12*\n\nresolution\x18\x01 \x01(\x0e\x32\x16.qms.Ticket.ResolutionB!\n\x0e\x63om.nevmem.qmsB\x0fManagementProtob\x06proto3'
+  ,
+  dependencies=[proto_dot_ticket__pb2.DESCRIPTOR,])
 
 
 
@@ -47,6 +49,13 @@ _NEXTUSERREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='resolution', full_name='qms.NextUserRequest.resolution', index=2,
+      number=3, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -59,11 +68,46 @@ _NEXTUSERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=31,
-  serialized_end=85,
+  serialized_start=51,
+  serialized_end=149,
 )
 
+
+_ENDSERVICINGREQUEST = _descriptor.Descriptor(
+  name='EndServicingRequest',
+  full_name='qms.EndServicingRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='resolution', full_name='qms.EndServicingRequest.resolution', index=0,
+      number=1, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=151,
+  serialized_end=216,
+)
+
+_NEXTUSERREQUEST.fields_by_name['resolution'].enum_type = proto_dot_ticket__pb2._TICKET_RESOLUTION
+_ENDSERVICINGREQUEST.fields_by_name['resolution'].enum_type = proto_dot_ticket__pb2._TICKET_RESOLUTION
 DESCRIPTOR.message_types_by_name['NextUserRequest'] = _NEXTUSERREQUEST
+DESCRIPTOR.message_types_by_name['EndServicingRequest'] = _ENDSERVICINGREQUEST
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 NextUserRequest = _reflection.GeneratedProtocolMessageType('NextUserRequest', (_message.Message,), {
@@ -72,6 +116,13 @@ NextUserRequest = _reflection.GeneratedProtocolMessageType('NextUserRequest', (_
   # @@protoc_insertion_point(class_scope:qms.NextUserRequest)
   })
 _sym_db.RegisterMessage(NextUserRequest)
+
+EndServicingRequest = _reflection.GeneratedProtocolMessageType('EndServicingRequest', (_message.Message,), {
+  'DESCRIPTOR' : _ENDSERVICINGREQUEST,
+  '__module__' : 'proto.management_pb2'
+  # @@protoc_insertion_point(class_scope:qms.EndServicingRequest)
+  })
+_sym_db.RegisterMessage(EndServicingRequest)
 
 
 DESCRIPTOR._options = None

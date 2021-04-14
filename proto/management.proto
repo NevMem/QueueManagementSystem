@@ -5,8 +5,16 @@ package qms;
 option java_package = "com.nevmem.qms";
 option java_outer_classname = "ManagementProto";
 
+import "proto/ticket.proto";
 
 message NextUserRequest {
     string window = 1;
     repeated string service_ids = 2;
+
+    Ticket.Resolution resolution = 3;
+}
+
+
+message EndServicingRequest {
+    Ticket.Resolution resolution = 1;
 }

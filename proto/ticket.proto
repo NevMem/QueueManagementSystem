@@ -15,6 +15,14 @@ message Ticket {
         PROCESSED = 2;
     }
 
+    enum Resolution {
+        NONE = 0;  // ticket state != PROCESSED
+        SERVICED = 1;  // User was serviced correctly
+        NOT_SERVICED = 2;  // User wasn't serviced (not enough documents and etc.)
+        KICKED = 3;  // User was kicked from queue by system before servicing
+        GONE = 4;  // User left queue by himself before serving
+    }
+
     string id = 1;
 
     string user_id = 2;
@@ -28,6 +36,7 @@ message Ticket {
 
     User user = 7;
     State state = 10;
+    Resolution resolution = 12;  // set after ticket processed
 }
 
 message TicketInfo {
