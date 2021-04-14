@@ -173,3 +173,71 @@ Request:  google.protobuf.Empty
 Response:  proto.ticket.TicketInfo
 
 Возвращает статус по последнему тикету
+
+
+#### История тикетов для юзера
+
+POST `/client/tickets_history`
+
+Request:  google.protobuf.Empty
+
+Response:  proto.ticket.TicketList
+
+Возвращает список всех завершенных тикетов для пользователя
+
+
+#### История тикетов для сервиса
+
+POST `/admin/service_tickets_history`
+
+Request:  google.protobuf.Empty
+
+Response:  proto.ticket.TicketList
+
+Возвращает список всех завершенных тикетов для сервиса
+
+
+#### Покинуть очередь
+
+POST `/client/left_queue`
+
+Request:  google.protobuf.Empty
+
+Response:  google.protobuf.Empty
+
+Покинуть очередь. Не сработает, если нас уже обрабатывают
+
+
+
+#### Получить текущий обрабатываемый тикет
+
+POST `/admin/get_current_ticket`
+
+Request:  google.protobuf.Empty
+
+Response:  proto.ticket.Ticket
+
+Получает текущий обрабатваемый менеджером тикет (на случай рестарта страницы допустим)
+
+
+#### Обработать следующего клиента
+
+POST `/admin/service_next_user`
+
+Request:  proto.management.NextUserRequest
+
+Response:  proto.ticket.Ticket
+
+Выдает следующий тикет из набора сервисов, если такой есть (404 иначе)
+Важно! Завершает обработку предыдущего тикета, если она не была завершена
+
+
+#### Закончить обработку клиента
+
+POST `/admin/end_servicing`
+
+Request:  proto.management.EndServicingRequest
+
+Response:  google.protobuf.Empty
+
+Заканчивает обработку пользователя
