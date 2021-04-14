@@ -27,8 +27,7 @@ export default function AddButton({isPrimaryButton, text, ...props}) {
                     marginLeft: '5px',
                     display: 'inline-block',
                     color: fontColor,
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden'
+                    whiteSpace: 'nowrap'
                 }}>
                     {text}
             </div>

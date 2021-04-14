@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 import localizedString from '../../localization/localizedString'
 import ServiceRow from '../service-row/ServiceRow'
+import Table from '../../images/table.svg'
 import Typography from '@material-ui/core/Typography'
 
 class FeedbackCountRow extends Component {
@@ -80,8 +81,8 @@ export default function OrganizationCard({organizationData, ...props}) {
 
     return (
         <div className = 'organizationCard' {...props}>
-            <Grid container justify='space-between'>
-                <Grid item xs={6} style={{display: 'flex', flexDirection: 'row'}}>
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                <div style={{display: 'flex', flexDirection: 'row'}}>
                     <Typography style={{color: '#c0c0c0', fontSize: '30px'}} variant='body2'>
                         {name}
                     </Typography>
@@ -92,15 +93,19 @@ export default function OrganizationCard({organizationData, ...props}) {
                         open={editDialogOpen}
                         onClose={handleStopEdit}
                         organization={organizationData} />
-                </Grid>
-                <Grid item>
+                </div>
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                    <IconButton style={{marginRight: '16px'}}>
+                        <img src={Table} style={{width: '16px'}} />
+                    </IconButton>
+
                     <AddButton
                         onClick={handleOpen}
                         isPrimaryButton={false}
                         text={localizedString('new_service')} />
                     <AddServiceDialog open={open} onClose={handleClose} organization={organizationData} />
-                </Grid>
-            </Grid>
+                </div>
+            </div>
             <Grid container>
                 <Typography style={{color: '#a0a0a0', fontSize: '20px'}} variant='body2'>
                     {address}
