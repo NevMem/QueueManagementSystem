@@ -58,3 +58,11 @@ def generate_next_ticket(previous_ticket: str, service_index: int) -> str:
     letter_digits = number_to_base(service_index, 26)
 
     return f'{"".join(string.ascii_uppercase[d] for d in letter_digits)}{number:03d}'
+
+
+def isiterable(obj):
+    try:
+        iter(obj)
+        return True
+    except TypeError:
+        return False
