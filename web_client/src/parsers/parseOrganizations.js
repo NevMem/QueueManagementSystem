@@ -30,7 +30,8 @@ const parseService = (json) => {
     const service = {
         id: json.info.id,
         name: json.info.name,
-        admins: parseAdmins(json.admins)
+        admins: parseAdmins(json.admins),
+        data: json.info.data
     }
     return service
 }
@@ -58,7 +59,8 @@ const parseOrganization = (json) => {
         name: json.info.name,
         address: json.info.address,
         services: parseServices(json.services),
-        admins: parseAdmins(json.admins)
+        admins: parseAdmins(json.admins),
+        data: json.info.data
     }
     return organization
 }

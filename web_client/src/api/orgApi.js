@@ -8,8 +8,10 @@ const paths = withBackendUrl({
     createOrganization: '/admin/create_organization',
     createService: '/admin/create_service',
     organizationsList: '/admin/get_organizations_list',
-    updateManageOfOrganizationPrivilege: 'admin/update_user_privilege',
-    updateManageOfServicePrivilege: 'admin/update_user_privilege',
+    updateManageOfOrganizationPrivilege: '/admin/update_user_privilege',
+    updateManageOfServicePrivilege: '/admin/update_user_privilege',
+    updateOrganization: '/admin/update_organization',
+    updateService: '/admin/update_service',
 })
 
 export const loadOrganizationList = (token) => {
@@ -26,10 +28,25 @@ export const createOrganization = (token, name, address, data) => {
         { headers: { session: token } }))
 }
 
+export const updateOrganization = (token, id, name, address, data) => {
+    return authorizedRequestWrapper(axios.post(
+        paths.updateOrganization,
+        { id: id, name: name, address: address, data: data },
+        { headers: { session: token } }
+    ))
+}
+
 export const createService = (token, name, organizationId, data) => {
     return authorizedRequestWrapper(axios.post(
         paths.createService,
         { name: name, organizationId: organizationId, data: data },
+        { headers: { session: token } }))
+}
+
+export const updateService = (token, id, name, organizationId, data) => {
+    return authorizedRequestWrapper(axios.post(
+        paths.updateService,
+        { name: name, organizationId: organizationId, id: id, data: data },
         { headers: { session: token } }))
 }
 
