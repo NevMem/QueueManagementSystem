@@ -1,6 +1,7 @@
 import { Component } from 'react'
-import orgAdapter from '../../adapters/OrgAdapter'
 import Grid from '@material-ui/core/Grid'
+import localizedString from '../../localization/localizedString'
+import orgAdapter from '../../adapters/OrgAdapter'
 import triangle from '../../images/triangle.svg'
 
 const styles = {
@@ -9,7 +10,8 @@ const styles = {
         flexDirection: 'column',
         flexWrap: 'wrap',
         padding: '32px',
-        height: 'calc(100vh - 64px)',
+        paddingTop: '80px',
+        height: 'calc(100vh - 102px)',
         alignItems: 'flex-start',
     },
     waitingTicket: {
@@ -26,7 +28,8 @@ const styles = {
         flexDirection: 'column-reverse',
         flexWrap: 'wrap',
         padding: '32px',
-        height: 'calc(100vh - 64px)',
+        paddingTop: '80px',
+        height: 'calc(100vh - 102px)',
         alignItems: 'flex-start',
     },
     processingTicket: {
@@ -64,6 +67,9 @@ const WaitingBlock = ({ tickets }) => {
     
     return (
         <div style={styles.waitingBlock}>
+            <div style={{position: 'absolute', top: '20px', left: 'calc(50vw + 48px)', color: 'white', fontSize: '36px'}}>
+                {localizedString('waiting_for_service')}
+            </div>
             {waiting.map(elem => {
                 return (
                     <WatingTicket ticket={elem} key={elem.ticketId} />
@@ -88,6 +94,9 @@ const ProcessingBlock = ({ tickets }) => {
 
     return (
         <div style={styles.processingBlock}>
+            <div style={{position: 'absolute', top: '20px', left: '64px', color: 'white', fontSize: '36px'}}>
+                {localizedString('ready_for_service')}
+            </div>
             {processing.map(elem => {
                 return (
                     <ProcessingTicket ticket={elem} key={elem.ticketId} />
