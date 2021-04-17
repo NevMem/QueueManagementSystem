@@ -726,7 +726,7 @@ async def service_next_user(request: Request):
             model.Ticket.service_id.in_(request.parsed.service_ids),
             model.Ticket.state == 'WAITING',
         )
-        .order_by(model.Ticket.enqueue_at.desc())
+        .order_by(model.Ticket.enqueue_at.asc())
         .options(
             selectinload(model.Ticket.user),
             selectinload(model.Ticket.service),
