@@ -1,4 +1,5 @@
 import './CurrentServicingBlock.css'
+import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import Button from '@material-ui/core/Button'
 import localizedString from '../../localization/localizedString'
@@ -15,7 +16,9 @@ const ServicingBlockImpl = observer(({ adapter }) => {
                 <div className='servicingPulse' />
                 <div style={{marginLeft: '12px'}}>{localizedString('continue_servicing')}</div>
             </div>
-            <Button variant='text' color='primary'>{localizedString('continue')}</Button>
+            <Link to='/servicing' style={{textDecoration: 'none'}}>
+                <Button variant='text' color='primary'>{localizedString('continue')}</Button>
+            </Link>
         </div>
     )
 })
