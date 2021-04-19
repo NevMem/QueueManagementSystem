@@ -1,0 +1,53 @@
+.servicingBlock {
+    border: 2px solid #a0a0a0;
+    border-radius: 8px;
+    margin-top: 16px;
+    padding: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.servicingPulse {
+    background-color: #30f050;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+}
+
+.servicingPulse::after {
+    content: '';
+    background-color: #30f05050;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    transform: translate(-2px, -2px) scale(10);
+    display: block;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    from {
+        transform: translate(-2px, -2px) scale(0.1);
+    }
+
+    50% {
+        opacity: 1;
+    }
+    
+    75% {
+        opacity: 0.75;
+    }
+
+    to {
+        transform: translate(-2px, -2px) scale(1.5);
+        opacity: 0;
+    }
+}

@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react'
 import AddButton from '../../components/buttons/add_button/AddButton'
 import AddOrganizationDialog from '../../components/dialogs/AddOrganizationDialog'
+import CurrentServicingBlock from '../../components/servicing/CurrentServicingBlock'
 import Grid from '@material-ui/core/Grid'
 import Header from '../../components/header/Header'
 import localizedString from '../../localization/localizedString'
@@ -50,6 +51,7 @@ export default class HomePage extends Component {
                 <Header />
                 <Grid container justify='center'>
                     <Grid item xs={8}>
+                        <CurrentServicingBlock />
                         <Grid container justify='space-between' style={{marginTop: '16px'}}>
                             <Typography style={{color: '#a0a0a0', fontSize: '26px'}} variant='body2'>
                                 {localizedString('your_organizations')}
