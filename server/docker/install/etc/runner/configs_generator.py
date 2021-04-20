@@ -24,10 +24,10 @@ server {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Access-Control-Allow-Origin: '*'
-    proxy_set_header Access-Control-Expose-Headers: 'session'
-    proxy_set_header Access-Control-Allow-Methods: '*'
-    proxy_set_header Access-Control-Allow-Headers: '*'
+    add_header Access-Control-Allow-Origin: '*'
+    add_header Access-Control-Expose-Headers: 'session'
+    add_header Access-Control-Allow-Methods: '*'
+    add_header Access-Control-Allow-Headers: '*'
 
     proxy_redirect off;
     proxy_buffering off;
