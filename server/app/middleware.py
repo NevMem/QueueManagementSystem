@@ -11,7 +11,6 @@ from starlette.datastructures import MutableHeaders
 from starlette.middleware import Middleware
 from starlette.middleware.authentication import AuthenticationMiddleware, AuthenticationBackend, AuthCredentials, UnauthenticatedUser
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import HTTPConnection
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
@@ -130,7 +129,6 @@ class DBSessionMiddleware(BaseHTTPMiddleware):
 
 
 middleware = [
-    Middleware(CORSMiddleware, allow_origins=['*'], allow_methods=['*'], allow_headers=['*'], expose_headers=['session']),
     Middleware(DBSessionMiddleware),
     Middleware(SessionMiddleware, secret_key=Config.SECRET_KEY),
     Middleware(Proto2JsonMiddleware),
