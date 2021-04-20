@@ -6,8 +6,8 @@ import localizedString from '../../localization/localizedString'
 import servicingAdapter from '../../adapters/ServicingAdapter'
 
 const ServicingBlockImpl = observer(({ adapter }) => {
-    const current_ticket = adapter.current_ticket
-    if (current_ticket === undefined) {
+    const currentTicket = adapter.currentTicket
+    if (currentTicket === undefined) {
         return null
     }
     return (

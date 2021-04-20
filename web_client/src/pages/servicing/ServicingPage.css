@@ -1,0 +1,34 @@
+.servicingCard {
+    margin-top: 24px;
+    border: 2px solid #707070;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
+
+.userInfoRow {
+    display: flex;
+    flex-direction: row;
+    color: #c0c0c0;
+    font-size: 16px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.userInfoRow > .description {
+    width: 128px;
+}
+
+.clientHeader {
+    font-size: 32px;
+    color: #c0c0c0;
+}
+
+.actionsBlock {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}

@@ -1,12 +1,14 @@
 import authAdapter from './AuthAdapter'
 import { makeAutoObservable } from 'mobx'
 import {
-    currentTicket
+    currentTicket,
+    nextUser,
+    endServicing,
 } from '../api/servicingApi'
 
 class ServicingAdapter {
     constructor() {
-        this.current_ticket = undefined
+        this.currentTicket = undefined
         makeAutoObservable(this)
 
         this.scheduleUpdate()
@@ -16,18 +18,39 @@ class ServicingAdapter {
         currentTicket(authAdapter.token)
             .then(data => data.data)
             .then(data => {
-                this.current_ticket = data
-                console.log(this.current_ticket)
+                this.currentTicket = data
                 this.rescheduleUpdate()
             })
             .catch(() => {
-                this.current_ticket = undefined
+                this.currentTicket = undefined
                 this.rescheduleUpdate()
             })
     }
 
-    rescheduleUpdate() {
-        setTimeout(this.scheduleUpdate.bind(this), 1000)
+    nextUser(windowName, serviceIds) {
+        nextUser(authAdapter.token, windowName, serviceIds)
+            .then(data => data.data)
+            .then(data => {
+                this.rescheduleUpdate(true)
+                return data
+            })
+    }
+
+    endServicing(resolution) {
+        endServicing(authAdapter.token, resolution)
+            .then(data => data.data)
+            .then(data => {
+                this.rescheduleUpdate(true)
+                return data
+            })
+    }
+
+    rescheduleUpdate(force) {
+        if (force) {
+            this.scheduleUpdate()
+        } else {
+            setTimeout(this.scheduleUpdate.bind(this), 1000)
+        }
     }
 }
 
