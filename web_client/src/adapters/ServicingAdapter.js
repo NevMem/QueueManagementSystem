@@ -28,7 +28,7 @@ class ServicingAdapter {
     }
 
     nextUser(windowName, serviceIds) {
-        nextUser(authAdapter.token, windowName, serviceIds)
+        return nextUser(authAdapter.token, windowName, serviceIds)
             .then(data => data.data)
             .then(data => {
                 this.rescheduleUpdate(true)
@@ -37,7 +37,7 @@ class ServicingAdapter {
     }
 
     endServicing(resolution) {
-        endServicing(authAdapter.token, resolution)
+        return endServicing(authAdapter.token, resolution)
             .then(data => data.data)
             .then(data => {
                 this.rescheduleUpdate(true)
