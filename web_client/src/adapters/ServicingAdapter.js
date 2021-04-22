@@ -9,6 +9,7 @@ import {
 class ServicingAdapter {
     constructor() {
         this.currentTicket = undefined
+        this.serviceIds = []
         makeAutoObservable(this)
 
         this.scheduleUpdate()
@@ -50,6 +51,21 @@ class ServicingAdapter {
             this.scheduleUpdate()
         } else {
             setTimeout(this.scheduleUpdate.bind(this), 1000)
+        }
+    }
+
+    addServiceToServicing(serviceId) {
+        const newServiceIds = [...this.serviceIds]
+        newServiceIds.push(serviceId)
+        this.serviceIds = newServiceIds
+    }
+
+    removeServiceFromServicing(serviceId) {
+        const newServiceIds = [...this.serviceIds]
+        const index = newServiceIds.indexOf(serviceId)
+        if (index >= 0) {
+            newServiceIds.splice(index, 1)
+            this.serviceIds = newServiceIds
         }
     }
 }
