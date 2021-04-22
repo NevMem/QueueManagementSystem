@@ -8,6 +8,7 @@ import localizedString from '../../localization/localizedString'
 import orgAdapter from '../../adapters/OrgAdapter'
 import OrganizationCard from '../../components/organization/OrganizationCard'
 import React, { Component, Fragment } from 'react'
+import StartServicingBlock from '../../components/servicing/StartServicingBlock'
 import Typography from '@material-ui/core/Typography'
 import ZeroOrganizationCard from '../../components/organization/ZeroOrganizationCard'
 
@@ -65,6 +66,7 @@ export default class HomePage extends Component {
                             <AddOrganizationDialog open={this.state.open} onClose={this.closeDialog} />
                         </Grid>
                         <WrappedOrganizationCardsBlock orgAdapter={orgAdapter} />
+                        <StartServicingBlock />
                     </Grid>
                 </Grid>
             </Fragment>
