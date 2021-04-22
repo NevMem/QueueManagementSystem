@@ -24,7 +24,9 @@ const OrganizationCardsBlock = ({ organizationsData, loading }) => {
 }
 
 const WrappedOrganizationCardsBlock = observer(({ orgAdapter }) => {
-    return <OrganizationCardsBlock organizationsData={orgAdapter.getOrganizations()} loading={orgAdapter.loading} />
+    return <OrganizationCardsBlock
+        organizationsData={orgAdapter.getOrganizations()}
+        loading={orgAdapter.loading} />
 })
 
 export default class HomePage extends Component {
@@ -50,7 +52,7 @@ export default class HomePage extends Component {
             <Fragment>
                 <Header />
                 <Grid container justify='center'>
-                    <Grid item xs={8}>
+                    <Grid item xs={8} style={{paddingBottom: '32px'}}>
                         <CurrentServicingBlock />
                         <Grid container justify='space-between' style={{marginTop: '16px'}}>
                             <Typography style={{color: '#a0a0a0', fontSize: '26px'}} variant='body2'>
