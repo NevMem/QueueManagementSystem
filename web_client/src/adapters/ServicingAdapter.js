@@ -10,6 +10,7 @@ class ServicingAdapter {
     constructor() {
         this.currentTicket = undefined
         this.serviceIds = []
+        this.windowName = ''
         makeAutoObservable(this)
 
         this.scheduleUpdate()
@@ -67,6 +68,10 @@ class ServicingAdapter {
             newServiceIds.splice(index, 1)
             this.serviceIds = newServiceIds
         }
+    }
+
+    setWindowName(windowName) {
+        this.windowName = windowName
     }
 }
 
