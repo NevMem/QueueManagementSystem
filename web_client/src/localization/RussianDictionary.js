@@ -17,6 +17,8 @@ const dictionary = {
     'app_name': 'QMS',
     'cancel': 'Отмена',
     'checklist_header': 'Чеклист',
+    'continue_servicing': 'Активное обслуживание',
+    'continue': 'Продолжить',
     'edit': 'Редактировать',
     'employee': 'сотрудников',
     'login_form_title': 'Войдите чтобы управлять своими очередями',

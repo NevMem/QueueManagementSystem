@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useState, Component } from 'react'
 import AddButton from '../../components/buttons/add_button/AddButton'
 import AddServiceDialog from '../dialogs/AddServiceDialog'
+import authAdapter from '../../adapters/AuthAdapter'
 import Edit from '@material-ui/icons/Edit'
 import EditOrganizationDialog from '../dialogs/EditOrganizationDialog'
 import feedbackAdapter from '../../adapters/FeedbackAdapter'
@@ -79,6 +80,10 @@ export default function OrganizationCard({organizationData, ...props}) {
         setOpenEditDialog(false)
     }
 
+    const self = admins.find(admin => {
+        return admin.email === authAdapter.user.login
+    })
+
     return (
         <div className = 'organizationCard' {...props}>
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -101,10 +106,12 @@ export default function OrganizationCard({organizationData, ...props}) {
                         </IconButton>
                     </Link>
 
-                    <AddButton
-                        onClick={handleOpen}
-                        isPrimaryButton={false}
-                        text={localizedString('new_service')} />
+                    { self !== undefined && ['OWNER', 'MANAGER'].indexOf(self.permissionType) >= 0 &&
+                        <AddButton
+                            onClick={handleOpen}
+                            isPrimaryButton={false}
+                            text={localizedString('new_service')} />
+                    }
                     <AddServiceDialog open={open} onClose={handleClose} organization={organizationData} />
                 </div>
             </div>
