@@ -31,6 +31,18 @@ const WindowName = observer(({ servicingAdapter }) => {
     )
 })
 
+const StartButton = observer(({ servicingAdapter, onClick }) => {
+    return (
+        <Button
+            disabled={servicingAdapter.serviceIds.length === 0}
+            onClick={onClick}
+            color='secondary'
+            variant='contained'>
+                {localizedString('start')}
+        </Button>
+    )
+})
+
 export default function StartServicingBlock() {
     const [redirect, setRedirectionNeeded] = useState(false)
 
@@ -49,12 +61,7 @@ export default function StartServicingBlock() {
             { redirect && <Redirect to='/servicing' /> }
             <WindowName servicingAdapter={servicingAdapter} />
             <AmountToService servicingAdapter={servicingAdapter} />
-            <Button
-                onClick={handleClick}
-                color='secondary'
-                variant='contained'>
-                    {localizedString('start')}
-            </Button>
+            <StartButton servicingAdapter={servicingAdapter} onClick={handleClick} />
         </div>
     )
 }
