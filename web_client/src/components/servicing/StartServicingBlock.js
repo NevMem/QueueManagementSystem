@@ -47,7 +47,7 @@ export default function StartServicingBlock() {
     const [redirect, setRedirectionNeeded] = useState(false)
 
     const handleClick = () => {
-        servicingAdapter.nextUser(servicingAdapter.windowName, servicingAdapter.serviceIds)
+        servicingAdapter.nextUser(servicingAdapter.windowName, servicingAdapter.serviceIds.map(elem => elem.serviceId))
             .then(() => {
                 setRedirectionNeeded(true)
             })

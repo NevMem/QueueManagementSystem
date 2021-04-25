@@ -1,4 +1,5 @@
 import authAdapter from './AuthAdapter'
+import orgAdapter from './OrgAdapter'
 import { makeAutoObservable } from 'mobx'
 import {
     currentTicket,
@@ -11,20 +12,33 @@ class ServicingAdapter {
         this.currentTicket = undefined
         this.serviceIds = []
         this.windowName = ''
+        this.filteredTickets = []
         makeAutoObservable(this)
 
         this.scheduleUpdate()
     }
 
     scheduleUpdate() {
-        currentTicket(authAdapter.token)
+        const ticketPromise = currentTicket(authAdapter.token)
             .then(data => data.data)
-            .then(data => {
-                this.currentTicket = data
-                this.rescheduleUpdate()
-            })
-            .catch(() => {
-                this.currentTicket = undefined
+        var organizationId = undefined
+        if (this.serviceIds.length > 0) {
+            organizationId = this.serviceIds[0].organizationId
+        }
+        var ticketsPromise = new Promise((res, rej) => { res([]) })
+        if (organizationId !== undefined) {
+            ticketsPromise = orgAdapter.tickets(organizationId)
+        }
+        Promise.allSettled([ticketPromise, ticketsPromise])
+            .then(values => {
+                const ticket = values[0]
+                const tickets = values[1].value
+                this.currentTicket = ticket.value
+                if (tickets !== undefined && tickets.tickets !== undefined) {
+                    this.filteredTickets = tickets.tickets.filter(elem => {
+                        return this.serviceIds.map(elem => elem.serviceId).indexOf(elem.serviceId) >= 0
+                    })
+                }
                 this.rescheduleUpdate()
             })
     }
@@ -55,15 +69,15 @@ class ServicingAdapter {
         }
     }
 
-    addServiceToServicing(serviceId) {
+    addServiceToServicing(organizationId, serviceId) {
         const newServiceIds = [...this.serviceIds]
-        newServiceIds.push(serviceId)
+        newServiceIds.push({ organizationId: organizationId, serviceId: serviceId })
         this.serviceIds = newServiceIds
     }
 
     removeServiceFromServicing(serviceId) {
         const newServiceIds = [...this.serviceIds]
-        const index = newServiceIds.indexOf(serviceId)
+        const index = newServiceIds.indexOf(newServiceIds.find(elem => elem.serviceId === serviceId))
         if (index >= 0) {
             newServiceIds.splice(index, 1)
             this.serviceIds = newServiceIds

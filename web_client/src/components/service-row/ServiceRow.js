@@ -93,7 +93,7 @@ const ServiceRow = ({ organizationId, serviceData }) => {
                                 organizationId={organizationId} />
                         </Grid>
                         <Grid item xs={4}>
-                            <ServicingCheckbox serviceId={serviceData.id} />
+                            <ServicingCheckbox serviceId={serviceData.id} organizationId={organizationId} />
                         </Grid>
                         <Grid item xs={3}>
                             <QrCodeGroup organizationId={organizationId} serviceId={serviceData.id} />
