@@ -1,11 +1,7 @@
+import { actionButtonStyle } from './styles.js'
 import Button from '@material-ui/core/Button'
 import localizedString from '../../localization/localizedString'
 import servicingAdapter from '../../adapters/ServicingAdapter'
-
-const actionButtonStyle = {
-    marginLeft: '5px',
-    marginRight: '5px',
-}
 
 const ServiceNextButton = () => {
     const handleClick = () => {

@@ -1,3 +1,4 @@
+import { actionButtonStyle, dialogContent, formControl } from './styles.js'
 import { useState, Fragment } from 'react'
 import Button from '@material-ui/core/Button'
 import Dialog from '../../components/dialogs/StyledDialog'
@@ -9,11 +10,6 @@ import localizedString from '../../localization/localizedString'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import servicingAdapter from '../../adapters/ServicingAdapter'
-
-const actionButtonStyle = {
-    marginLeft: '5px',
-    marginRight: '5px',
-}
 
 const EndServicingButton = () => {
     const [open, setOpen] = useState(false)
@@ -46,8 +42,8 @@ const EndServicingButton = () => {
                 {localizedString('end_servicing')}
             </Button>
             <Dialog open={open} onClose={handleClose}>
-                <DialogContent style={{ minWidth: '300px' }}>
-                    <FormControl variant="outlined" style={{ width: '100%' }}>
+                <DialogContent style={dialogContent}>
+                    <FormControl variant="outlined" style={formControl}>
                         <InputLabel id="resolution-label">{localizedString('resolution')}</InputLabel>
                         <Select
                             labelId="resolution-label"
