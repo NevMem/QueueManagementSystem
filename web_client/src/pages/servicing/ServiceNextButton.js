@@ -9,13 +9,13 @@ const actionButtonStyle = {
 
 const ServiceNextButton = () => {
     const handleClick = () => {
-      servicingAdapter.nextUser()
+        servicingAdapter.nextUser()
     }
-  
+
     return (
-      <Button style={actionButtonStyle} onClick={handleClick} color='secondary' variant='text'>
-        {localizedString('service_next')}
-      </Button>
+        <Button style={actionButtonStyle} onClick={handleClick} color='secondary' variant='text'>
+            {localizedString('service_next')}
+        </Button>
     )
 }
 
