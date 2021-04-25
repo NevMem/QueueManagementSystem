@@ -26,7 +26,7 @@ server {
     proxy_set_header Upgrade $http_upgrade;
     add_header Access-Control-Allow-Origin * always;
     add_header Access-Control-Expose-Headers session always;
-    add_header Access-Control-Allow-Methods * always;
+    add_header Access-Control-Allow-Methods "GET, POST, OPTIONS" always;
     add_header Access-Control-Allow-Headers * always;
 
     proxy_redirect off;
