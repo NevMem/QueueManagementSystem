@@ -16,6 +16,21 @@ class ServicingAdapter {
         makeAutoObservable(this)
 
         this.scheduleUpdate()
+
+        this.loadState()
+    }
+
+    saveState() {
+        localStorage.setItem('service_ids', JSON.stringify(this.serviceIds))
+        localStorage.setItem('window_name', JSON.stringify(this.windowName))
+    }
+
+    loadState() {
+        this.serviceIds = JSON.parse(localStorage.getItem('service_ids'))
+        this.windowName = JSON.parse(localStorage.getItem('window_name'))
+        if (this.serviceIds === null || this.serviceIds === undefined) {
+            this.serviceIds = []
+        }
     }
 
     scheduleUpdate() {
@@ -73,6 +88,7 @@ class ServicingAdapter {
         const newServiceIds = [...this.serviceIds]
         newServiceIds.push({ organizationId: organizationId, serviceId: serviceId })
         this.serviceIds = newServiceIds
+        this.saveState()
     }
 
     removeServiceFromServicing(serviceId) {
@@ -82,10 +98,12 @@ class ServicingAdapter {
             newServiceIds.splice(index, 1)
             this.serviceIds = newServiceIds
         }
+        this.saveState()
     }
 
     setWindowName(windowName) {
         this.windowName = windowName
+        this.saveState()
     }
 }
 
