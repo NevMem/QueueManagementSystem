@@ -7,14 +7,14 @@ android {
     compileSdkVersion globalCompileSdkVersion
     buildToolsVersion "29.0.3"
 
+    ndkVersion '23.0.7272597-rc3'
+
     defaultConfig {
         minSdkVersion globalMinSdkVersion
         targetSdkVersion globalTargetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
-
-        ndkVersion '21.1.6352462'
 
         externalNativeBuild {
             cmake {

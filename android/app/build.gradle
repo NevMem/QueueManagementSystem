@@ -10,6 +10,8 @@ android {
     compileSdkVersion globalCompileSdkVersion
     buildToolsVersion "29.0.3"
 
+    ndkVersion '23.0.7272597-rc3'
+
     defaultConfig {
         applicationId "com.nevmem.qms"
         minSdkVersion globalMinSdkVersion
