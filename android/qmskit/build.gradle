@@ -13,6 +13,14 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        ndkVersion '21.1.6352462'
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++17"
+            }
+        }
     }
 
     buildTypes {
@@ -27,6 +35,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.10.2"
+        }
     }
 }
 
