@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\014ServiceProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x13proto/service.proto\x12\x03qms\x1a\x10proto/user.proto\"\x97\x01\n\x0bServiceInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x17\n\x0forganization_id\x18\x04 \x01(\t\x12(\n\x04\x64\x61ta\x18\x03 \x03(\x0b\x32\x1a.qms.ServiceInfo.DataEntry\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"5\n\x0fServiceInfoList\x12\"\n\x08services\x18\x01 \x03(\x0b\x32\x10.qms.ServiceInfo\"D\n\x07Service\x12\x1e\n\x04info\x18\x01 \x01(\x0b\x32\x10.qms.ServiceInfo\x12\x19\n\x06\x61\x64mins\x18\x03 \x03(\x0b\x32\t.qms.UserB\x1e\n\x0e\x63om.nevmem.qmsB\x0cServiceProtob\x06proto3'
+  serialized_pb=b'\n\x13proto/service.proto\x12\x03qms\x1a\x10proto/user.proto\"\xd3\x01\n\x0bServiceInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x17\n\x0forganization_id\x18\x04 \x01(\t\x12\x1c\n\x14\x64\x65\x66\x61ult_waiting_time\x18\x05 \x01(\r\x12\x1c\n\x14\x61verage_waiting_time\x18\x06 \x01(\r\x12(\n\x04\x64\x61ta\x18\x03 \x03(\x0b\x32\x1a.qms.ServiceInfo.DataEntry\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"5\n\x0fServiceInfoList\x12\"\n\x08services\x18\x01 \x03(\x0b\x32\x10.qms.ServiceInfo\"D\n\x07Service\x12\x1e\n\x04info\x18\x01 \x01(\x0b\x32\x10.qms.ServiceInfo\x12\x19\n\x06\x61\x64mins\x18\x03 \x03(\x0b\x32\t.qms.UserB\x1e\n\x0e\x63om.nevmem.qmsB\x0cServiceProtob\x06proto3'
   ,
   dependencies=[proto_dot_user__pb2.DESCRIPTOR,])
 
@@ -61,8 +61,8 @@ _SERVICEINFO_DATAENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=155,
-  serialized_end=198,
+  serialized_start=215,
+  serialized_end=258,
 )
 
 _SERVICEINFO = _descriptor.Descriptor(
@@ -95,7 +95,21 @@ _SERVICEINFO = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='data', full_name='qms.ServiceInfo.data', index=3,
+      name='default_waiting_time', full_name='qms.ServiceInfo.default_waiting_time', index=3,
+      number=5, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='average_waiting_time', full_name='qms.ServiceInfo.average_waiting_time', index=4,
+      number=6, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='data', full_name='qms.ServiceInfo.data', index=5,
       number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -114,7 +128,7 @@ _SERVICEINFO = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=47,
-  serialized_end=198,
+  serialized_end=258,
 )
 
 
@@ -145,8 +159,8 @@ _SERVICEINFOLIST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=200,
-  serialized_end=253,
+  serialized_start=260,
+  serialized_end=313,
 )
 
 
@@ -184,8 +198,8 @@ _SERVICE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=255,
-  serialized_end=323,
+  serialized_start=315,
+  serialized_end=383,
 )
 
 _SERVICEINFO_DATAENTRY.containing_type = _SERVICEINFO

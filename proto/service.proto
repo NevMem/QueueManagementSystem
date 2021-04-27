@@ -13,6 +13,9 @@ message ServiceInfo {
   string name = 2;
   string organization_id = 4;
 
+  uint32 default_waiting_time = 5;  // in seconds, default 300
+  uint32 average_waiting_time = 6;  // read-only
+
   map<string, string> data = 3;
 }
 
