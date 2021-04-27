@@ -4,7 +4,6 @@ from sqlalchemy.sql import select, delete, update, exists
 from sqlalchemy.orm import selectinload
 from sqlalchemy import func
 
-from datetime import datetime
 import io
 import json
 import qrcode
@@ -18,7 +17,7 @@ from proto import user_pb2, permissions_pb2, organization_pb2, service_pb2, tick
 from server.app import model
 from server.app.middleware import middleware
 from server.app.statistic import StatisticWorker
-from server.app.utils import sha_hash, generate_next_ticket
+from server.app.utils import sha_hash, generate_next_ticket, now
 from server.app.utils.db_utils import prepare_db
 from server.app.utils.protobuf import patch_enums
 from server.app.utils.web import route, prepare_app, Request, ProtobufResponse, Response
@@ -103,7 +102,7 @@ def ticket_from_model(ticket: model.Ticket, with_user=False, with_permissions=Fa
         organization_id=ticket.service.organization_id,
         ticket_id=ticket.ticket_id,
         enqueue_at=ticket.enqueue_at.timestamp(),
-        accepted_at=ticket.enqueue_at.timestamp(),
+        accepted_at=ticket.accepted_at.timestamp() if ticket.accepted_at else 0,
         state=ticket_pb2.Ticket.State[ticket.state],
         window=ticket.window,
         resolution=ticket_pb2.Ticket.Resolution[ticket.resolution],
@@ -746,7 +745,7 @@ async def service_next_user(request: Request):
 
     ticket.servicing_by = request.user.id
     ticket.state = 'PROCESSING'
-    ticket.accepted_at = datetime.now()
+    ticket.accepted_at = now()
     ticket.window = request.parsed.window
 
     return ProtobufResponse(ticket_from_model(ticket, with_user=True))
@@ -773,7 +772,7 @@ async def end_servicing(request: Request):
 
     ticket.state = 'PROCESSED'
     ticket.resolution = ticket_pb2.Ticket.Resolution[request.parsed.resolution]
-    ticket.finished_at = datetime.now()
+    ticket.finished_at = now()
     if ticket.resolution == 'NONE':
         ticket.resolution = 'SERVICED'
 
@@ -826,7 +825,7 @@ async def left_queue(request: Request):
 
     ticket.state = 'PROCESSED'
     ticket.resolution = 'GONE'
-    ticket.finished_at = datetime.now()
+    ticket.finished_at = now()
 
     return ProtobufResponse(empty_pb2.Empty())
 
