@@ -1,5 +1,6 @@
 import sqlalchemy
 import uuid
+import datetime
 
 from sqlalchemy import types
 from sqlalchemy.dialects import postgresql
@@ -29,6 +30,11 @@ class Service(BaseModel):
 
     admins = relationship('Permission', cascade='all, delete-orphan')
     tickets = relationship('Ticket', backref='service')
+
+    default_waiting_time = sqlalchemy.Column(types.Integer, server_default='300')
+    average_waiting_time = sqlalchemy.Column(types.Integer, server_default='300')
+
+    last_updated_at = sqlalchemy.Column(types.DateTime, default=datetime.datetime(1970, 1, 1))
 
     data = sqlalchemy.Column(postgresql.JSONB, default={})
 
@@ -82,6 +88,7 @@ class Ticket(BaseModel):
 
     enqueue_at = sqlalchemy.Column(types.DateTime, server_default=func.now())
     accepted_at = sqlalchemy.Column(types.DateTime)
+    finished_at = sqlalchemy.Column(types.DateTime)
 
     window = sqlalchemy.Column(types.String)
 

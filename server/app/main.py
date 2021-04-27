@@ -4,6 +4,7 @@ from sqlalchemy.sql import select, delete, update, exists
 from sqlalchemy.orm import selectinload
 from sqlalchemy import func
 
+from datetime import datetime
 import io
 import json
 import qrcode
@@ -14,12 +15,13 @@ from starlette.authentication import requires
 from starlette.exceptions import HTTPException
 
 from proto import user_pb2, permissions_pb2, organization_pb2, service_pb2, ticket_pb2, management_pb2
-from server.app.middleware import middleware
 from server.app import model
+from server.app.middleware import middleware
+from server.app.statistic import StatisticWorker
 from server.app.utils import sha_hash, generate_next_ticket
 from server.app.utils.db_utils import prepare_db
-from server.app.utils.web import route, prepare_app, Request, ProtobufResponse, Response
 from server.app.utils.protobuf import patch_enums
+from server.app.utils.web import route, prepare_app, Request, ProtobufResponse, Response
 
 
 patch_enums()
@@ -63,7 +65,9 @@ def service_from_model(service: model.Service) -> service_pb2.Service:
         info=service_pb2.ServiceInfo(
             id=str(service.id),
             name=service.name,
-            data=service.data
+            data=service.data,
+            default_waiting_time=service.default_waiting_time,
+            average_waiting_time=service.average_waiting_time,
         ),
         admins=[
             user_from_permission(permission)
@@ -335,6 +339,7 @@ async def create_service(request: Request):
         organization_id=request.parsed.organization_id,
         data=dict(request.parsed.data),
         index=next_index,
+        default_waiting_time=request.parsed.default_waiting_time or 300,
     )
 
     new_permission = model.Permission(
@@ -356,7 +361,8 @@ async def update_service(request: Request) -> empty_pb2.Empty:
         .where(model.Service.id == request.parsed.id)
         .values({
             model.Service.name: request.parsed.name,
-            model.Service.data: dict(**request.parsed.data)
+            model.Service.data: dict(**request.parsed.data),
+            model.Service.default_waiting_time: request.parsed.default_waiting_time,
         })
     )
 
@@ -641,6 +647,7 @@ async def update_user_privilege(request: Request):
                 else model.Permission.service_id == request.parsed.id
             )
         )
+        .with_for_update(nowait=True)
     )
 
     result = await request.connection.execute(permission_query)
@@ -694,7 +701,7 @@ async def get_current_queue_info(request: Request):
     return ProtobufResponse(ticket_pb2.TicketInfo(
         ticket=ticket_proto,
         people_in_front_count=people_count,
-        remaining_time=60 * 5 * people_count,  # FIXME: statistic
+        remaining_time=ticket.service.average_waiting_time * people_count,
     ))
 
 
@@ -714,11 +721,7 @@ async def service_next_user(request: Request):
     ticket = result.scalars().first()
 
     if ticket is not None:
-        ticket.state = 'PROCESSED'
-        ticket.resolution = ticket_pb2.Ticket.Resolution[request.parsed.resolution]
-
-        if ticket.resolution == 'NONE':
-            ticket.resolution = 'SERVICED'
+        raise HTTPException(409)
 
     next_ticket_query = (
         select(model.Ticket)
@@ -731,6 +734,7 @@ async def service_next_user(request: Request):
             selectinload(model.Ticket.user),
             selectinload(model.Ticket.service),
         )
+        .with_for_update(nowait=True)
         .limit(1)
     )
 
@@ -738,11 +742,11 @@ async def service_next_user(request: Request):
     ticket = result.scalars().first()
 
     if ticket is None:
-        await request.connection.commit()
         raise HTTPException(404)
 
     ticket.servicing_by = request.user.id
     ticket.state = 'PROCESSING'
+    ticket.accepted_at = datetime.now()
     ticket.window = request.parsed.window
 
     return ProtobufResponse(ticket_from_model(ticket, with_user=True))
@@ -757,6 +761,7 @@ async def end_servicing(request: Request):
             model.Ticket.servicing_by == request.user.id,
             model.Ticket.state == 'PROCESSING',
         )
+        .with_for_update(nowait=True)
         .limit(1)
     )
 
@@ -768,6 +773,7 @@ async def end_servicing(request: Request):
 
     ticket.state = 'PROCESSED'
     ticket.resolution = ticket_pb2.Ticket.Resolution[request.parsed.resolution]
+    ticket.finished_at = datetime.now()
     if ticket.resolution == 'NONE':
         ticket.resolution = 'SERVICED'
 
@@ -808,6 +814,7 @@ async def left_queue(request: Request):
             model.Ticket.user_id == request.user.id,
             model.Ticket.state == 'WAITING',
         )
+        .with_for_update(nowait=True)
         .limit(1)
     )
 
@@ -819,6 +826,7 @@ async def left_queue(request: Request):
 
     ticket.state = 'PROCESSED'
     ticket.resolution = 'GONE'
+    ticket.finished_at = datetime.now()
 
     return ProtobufResponse(empty_pb2.Empty())
 
@@ -869,4 +877,4 @@ async def user_tickets_history(request: Request):
     ))
 
 
-app = prepare_app(debug=True, middleware=middleware, on_startup=[prepare_db])
+app = prepare_app(debug=True, middleware=middleware, on_startup=[prepare_db, StatisticWorker().start])
