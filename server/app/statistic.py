@@ -3,12 +3,13 @@ import asyncio
 import contextlib
 import numpy as np
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func, select
 
-from server.app.utils.db_utils import session_scope
 from server.app import model
+from server.app.utils import now
+from server.app.utils.db_utils import session_scope
 
 
 class StatisticWorker:
@@ -23,7 +24,7 @@ class StatisticWorker:
         query = (
             select(model.Ticket)
             .where(
-                model.Ticket.enqueue_at > datetime.now() - timedelta(seconds=self.MAX_TICKET_AGE),
+                model.Ticket.enqueue_at > now() - timedelta(seconds=self.MAX_TICKET_AGE),
                 model.Ticket.state == 'PROCESSED',
                 model.Ticket.resolution != 'GONE',
                 model.Ticket.service_id == service.id,
@@ -41,7 +42,7 @@ class StatisticWorker:
             times.append((ticket.accepted_at - ticket.enqueue_at).seconds)
 
         service.average_waiting_time = round(np.average(times, weights=weights))
-        service.last_updated_at = datetime.now()
+        service.last_updated_at = now()
 
     async def loop(self):
         while True:
@@ -50,7 +51,7 @@ class StatisticWorker:
                     query = (
                         select(model.Service)
                         .where(
-                            model.Service.last_updated_at < datetime.now() - timedelta(seconds=self.UPDATE_PERIOD),
+                            model.Service.last_updated_at < now() - timedelta(seconds=self.UPDATE_PERIOD),
                         )
                         .order_by(func.random())
                         .with_for_update(nowait=True)

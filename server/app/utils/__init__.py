@@ -4,10 +4,14 @@ import sys
 import traceback
 import typing as tp
 
+from datetime import datetime
+from dateutil import tz as timezone
+
 from Crypto.Hash import SHA256
 
 
 uuid_letters = string.ascii_letters + string.digits
+TZ = timezone.gettz()
 
 
 def get_traceback_string(exception):
@@ -66,3 +70,7 @@ def isiterable(obj):
         return True
     except TypeError:
         return False
+
+
+def now():
+    return datetime.now(tz=TZ)
