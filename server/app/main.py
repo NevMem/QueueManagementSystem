@@ -102,7 +102,7 @@ def ticket_from_model(ticket: model.Ticket, with_user=False, with_permissions=Fa
         organization_id=ticket.service.organization_id,
         ticket_id=ticket.ticket_id,
         enqueue_at=ticket.enqueue_at.timestamp(),
-        accepted_at=ticket.enqueue_at.timestamp(),
+        accepted_at=ticket.accepted_at.timestamp() if ticket.accepted_at else 0,
         state=ticket_pb2.Ticket.State[ticket.state],
         window=ticket.window,
         resolution=ticket_pb2.Ticket.Resolution[ticket.resolution],
