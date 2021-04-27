@@ -32,7 +32,7 @@ class Service(BaseModel):
     tickets = relationship('Ticket', backref='service')
 
     default_waiting_time = sqlalchemy.Column(types.Integer, server_default='300')
-    average_waiting_time = sqlalchemy.Column(types.Integer, server_default='0')
+    average_waiting_time = sqlalchemy.Column(types.Integer, server_default='300')
 
     last_updated_at = sqlalchemy.Column(types.DateTime, default=datetime.datetime(1970, 1, 1))
 
