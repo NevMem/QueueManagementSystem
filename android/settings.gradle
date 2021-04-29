@@ -1,3 +1,4 @@
+include ':qmskit'
 include ':feedback'
 include ':rating'
 include ':common'

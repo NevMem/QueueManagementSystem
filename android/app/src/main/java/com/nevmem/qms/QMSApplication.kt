@@ -19,6 +19,7 @@ import com.nevmem.qms.notifications.createNotificationsManager
 import com.nevmem.qms.permissions.createPermissionsManager
 import com.nevmem.qms.push.PushProcessor
 import com.nevmem.qms.push.ToastPushProcessor
+import com.nevmem.qms.qmskit.QMSKit
 import com.nevmem.qms.rating.createRatingsManager
 import com.nevmem.qms.status.StatusProvider
 import com.nevmem.qms.status.createStatusProvider
@@ -86,6 +87,8 @@ class QMSApplication : Application() {
             .build()
         YandexMetrica.activate(applicationContext, config)
         YandexMetrica.enableActivityAutoTracking(this)
+
+        QMSKit.initialize()
 
         startKoin {
             androidLogger()
