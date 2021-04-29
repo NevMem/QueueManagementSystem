@@ -7,7 +7,7 @@ Java_com_nevmem_qms_qmskit_QMSKit_apiKey(
         jobject /* this */) {
 
 #define APP_API_KEY(X) \
-    static std::string API_KEY = X;
+    static const std::string API_KEY = X;
 #include "../../../../../shared/apikey/apikey.def"
 #undef APP_API_KEY
 
