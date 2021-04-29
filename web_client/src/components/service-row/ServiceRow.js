@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import AddManagerRow from '../manager-row/AddManagerRow'
 import Edit from '@material-ui/icons/Edit'
+import EditServiceDialog from '../dialogs/EditServiceDialog'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
@@ -10,9 +11,9 @@ import MuiAccordion from '@material-ui/core/Accordion'
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails'
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary'
 import QrCodeGroup from '../qr/QrCodeGroup'
+import ServicingCheckbox from '../servicing/ServicingCheckbox'
 import SimpleRatingView from '../rating/SimpleRatingView'
 import Typography from '@material-ui/core/Typography'
-import EditServiceDialog from '../dialogs/EditServiceDialog'
 
 const Accordion = withStyles({
     root: {
@@ -92,9 +93,7 @@ const ServiceRow = ({ organizationId, serviceData }) => {
                                 organizationId={organizationId} />
                         </Grid>
                         <Grid item xs={4}>
-                            <Typography style={{color: '#a0a0a0', fontSize: '16px', textAlign: 'right'}} variant='body2'>
-                                {serviceData.waiting}
-                            </Typography>
+                            <ServicingCheckbox serviceId={serviceData.id} organizationId={organizationId} />
                         </Grid>
                         <Grid item xs={3}>
                             <QrCodeGroup organizationId={organizationId} serviceId={serviceData.id} />

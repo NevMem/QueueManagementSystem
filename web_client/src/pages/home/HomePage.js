@@ -1,12 +1,14 @@
 import { observer } from 'mobx-react'
 import AddButton from '../../components/buttons/add_button/AddButton'
 import AddOrganizationDialog from '../../components/dialogs/AddOrganizationDialog'
+import CurrentServicingBlock from '../../components/servicing/CurrentServicingBlock'
 import Grid from '@material-ui/core/Grid'
 import Header from '../../components/header/Header'
 import localizedString from '../../localization/localizedString'
 import orgAdapter from '../../adapters/OrgAdapter'
 import OrganizationCard from '../../components/organization/OrganizationCard'
 import React, { Component, Fragment } from 'react'
+import StartServicingBlock from '../../components/servicing/StartServicingBlock'
 import Typography from '@material-ui/core/Typography'
 import ZeroOrganizationCard from '../../components/organization/ZeroOrganizationCard'
 
@@ -23,7 +25,9 @@ const OrganizationCardsBlock = ({ organizationsData, loading }) => {
 }
 
 const WrappedOrganizationCardsBlock = observer(({ orgAdapter }) => {
-    return <OrganizationCardsBlock organizationsData={orgAdapter.getOrganizations()} loading={orgAdapter.loading} />
+    return <OrganizationCardsBlock
+        organizationsData={orgAdapter.getOrganizations()}
+        loading={orgAdapter.loading} />
 })
 
 export default class HomePage extends Component {
@@ -49,7 +53,8 @@ export default class HomePage extends Component {
             <Fragment>
                 <Header />
                 <Grid container justify='center'>
-                    <Grid item xs={8}>
+                    <Grid item xs={8} style={{paddingBottom: '32px'}}>
+                        <CurrentServicingBlock />
                         <Grid container justify='space-between' style={{marginTop: '16px'}}>
                             <Typography style={{color: '#a0a0a0', fontSize: '26px'}} variant='body2'>
                                 {localizedString('your_organizations')}
@@ -61,6 +66,7 @@ export default class HomePage extends Component {
                             <AddOrganizationDialog open={this.state.open} onClose={this.closeDialog} />
                         </Grid>
                         <WrappedOrganizationCardsBlock orgAdapter={orgAdapter} />
+                        <StartServicingBlock />
                     </Grid>
                 </Grid>
             </Fragment>
