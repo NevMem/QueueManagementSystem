@@ -49,27 +49,12 @@ internal class NetworkStatusProvider(
 
         GlobalScope.launch(Dispatchers.Default) {
             while (true) {
-                try {
+                queueStatus = try {
                     val info = networkManager.currentTicketInfo(authManager.token)
-
-                    val orgId = info.ticket.organizationId
-                    val serviceId = info.ticket.serviceId
-
-                    var serviceInfo: QueueStatus.ServiceInfo? = null
-
-                    if (orgId != null && serviceId != null) {
-                        serviceInfo = QueueStatus.ServiceInfo(orgId, serviceId)
-                    }
-
-                    val newQueueStatus = QueueStatus(
-                        info.peopleInFrontCount + 1,
-                        info.ticket?.ticketId ?: context.getString(R.string.no_ticket),
-                        info.remainingTime,
-                        serviceInfo)
-
-                    queueStatus = newQueueStatus
+                    val newQueueStatus = QueueStatus(info)
+                    newQueueStatus
                 } catch (exception: Exception) {
-                    queueStatus = null
+                    null
                 }
 
                 delay(updateTime)
@@ -107,8 +92,8 @@ internal class NetworkStatusProvider(
 
     private fun showNotificationIfNeeded() {
         queueStatus?.let { status ->
-            if (status.etaInSeconds < 60 * 5 && lastNotifiedTicket != status.ticket) {
-                lastNotifiedTicket = status.ticket
+            if (status.etaInSeconds < 60 * 5 && lastNotifiedTicket != status.ticketId) {
+                lastNotifiedTicket = status.ticketId
                 notificationsManager.showNotificationInChannel(
                     channel.channelName,
                     Notification(

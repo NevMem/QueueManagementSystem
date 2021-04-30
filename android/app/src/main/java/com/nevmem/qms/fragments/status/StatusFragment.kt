@@ -53,7 +53,7 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
         statusCard.isVisible = true
         queueStatus.let {
             numberInLine.text = resources.getQuantityString(R.plurals.numberInTheLine, it.numberInLine, it.numberInLine)
-            ticketNumber.text = it.ticket
+            ticketNumber.text = it.ticketId
             eta.text = resources.getString(R.string.minutes_remaining, (it.etaInSeconds + 59) / 60)
         }
     }

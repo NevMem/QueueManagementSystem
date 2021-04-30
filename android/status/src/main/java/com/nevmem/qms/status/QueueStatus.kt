@@ -1,10 +1,35 @@
 package com.nevmem.qms.status
 
+import com.nevmem.qms.TicketProto
+
 data class QueueStatus(
-    val numberInLine: Int,
-    val ticket: String,
-    val etaInSeconds: Int,
-    val serviceInfo: ServiceInfo?
+    private val ticketInfo: TicketProto.TicketInfo
 ) {
     data class ServiceInfo(val organizationId: String, val serviceId: String)
+
+    val ticketId by lazy {
+        ticketInfo.ticket.ticketId ?: ""
+    }
+
+    val etaInSeconds by lazy {
+        ticketInfo.remainingTime
+    }
+
+    val serviceInfo by lazy {
+        val serviceId = ticketInfo.ticket.serviceId
+        val orgId = ticketInfo.ticket.organizationId
+        if (serviceId != null && orgId != null) {
+            ServiceInfo(orgId, serviceId)
+        } else {
+            null
+        }
+    }
+
+    val numberInLine by lazy {
+        ticketInfo.peopleInFrontCount + 1
+    }
+
+    val ticketState by lazy {
+        ticketInfo.ticket.state
+    }
 }
