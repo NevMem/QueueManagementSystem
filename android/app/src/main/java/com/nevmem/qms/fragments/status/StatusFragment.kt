@@ -67,11 +67,14 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
     private fun updateUi(queueStatus: QueueStatus) {
         hideSuggestsUi()
         statusCard.isVisible = true
-        queueStatus.let {
-            updateNumberInLine(it)
-            updateTicketId(it)
-            updateEta(it)
-            updateLeaveButton(it.ticketState)
+
+        listOf(
+            ::updateNumberInLine,
+            ::updateTicketId,
+            ::updateEta,
+            ::updateLeaveButton
+        ).forEach {
+            it(queueStatus)
         }
     }
 
@@ -105,9 +108,10 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
         }
     }
 
-    private fun updateLeaveButton(ticketState: TicketProto.Ticket.State) {
+    private fun updateLeaveButton(queueStatus: QueueStatus) {
+        val state = queueStatus.ticketState
         leaveButton.isVisible = false
-        when (ticketState) {
+        when (state) {
             TicketProto.Ticket.State.WAITING, TicketProto.Ticket.State.PROCESSING -> {
                 leaveButton.isVisible = true
             }
