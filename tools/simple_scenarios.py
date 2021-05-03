@@ -132,7 +132,7 @@ def test_full_pipeline(client):
     user_login, user_password, user_name, user_surname = create_user_data()
     check_registration_successfull(client.register(user_login, user_password, user_name, user_surname))
     user_token = check_login_successfull(client.login(user_login, user_password))
-    code, body, data = client.load_organizations(token)
+    code, body, data = client.load_organizations(admin_token)
     sc_assert(code == 200, body, code)
     sc_assert(len(data['organizations']) == 1, body, code)
     sc_assert(data['organizations'][0]['info']['name'] == org_name, body, code)
