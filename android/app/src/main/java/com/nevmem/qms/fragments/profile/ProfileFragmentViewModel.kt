@@ -61,7 +61,7 @@ class ProfileFragmentViewModel(
 
     private fun updateData() {
         profileList.postValue(mutableListOf<RVItem>().apply {
-            add(ProfileAvatar("https://pickaface.net/gallery/avatar/unr_sample_161118_2054_ynlrg.png"))
+            add(ProfileAvatar(null))
             addIf(user!!.name != null, ProfileName(user!!.name!!))
             addIf(user!!.surname != null, ProfileLastName(user!!.surname!!))
             addIf(user!!.email != null, ProfileEmail(user!!.email!!))
