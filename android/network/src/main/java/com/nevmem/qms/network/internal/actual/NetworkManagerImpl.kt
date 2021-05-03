@@ -247,8 +247,8 @@ internal class NetworkManagerImpl(
         wrapRequest(protoService.leave(token), continuation)
     }
 
-    override suspend fun ticketList(token: String): TicketProto.TicketList {
-        TODO("Not yet implemented")
+    override suspend fun ticketList(token: String): TicketProto.TicketList = suspendCoroutine {
+        wrapRequest(protoService.history(token), it)
     }
 
     private fun User.toApiClass(): ClientApiProto.User {

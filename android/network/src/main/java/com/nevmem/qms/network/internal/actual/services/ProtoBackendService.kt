@@ -11,4 +11,7 @@ interface ProtoBackendService {
 
     @POST("/client/left_queue")
     fun leave(@Header("session") session: String): Call<Unit>
+
+    @POST("/client/tickets_history")
+    fun history(@Header("session") session: String): Call<TicketProto.TicketList>
 }

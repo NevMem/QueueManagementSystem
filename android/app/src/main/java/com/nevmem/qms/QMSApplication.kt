@@ -11,6 +11,7 @@ import com.nevmem.qms.fragments.login.LoginPageViewModel
 import com.nevmem.qms.fragments.profile.ProfileFragmentViewModel
 import com.nevmem.qms.fragments.registration.RegistrationPageViewModel
 import com.nevmem.qms.fragments.status.StatusFragmentViewModel
+import com.nevmem.qms.history.createHistoryManager
 import com.nevmem.qms.keyvalue.createKeyValueStorage
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.logger.LoggerImpl
@@ -71,6 +72,7 @@ class QMSApplication : Application() {
         single { createFeedbackManager(get(), get()) }
         single { createRatingsManager(get(), get()) }
         single { createDialogsManager() }
+        single { createHistoryManager(get(), get()) }
     }
 
     private val viewModelsModule = module {
