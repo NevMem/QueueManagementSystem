@@ -57,6 +57,6 @@ class Client:
 
     def left_queue(self, token):
         res = self.layer.post(
-            self.base_url + '/client/enter_queue',
+            self.base_url + '/client/left_queue',
             headers={'session': token})
         return res.status_code, res.text
