@@ -9,6 +9,7 @@ import com.nevmem.qms.R
 import com.nevmem.qms.TicketProto
 import com.nevmem.qms.dialogs.DialogsManager
 import com.nevmem.qms.features.FeatureManager
+import com.nevmem.qms.features.internal.updateDelay
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.status.QueueStatus
 import com.nevmem.qms.suggests.Suggest
@@ -72,7 +73,8 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
             ::updateNumberInLine,
             ::updateTicketId,
             ::updateEta,
-            ::updateLeaveButton
+            ::updateLeaveButton,
+            ::updateResolution
         ).forEach {
             it(queueStatus)
         }
@@ -116,6 +118,21 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
                 leaveButton.isVisible = true
             }
             else -> {}
+        }
+    }
+
+    private fun updateResolution(queueStatus: QueueStatus) {
+        if (queueStatus.ticketState == TicketProto.Ticket.State.PROCESSED) {
+            resolution.isVisible = true
+            resolution.text = when (queueStatus.resolution) {
+                TicketProto.Ticket.Resolution.GONE -> getString(R.string.resolution_gone)
+                TicketProto.Ticket.Resolution.SERVICED -> getString(R.string.resolution_serviced)
+                TicketProto.Ticket.Resolution.NOT_SERVICED -> getString(R.string.resolution_not_serviced)
+                TicketProto.Ticket.Resolution.KICKED -> getString(R.string.resolution_kicked)
+                else -> ""
+            }
+        } else {
+            resolution.isVisible = false
         }
     }
 

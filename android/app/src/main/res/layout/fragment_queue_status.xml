@@ -51,6 +51,16 @@
                 tools:text="Вы 10ый в очереди"/>
 
             <TextView
+                android:id="@+id/resolution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/light"
+                android:textSize="@dimen/resolution"
+                android:textAlignment="center"
+                android:visibility="gone"
+                tools:text="Вы покинули в очереди"/>
+
+            <TextView
                 android:id="@+id/ticketNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,7 +74,8 @@
                 android:id="@+id/eta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/statusPanelMargin"
+                android:layout_marginTop="@dimen/statusPanelMargin"
+                android:layout_marginBottom="0dp"
                 android:textSize="@dimen/etaTextSize"
                 android:fontFamily="@font/light"
                 tools:text="~23 min"/>
@@ -73,6 +84,7 @@
                 android:id="@+id/serviceInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/statusPanelMargin"
                 android:background="@drawable/about_service_card_background" />
 
             <com.google.android.material.button.MaterialButton

@@ -32,4 +32,8 @@ data class QueueStatus(
     val ticketState: TicketProto.Ticket.State by lazy {
         ticketInfo.ticket.state
     }
+
+    val resolution: TicketProto.Ticket.Resolution by lazy {
+        ticketInfo.ticket.resolution
+    }
 }
