@@ -82,6 +82,7 @@ dependencies {
     implementation project(':dialogs')
     implementation project(':features')
     implementation project(':feedback')
+    implementation project(':history')
     implementation project(':keyvalue')
     implementation project(':knownfeatures')
     implementation project(':logger')

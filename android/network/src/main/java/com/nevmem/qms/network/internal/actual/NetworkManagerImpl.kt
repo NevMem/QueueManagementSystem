@@ -247,6 +247,10 @@ internal class NetworkManagerImpl(
         wrapRequest(protoService.leave(token), continuation)
     }
 
+    override suspend fun ticketList(token: String): TicketProto.TicketList {
+        TODO("Not yet implemented")
+    }
+
     private fun User.toApiClass(): ClientApiProto.User {
         val builder = ClientApiProto.User.newBuilder()
         if (email != null) {

@@ -16,6 +16,8 @@ interface NetworkManager {
     suspend fun currentTicketInfo(token: String): TicketProto.TicketInfo
     suspend fun leaveQueue(token: String)
 
+    suspend fun ticketList(token: String): TicketProto.TicketList
+
     suspend fun loadFeatures(): Map<String, String>
 
     suspend fun login(credentials: ClientApiProto.UserIdentity): String
