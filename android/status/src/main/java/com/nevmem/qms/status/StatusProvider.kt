@@ -1,6 +1,7 @@
 package com.nevmem.qms.status
 
 import com.nevmem.qms.ServiceProto
+import com.nevmem.qms.common.operations.OperationStatus
 import kotlinx.coroutines.flow.Flow
 
 interface StatusProvider {

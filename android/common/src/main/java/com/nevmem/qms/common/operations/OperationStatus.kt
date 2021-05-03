@@ -1,4 +1,4 @@
-package com.nevmem.qms.status
+package com.nevmem.qms.common.operations
 
 sealed class OperationStatus<T : Any> {
     class Pending<T : Any>: OperationStatus<T>()

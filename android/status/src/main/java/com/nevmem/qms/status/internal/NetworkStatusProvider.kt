@@ -3,6 +3,7 @@ package com.nevmem.qms.status.internal
 import android.content.Context
 import com.nevmem.qms.ServiceProto
 import com.nevmem.qms.auth.AuthManager
+import com.nevmem.qms.common.operations.OperationStatus
 import com.nevmem.qms.common.utils.runOnUi
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.notifications.Channel
