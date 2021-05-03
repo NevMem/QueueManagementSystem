@@ -40,7 +40,8 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
                 val resolution = dialogsManager.showSimpleDialog(
                     requireContext().getString(R.string.ready_to_leave))
                 if (resolution == DialogsManager.SimpleDialogResolution.Ok) {
-                    model.handleLeave()
+                    val flow = model.handleLeave()
+                    dialogsManager.showOperationStatusDialog(flow)
                 }
             }
         }

@@ -27,6 +27,8 @@ class SimpleDialogFragment : BottomSheetDialogFragment() {
         requireView().findViewById<AppCompatTextView>(R.id.dialogMessage)
     }
 
+    private var willBeDismissed = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,11 +42,13 @@ class SimpleDialogFragment : BottomSheetDialogFragment() {
 
         okButton.setOnClickListener {
             onOk()
+            willBeDismissed = true
             dismiss()
         }
 
         cancelButton.setOnClickListener {
             onCancel()
+            willBeDismissed = true
             dismiss()
         }
 
@@ -53,6 +57,9 @@ class SimpleDialogFragment : BottomSheetDialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
+        if (willBeDismissed) {
+            return
+        }
         onCancel()
     }
 
