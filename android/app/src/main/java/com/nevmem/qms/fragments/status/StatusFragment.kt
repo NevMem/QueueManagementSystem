@@ -37,7 +37,8 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
 
         leaveButton.setOnClickListener {
             GlobalScope.launch {
-                val resolution = dialogsManager.showSimpleDialog(requireContext().getString(R.string.ready_to_leave))
+                val resolution = dialogsManager.showSimpleDialog(
+                    requireContext().getString(R.string.ready_to_leave))
                 if (resolution == DialogsManager.SimpleDialogResolution.Ok) {
                     model.handleLeave()
                 }
