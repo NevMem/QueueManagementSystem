@@ -3,6 +3,7 @@ package com.nevmem.qms.auth.internal.impl
 import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.auth.data.*
+import com.nevmem.qms.common.operations.OperationStatus
 import com.nevmem.qms.keyvalue.KeyValueStorage
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.network.NetworkManager
@@ -111,13 +112,13 @@ internal class AuthManagerImpl(
         }
     }
 
-    override fun currentUser(): Flow<UserLoadingState> = flow {
-        emit(UserLoadingState.Pending)
+    override fun currentUser(): Flow<OperationStatus<ClientApiProto.User>> = flow {
+        emit(OperationStatus.Pending())
         try {
             val user = networkManager.getUser(token)
-            emit(UserLoadingState.User.fromProto(user))
+            emit(OperationStatus.Success(user))
         } catch (exception: Exception) {
-            emit(UserLoadingState.Error(exception.message ?: ""))
+            emit(OperationStatus.Error(exception.message ?: ""))
         }
     }
 

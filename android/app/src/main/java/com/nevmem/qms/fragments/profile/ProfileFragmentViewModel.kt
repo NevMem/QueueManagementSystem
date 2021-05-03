@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.auth.AuthManager
-import com.nevmem.qms.auth.data.UserLoadingState
+import com.nevmem.qms.common.operations.OperationStatus
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.history.HistoryManager
@@ -28,7 +29,7 @@ class ProfileFragmentViewModel(
     private val visitedList = MutableLiveData<List<RVItem>>()
     internal val visited: LiveData<List<RVItem>> = visitedList
 
-    private var user: UserLoadingState.User? = null
+    private var user: ClientApiProto.User? = null
         set(value) {
             if (field == value) {
                 return
@@ -41,10 +42,10 @@ class ProfileFragmentViewModel(
         profileList.postValue(listOf(ProfileLoadingStub))
         viewModelScope.launch {
             authManager.currentUser().collect {
-                if (it is UserLoadingState.Error) {
+                if (it is OperationStatus.Error) {
                     showToastManager.error(it.message)
-                } else if (it is UserLoadingState.User) {
-                    user = it
+                } else if (it is OperationStatus.Success) {
+                    user = it.result
                 }
             }
         }
@@ -61,7 +62,7 @@ class ProfileFragmentViewModel(
 
     private fun updateData() {
         profileList.postValue(mutableListOf<RVItem>().apply {
-            add(ProfileAvatar(null))
+            add(ProfileAvatar(user?.dataMap?.get("avatar")))
             addIf(user!!.name != null, ProfileName(user!!.name!!))
             addIf(user!!.surname != null, ProfileLastName(user!!.surname!!))
             addIf(user!!.email != null, ProfileEmail(user!!.email!!))

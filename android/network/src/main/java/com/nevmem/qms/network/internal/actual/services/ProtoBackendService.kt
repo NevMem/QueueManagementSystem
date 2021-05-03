@@ -1,5 +1,6 @@
 package com.nevmem.qms.network.internal.actual.services
 
+import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.TicketProto
 import retrofit2.Call
 import retrofit2.http.Header
@@ -14,4 +15,7 @@ interface ProtoBackendService {
 
     @POST("/client/tickets_history")
     fun history(@Header("session") session: String): Call<TicketProto.TicketList>
+
+    @POST("/client/get_user")
+    fun getUser(@Header("session") session: String): Call<ClientApiProto.User>
 }

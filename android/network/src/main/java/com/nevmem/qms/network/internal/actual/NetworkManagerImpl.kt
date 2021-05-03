@@ -173,27 +173,7 @@ internal class NetworkManagerImpl(
     }
 
     override suspend fun getUser(token: String): ClientApiProto.User = suspendCoroutine { continuation ->
-        service.getUser(token).enqueue(object : Callback<User> {
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                continuation.resumeWith(Result.failure(t))
-            }
-
-            override fun onResponse(
-                call: Call<User>,
-                response: Response<User>
-            ) {
-                val body = response.body()
-                if (response.code() == 200 && body != null) {
-                    try {
-                        continuation.resumeWith(Result.success(body.toApiClass()))
-                    } catch (exception: Exception) {
-                        continuation.resumeWith(Result.failure(exception))
-                    }
-                } else {
-                    continuation.resumeWith(Result.failure(IllegalStateException("Response code isn't 200 or body not present")))
-                }
-            }
-        })
+        wrapRequest(protoService.getUser(token), continuation)
     }
 
     override suspend fun registerNewPushToken(request: NewPushTokenRequest) = suspendCoroutine<Unit> { continuation ->
@@ -249,20 +229,6 @@ internal class NetworkManagerImpl(
 
     override suspend fun ticketList(token: String): TicketProto.TicketList = suspendCoroutine {
         wrapRequest(protoService.history(token), it)
-    }
-
-    private fun User.toApiClass(): ClientApiProto.User {
-        val builder = ClientApiProto.User.newBuilder()
-        if (email != null) {
-            builder.email = email
-        }
-        if (name != null) {
-            builder.name = name
-        }
-        if (surname != null) {
-            builder.surname = surname
-        }
-        return builder.build()
     }
 
     private fun ClientApiProto.RegisterRequest?.toDataClass(): RegisterRequest? {

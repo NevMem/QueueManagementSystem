@@ -1,7 +1,9 @@
 package com.nevmem.qms.auth.internal.debug
 
+import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.auth.data.*
+import com.nevmem.qms.common.operations.OperationStatus
 import com.nevmem.qms.keyvalue.KeyValueStorage
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
@@ -51,7 +53,7 @@ internal class DebugAuthManager(
             emit(RegisterState.Success)
         }
 
-    override fun currentUser(): Flow<UserLoadingState> {
+    override fun currentUser(): Flow<OperationStatus<ClientApiProto.User>> {
         TODO("Not yet implemented")
     }
 
