@@ -8,6 +8,7 @@ import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.auth.data.UserLoadingState
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.features.isFeatureEnabled
+import com.nevmem.qms.history.HistoryManager
 import com.nevmem.qms.knownfeatures.KnownFeatures
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.toast.manager.ShowToastManager
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 class ProfileFragmentViewModel(
     private val authManager: AuthManager,
     private val showToastManager: ShowToastManager,
+    private val historyManager: HistoryManager,
     featureManager: FeatureManager
 ) : ViewModel() {
 
@@ -47,24 +49,13 @@ class ProfileFragmentViewModel(
             }
         }
         if (featureManager.isFeatureEnabled(KnownFeatures.ShowHistoryOnProfilePage.value)) {
-            visitedList.postValue((0..30).map {
-                listOf(
-                    ProfileVisitedPlace(
-                        "Hospital",
-                        "https://gb2bel.belzdrav.ru/upload/medialibrary/1a8/%D0%B3%D0%BB%D0%B0%D0%B2.jpg",
-                        listOf("Medical", "Health care")
-                    ),
-                    ProfileVisitedPlace(
-                        "Yandex",
-                        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Yandex_Logo.svg/1200px-Yandex_Logo.svg.png",
-                        listOf("IT", "Company")
-                    ),
-                    ProfileVisitedPlace(
-                        "Check tags",
-                        "https://blackbirdesolutions.com/files/2020/02/tags-and-categories.jpg",
-                        (0..10).map { "Tag $it" })
-                )
-            }.flatten())
+            viewModelScope.launch {
+                for (history in historyManager.historyChannel) {
+                    visitedList.postValue(history.ticketsList.map {
+                        ProfileVisitedPlace(it.serviceId)
+                    })
+                }
+            }
         }
     }
 

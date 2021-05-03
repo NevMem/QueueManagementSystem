@@ -43,7 +43,7 @@
 
     <string name="ready_to_leave">Are you sure you want to leave queue?</string>
 
-    <string name="resolution_gone">You've left queue</string>
+    <string name="resolution_gone">You\'ve left queue</string>
     <string name="resolution_kicked">You have been kicked</string>
     <string name="resolution_serviced">Latest appointment</string>
     <string name="resolution_not_serviced">Latest appointment</string>

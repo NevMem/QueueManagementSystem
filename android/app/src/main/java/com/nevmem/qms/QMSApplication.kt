@@ -77,7 +77,7 @@ class QMSApplication : Application() {
 
     private val viewModelsModule = module {
         viewModel { LoginPageViewModel(get()) }
-        viewModel { ProfileFragmentViewModel(get(), get(), get()) }
+        viewModel { ProfileFragmentViewModel(get(), get(), get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
         viewModel { DeveloperSettingsFragmentViewModel(get()) }
         viewModel { StatusFragmentViewModel(get(), get(), get(), get()) }
