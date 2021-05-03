@@ -29,7 +29,7 @@ data class QueueStatus(
         ticketInfo.peopleInFrontCount + 1
     }
 
-    val ticketState by lazy {
+    val ticketState: TicketProto.Ticket.State by lazy {
         ticketInfo.ticket.state
     }
 }

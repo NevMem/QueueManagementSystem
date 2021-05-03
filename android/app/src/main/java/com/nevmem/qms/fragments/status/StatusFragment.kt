@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.nevmem.qms.R
+import com.nevmem.qms.TicketProto
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.status.QueueStatus
@@ -29,6 +30,10 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
         model.smallServiceViewState.observe(viewLifecycleOwner, Observer {
             serviceInfo.state = it
         })
+
+        leaveButton.setOnClickListener {
+            model.handleLeave()
+        }
     }
 
     private fun updateUiWith(content: StatusFragmentViewModel.Content) {
@@ -55,6 +60,17 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
             numberInLine.text = resources.getQuantityString(R.plurals.numberInTheLine, it.numberInLine, it.numberInLine)
             ticketNumber.text = it.ticketId
             eta.text = resources.getString(R.string.minutes_remaining, (it.etaInSeconds + 59) / 60)
+            updateLeaveButton(it.ticketState)
+        }
+    }
+
+    private fun updateLeaveButton(ticketState: TicketProto.Ticket.State) {
+        leaveButton.isVisible = false
+        when (ticketState) {
+            TicketProto.Ticket.State.WAITING, TicketProto.Ticket.State.PROCESSING -> {
+                leaveButton.isVisible = true
+            }
+            else -> {}
         }
     }
 

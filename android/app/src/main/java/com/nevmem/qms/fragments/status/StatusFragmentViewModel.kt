@@ -3,11 +3,13 @@ package com.nevmem.qms.fragments.status
 import androidx.lifecycle.*
 import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.network.NetworkManager
+import com.nevmem.qms.status.OperationStatus
 import com.nevmem.qms.status.QueueStatus
 import com.nevmem.qms.status.StatusProvider
 import com.nevmem.qms.suggests.Suggest
 import com.nevmem.qms.suggests.SuggestsManager
 import com.nevmem.qms.ui.service.SmallServiceViewViewModelDelegate
+import kotlinx.coroutines.flow.Flow
 
 class StatusFragmentViewModel(
     private val statusProvider: StatusProvider,
@@ -49,6 +51,8 @@ class StatusFragmentViewModel(
     override fun onSuggestsUpdated() {
         updateContent()
     }
+
+    fun handleLeave(): Flow<OperationStatus<Unit>> = statusProvider.leave()
 
     private fun updateContent() {
         val queueStatus = statusProvider.queueStatus

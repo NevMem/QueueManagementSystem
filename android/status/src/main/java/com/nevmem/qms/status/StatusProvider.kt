@@ -17,6 +17,8 @@ interface StatusProvider {
 
     fun fetchDataForInvite(invite: String): Flow<FetchStatus>
 
+    fun leave(): Flow<OperationStatus<Unit>>
+
     fun addListener(listener: Listener)
     fun removeListener(listener: Listener)
 }

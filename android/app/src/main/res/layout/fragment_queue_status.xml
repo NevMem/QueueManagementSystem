@@ -75,6 +75,16 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/about_service_card_background" />
 
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:id="@+id/leaveButton"
+                android:textColor="@color/secondaryTextColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/leave_string"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

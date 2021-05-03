@@ -82,6 +82,11 @@ internal class NetworkStatusProvider(
         }
     }
 
+    override fun leave(): Flow<OperationStatus<Unit>> = flow<OperationStatus<Unit>> {
+        emit(OperationStatus.Pending())
+        emit(OperationStatus.Error("Not implemented"))
+    }
+
     override fun addListener(listener: StatusProvider.Listener) {
         listeners.add(listener)
     }
