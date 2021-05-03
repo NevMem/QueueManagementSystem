@@ -27,6 +27,7 @@ def check_registration_successfull(reg_resp):
 def check_default(resp):
     code, body = resp
     sc_assert(code == 200, body, code)
+    return body
 
 
 @scenario('Register')
@@ -109,3 +110,29 @@ def test_reg_log_create_org_add_service_get(client):
     sc_assert(data['organizations'][0]['info']['name'] == org_name, body, code)
     sc_assert(len(data['organizations'][0]['services']) == 1, body, code)
     sc_assert(data['organizations'][0]['services'][0]['info']['name'] == service_name, body, code)
+
+
+@scenario('Leave queue')
+def test_full_pipeline(client):
+    admin_login, admin_password, admin_name, admin_surname = create_user_data()
+    check_registration_successfull(client.register(admin_login, admin_password, admin_name, admin_surname))
+    admin_token = check_login_successfull(client.login(admin_login, admin_password))
+    org_name = random_string()
+    check_default(client.create_organization(admin_token, org_name))
+
+    code, body, data = client.load_organizations(admin_token)
+    sc_assert(code == 200, body, code)
+    sc_assert(len(data['organizations']) == 1, body, code)
+    sc_assert(data['organizations'][0]['info']['name'] == org_name, body, code)
+
+    service_name = random_string()
+    service = check_default(client.create_service(admin_token, data['organizations'][0]['info']['id'],
+                                                        service_name))
+
+    user_login, user_password, user_name, user_surname = create_user_data()
+    check_registration_successfull(client.register(user_login, user_password, user_name, user_surname))
+    user_token = check_login_successfull(client.login(user_login, user_password))
+
+    ticket = check_default(client.enter_queue(user_token, service['id']))
+    check_default(client.left_queue(user_token))
+
