@@ -83,9 +83,14 @@ internal class NetworkStatusProvider(
         }
     }
 
-    override fun leave(): Flow<OperationStatus<Unit>> = flow<OperationStatus<Unit>> {
+    override fun leave(): Flow<OperationStatus<Unit>> = flow {
         emit(OperationStatus.Pending())
-        emit(OperationStatus.Error("Not implemented"))
+        try {
+            networkManager.leaveQueue(authManager.token)
+            emit(OperationStatus.Success(Unit))
+        } catch (ex: Exception) {
+            emit(OperationStatus.Error(ex.message ?: ""))
+        }
     }
 
     override fun addListener(listener: StatusProvider.Listener) {

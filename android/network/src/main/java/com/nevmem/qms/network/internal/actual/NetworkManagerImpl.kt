@@ -37,13 +37,21 @@ internal class NetworkManagerImpl(
         .build()
 
     private val protobufClient = OkHttpClient.Builder()
-            .addInterceptor {
-                val newRequest = it.request().newBuilder()
-                    .addHeader("Content-Type", "application/protobuf")
-                    .build()
-                it.proceed(newRequest)
-            }
-            .build()
+        .addInterceptor {
+            logger.reportEvent("network-manager.request-to",
+                mapOf("url" to it.request().url().toString()))
+            val response = it.proceed(it.request())
+            logger.reportEvent("network-manager.from",
+                mapOf("url" to it.request().url().toString(), "code" to response.code()))
+            response
+        }
+        .addInterceptor {
+            val newRequest = it.request().newBuilder()
+                .addHeader("Content-Type", "application/protobuf")
+                .build()
+            it.proceed(newRequest)
+        }
+        .build()
 
     private fun createDefaultRetrofitBuilder() = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
@@ -233,6 +241,10 @@ internal class NetworkManagerImpl(
 
     override suspend fun currentTicketInfo(token: String): TicketProto.TicketInfo = suspendCoroutine { continuation ->
         wrapRequest(protoService.currentTicketInfo(token), continuation)
+    }
+
+    override suspend fun leaveQueue(token: String) = suspendCoroutine<Unit> { continuation ->
+        wrapRequest(protoService.leave(token), continuation)
     }
 
     private fun User.toApiClass(): ClientApiProto.User {

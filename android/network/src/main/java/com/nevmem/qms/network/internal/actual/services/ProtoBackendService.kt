@@ -8,4 +8,7 @@ import retrofit2.http.POST
 interface ProtoBackendService {
     @POST("/client/get_current_queue_info")
     fun currentTicketInfo(@Header("session") session: String): Call<TicketProto.TicketInfo>
+
+    @POST("/client/left_queue")
+    fun leave(@Header("session") session: String): Call<Unit>
 }

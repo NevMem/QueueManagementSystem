@@ -14,6 +14,7 @@ interface NetworkManager {
 
     suspend fun join(token: String, serviceInfo: ServiceProto.ServiceInfo)
     suspend fun currentTicketInfo(token: String): TicketProto.TicketInfo
+    suspend fun leaveQueue(token: String)
 
     suspend fun loadFeatures(): Map<String, String>
 
