@@ -46,4 +46,17 @@ class Client:
             self.base_url + 'admin/create_service',
             json={'name': name, 'organizationId': org_id},
             headers={'session': token})
+        return res.status_code, res.json()
+
+    def enter_queue(self, token, service_id):
+        res = self.layer.post(
+            self.base_url + '/client/enter_queue',
+            json={'id': service_id},
+            headers={'session': token})
+        return res.status_code, res.json()
+
+    def left_queue(self, token):
+        res = self.layer.post(
+            self.base_url + '/client/left_queue',
+            headers={'session': token})
         return res.status_code, res.text
