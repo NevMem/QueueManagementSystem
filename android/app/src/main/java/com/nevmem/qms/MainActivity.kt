@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.nevmem.qms.dialogs.DialogsManager
+import com.nevmem.qms.dialogs.FragmentManagerProvider
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.permissions.*
@@ -24,7 +27,7 @@ import org.koin.core.qualifier.named
 
 private const val ACTIVITY_PERMISSIONS_REQUEST_CODE = 123
 
-class MainActivity : AppCompatActivity(), PermissionsDelegate {
+class MainActivity : AppCompatActivity(), PermissionsDelegate, FragmentManagerProvider {
 
     private lateinit var bottomBarHidingUsecase: BottomBarHidingUsecase
 
@@ -41,6 +44,8 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
     ).apply {
         forEach { pushManager.addPushProcessor(it.value) }
     }
+
+    private val dialogsManager: DialogsManager by inject()
 
     private var currentPermissionsRequest: PermissionsRequest? = null
         set(value) {
@@ -84,12 +89,18 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate {
     override fun onResume() {
         super.onResume()
         permissionsManager.registerDelegate(this)
+        dialogsManager.fragmentManagerProvider = this
         checkPermissionsRequests()
     }
 
     override fun onPause() {
         super.onPause()
         permissionsManager.removeDelegate(this)
+        dialogsManager.fragmentManagerProvider = null
+    }
+
+    override fun provideFragmentManager(): FragmentManager {
+        return supportFragmentManager
     }
 
     override fun onHasNewPermissionsRequest() {

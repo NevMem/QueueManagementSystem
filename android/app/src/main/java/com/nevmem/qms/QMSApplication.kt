@@ -3,6 +3,7 @@ package com.nevmem.qms
 import android.app.Application
 import android.content.Context
 import com.nevmem.qms.auth.createAuthManager
+import com.nevmem.qms.dialogs.createDialogsManager
 import com.nevmem.qms.features.createFeatureManager
 import com.nevmem.qms.feedback.createFeedbackManager
 import com.nevmem.qms.fragments.dev_settings.DeveloperSettingsFragmentViewModel
@@ -69,6 +70,7 @@ class QMSApplication : Application() {
         }
         single { createFeedbackManager(get(), get()) }
         single { createRatingsManager(get(), get()) }
+        single { createDialogsManager() }
     }
 
     private val viewModelsModule = module {

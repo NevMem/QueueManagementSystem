@@ -40,4 +40,6 @@
     <string name="before_visit_string">Before visit</string>
     <string name="leave_feedback_string">Leave feedback</string>
     <string name="leave_string">Leave</string>
+
+    <string name="ready_to_leave">Are you sure you want to leave queue?</string>
 </resources>

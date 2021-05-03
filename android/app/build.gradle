@@ -79,6 +79,7 @@ dependencies {
     implementation project(':common')
     implementation project(':common-data')
     implementation project(':common-ui')
+    implementation project(':dialogs')
     implementation project(':features')
     implementation project(':feedback')
     implementation project(':keyvalue')
