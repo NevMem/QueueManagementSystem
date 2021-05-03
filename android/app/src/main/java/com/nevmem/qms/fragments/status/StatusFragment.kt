@@ -68,10 +68,40 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
         hideSuggestsUi()
         statusCard.isVisible = true
         queueStatus.let {
-            numberInLine.text = resources.getQuantityString(R.plurals.numberInTheLine, it.numberInLine, it.numberInLine)
-            ticketNumber.text = it.ticketId
-            eta.text = resources.getString(R.string.minutes_remaining, (it.etaInSeconds + 59) / 60)
+            updateNumberInLine(it)
+            updateTicketId(it)
+            updateEta(it)
             updateLeaveButton(it.ticketState)
+        }
+    }
+
+    private fun updateNumberInLine(queueStatus: QueueStatus) {
+        if (queueStatus.ticketState == TicketProto.Ticket.State.WAITING) {
+            numberInLine.isVisible = true
+            numberInLine.text = resources.getQuantityString(
+                R.plurals.numberInTheLine, queueStatus.numberInLine, queueStatus.numberInLine)
+        } else {
+            numberInLine.isVisible = false
+        }
+    }
+
+    private fun updateTicketId(queueStatus: QueueStatus) {
+        if (queueStatus.ticketState == TicketProto.Ticket.State.WAITING
+            || queueStatus.ticketState == TicketProto.Ticket.State.PROCESSING) {
+            ticketNumber.isVisible = true
+            ticketNumber.text = queueStatus.ticketId
+        } else {
+            ticketNumber.isVisible = false
+        }
+    }
+
+    private fun updateEta(queueStatus: QueueStatus) {
+        if (queueStatus.ticketState == TicketProto.Ticket.State.WAITING) {
+            eta.isVisible = true
+            eta.text = resources.getString(
+                R.string.minutes_remaining, (queueStatus.etaInSeconds + 59) / 60)
+        } else {
+            eta.isVisible = false
         }
     }
 
