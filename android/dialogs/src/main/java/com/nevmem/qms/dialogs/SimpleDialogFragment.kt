@@ -1,5 +1,6 @@
 package com.nevmem.qms.dialogs
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -48,6 +49,11 @@ class SimpleDialogFragment : BottomSheetDialogFragment() {
         }
 
         dialogMessage.text = message
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        onCancel()
     }
 
     companion object {
