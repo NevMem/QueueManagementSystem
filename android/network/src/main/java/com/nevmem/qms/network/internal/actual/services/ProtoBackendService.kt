@@ -25,7 +25,6 @@ interface ProtoBackendService {
     @POST("/client/fetch_organization")
     @Headers("Content-Type: application/protobuf")
     fun getOrganization(
-        @Header("session") session: String,
         @Body body: OrganizitionProto.OrganizationInfo
     ): Call<OrganizitionProto.Organization>
 }

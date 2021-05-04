@@ -1,9 +1,8 @@
 package com.nevmem.qms.fragments.status
 
 import androidx.lifecycle.*
-import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.common.operations.OperationStatus
-import com.nevmem.qms.network.NetworkManager
+import com.nevmem.qms.organizations.OrganizationsRepo
 import com.nevmem.qms.status.QueueStatus
 import com.nevmem.qms.status.StatusProvider
 import com.nevmem.qms.suggests.Suggest
@@ -14,8 +13,7 @@ import kotlinx.coroutines.flow.Flow
 class StatusFragmentViewModel(
     private val statusProvider: StatusProvider,
     private val suggestsManager: SuggestsManager,
-    private val authManager: AuthManager,
-    private val networkManager: NetworkManager
+    private val organizationsRepo: OrganizationsRepo
 ) : ViewModel(), StatusProvider.Listener, SuggestsManager.Listener {
 
     sealed class Content {
@@ -65,8 +63,7 @@ class StatusFragmentViewModel(
             val serviceId = queueStatus.serviceInfo?.serviceId
             if (orgId != null && serviceId != null) {
                 smallServiceInfoDelegate = SmallServiceViewViewModelDelegate(
-                        authManager,
-                        networkManager,
+                        organizationsRepo,
                         orgId,
                         serviceId,
                         viewModelScope).apply {

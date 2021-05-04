@@ -18,6 +18,7 @@ import com.nevmem.qms.logger.LoggerImpl
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.createNetworkManager
 import com.nevmem.qms.notifications.createNotificationsManager
+import com.nevmem.qms.organizations.createOrganizationsRepo
 import com.nevmem.qms.permissions.createPermissionsManager
 import com.nevmem.qms.push.PushProcessor
 import com.nevmem.qms.push.ToastPushProcessor
@@ -49,7 +50,7 @@ class QMSApplication : Application() {
         single<ShowToastManager> { get<ToastManager>() }
         single<ToastProvider> { get<ToastManager>() }
         single<NetworkManager> { createNetworkManager(get()) }
-        single<StatusProvider> { createStatusProvider(get(), get(), get(), get()) }
+        single<StatusProvider> { createStatusProvider(get(), get(), get(), get(), get()) }
         single {
             createFeatureManager(
                 get(),
@@ -73,6 +74,7 @@ class QMSApplication : Application() {
         single { createRatingsManager(get(), get()) }
         single { createDialogsManager() }
         single { createHistoryManager(get(), get()) }
+        single { createOrganizationsRepo(get()) }
     }
 
     private val viewModelsModule = module {
@@ -80,7 +82,7 @@ class QMSApplication : Application() {
         viewModel { ProfileFragmentViewModel(get(), get(), get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
         viewModel { DeveloperSettingsFragmentViewModel(get()) }
-        viewModel { StatusFragmentViewModel(get(), get(), get(), get()) }
+        viewModel { StatusFragmentViewModel(get(), get(), get()) }
     }
 
     override fun onCreate() {

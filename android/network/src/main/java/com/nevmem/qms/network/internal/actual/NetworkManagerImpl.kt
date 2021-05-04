@@ -89,13 +89,9 @@ internal class NetworkManagerImpl(
     private val javaBackendService by lazy { javaBackendRetrofit.create(JavaBackendService::class.java) }
 
     override suspend fun fetchOrganization(
-        token: String, invite: String
+        organizationInfo: OrganizitionProto.OrganizationInfo
     ): OrganizitionProto.Organization = suspendCoroutine { continuation ->
-        wrapRequest(
-            protoService.getOrganization(
-                token,
-                OrganizitionProto.OrganizationInfo.newBuilder().setId(invite).build()),
-            continuation)
+        wrapRequest(protoService.getOrganization(organizationInfo), continuation)
     }
 
     override suspend fun loadFeatures(): Map<String, String> = suspendCoroutine { continuation ->

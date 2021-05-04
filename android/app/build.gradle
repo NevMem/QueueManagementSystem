@@ -88,6 +88,7 @@ dependencies {
     implementation project(':logger')
     implementation project(':network')
     implementation project(':notifications')
+    implementation project(':organizations')
     implementation project(':permissions')
     implementation project(':protos')
     implementation project(':push')
