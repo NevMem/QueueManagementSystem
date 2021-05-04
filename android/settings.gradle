@@ -1,3 +1,4 @@
+include ':organizations'
 include ':history'
 include ':dialogs'
 include ':qmskit'
