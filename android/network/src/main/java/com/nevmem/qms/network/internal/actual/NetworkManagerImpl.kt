@@ -37,13 +37,21 @@ internal class NetworkManagerImpl(
         .build()
 
     private val protobufClient = OkHttpClient.Builder()
-            .addInterceptor {
-                val newRequest = it.request().newBuilder()
-                    .addHeader("Content-Type", "application/protobuf")
-                    .build()
-                it.proceed(newRequest)
-            }
-            .build()
+        .addInterceptor {
+            logger.reportEvent("network-manager.request-to",
+                mapOf("url" to it.request().url().toString()))
+            val response = it.proceed(it.request())
+            logger.reportEvent("network-manager.from",
+                mapOf("url" to it.request().url().toString(), "code" to response.code()))
+            response
+        }
+        .addInterceptor {
+            val newRequest = it.request().newBuilder()
+                .addHeader("Content-Type", "application/protobuf")
+                .build()
+            it.proceed(newRequest)
+        }
+        .build()
 
     private fun createDefaultRetrofitBuilder() = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
@@ -165,27 +173,7 @@ internal class NetworkManagerImpl(
     }
 
     override suspend fun getUser(token: String): ClientApiProto.User = suspendCoroutine { continuation ->
-        service.getUser(token).enqueue(object : Callback<User> {
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                continuation.resumeWith(Result.failure(t))
-            }
-
-            override fun onResponse(
-                call: Call<User>,
-                response: Response<User>
-            ) {
-                val body = response.body()
-                if (response.code() == 200 && body != null) {
-                    try {
-                        continuation.resumeWith(Result.success(body.toApiClass()))
-                    } catch (exception: Exception) {
-                        continuation.resumeWith(Result.failure(exception))
-                    }
-                } else {
-                    continuation.resumeWith(Result.failure(IllegalStateException("Response code isn't 200 or body not present")))
-                }
-            }
-        })
+        wrapRequest(protoService.getUser(token), continuation)
     }
 
     override suspend fun registerNewPushToken(request: NewPushTokenRequest) = suspendCoroutine<Unit> { continuation ->
@@ -235,18 +223,12 @@ internal class NetworkManagerImpl(
         wrapRequest(protoService.currentTicketInfo(token), continuation)
     }
 
-    private fun User.toApiClass(): ClientApiProto.User {
-        val builder = ClientApiProto.User.newBuilder()
-        if (email != null) {
-            builder.email = email
-        }
-        if (name != null) {
-            builder.name = name
-        }
-        if (surname != null) {
-            builder.surname = surname
-        }
-        return builder.build()
+    override suspend fun leaveQueue(token: String) = suspendCoroutine<Unit> { continuation ->
+        wrapRequest(protoService.leave(token), continuation)
+    }
+
+    override suspend fun ticketList(token: String): TicketProto.TicketList = suspendCoroutine {
+        wrapRequest(protoService.history(token), it)
     }
 
     private fun ClientApiProto.RegisterRequest?.toDataClass(): RegisterRequest? {

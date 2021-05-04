@@ -1,3 +1,5 @@
+include ':history'
+include ':dialogs'
 include ':qmskit'
 include ':feedback'
 include ':rating'

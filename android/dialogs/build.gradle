@@ -1,6 +1,7 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
 
 android {
     compileSdkVersion globalCompileSdkVersion
@@ -20,17 +21,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 dependencies {
     implementation "androidx.appcompat:appcompat:$versions.appcompat"
+    implementation "androidx.constraintlayout:constraintlayout:$versions.constraintLayout"
     implementation "androidx.core:core-ktx:$versions.coreKtx"
+    implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycleExtensions"
+    implementation "com.google.android.material:material:$versions.material"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutinesCore"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$versions.lifecycleExtensions"
 
     implementation project(':common')
-    implementation project(':keyvalue')
-    implementation project(':logger')
-    implementation project(':network')
-    implementation project(':protos')
+    implementation project(':common-ui')
 }

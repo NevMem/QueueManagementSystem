@@ -1,6 +1,7 @@
 package com.nevmem.qms.status
 
 import com.nevmem.qms.ServiceProto
+import com.nevmem.qms.common.operations.OperationStatus
 import kotlinx.coroutines.flow.Flow
 
 interface StatusProvider {
@@ -16,6 +17,8 @@ interface StatusProvider {
     fun join(serviceInfo: ServiceProto.ServiceInfo): Flow<JoinStatus>
 
     fun fetchDataForInvite(invite: String): Flow<FetchStatus>
+
+    fun leave(): Flow<OperationStatus<Unit>>
 
     fun addListener(listener: Listener)
     fun removeListener(listener: Listener)

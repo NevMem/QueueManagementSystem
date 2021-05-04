@@ -39,4 +39,12 @@
     <string name="description_string">Description</string>
     <string name="before_visit_string">Before visit</string>
     <string name="leave_feedback_string">Leave feedback</string>
+    <string name="leave_string">Leave</string>
+
+    <string name="ready_to_leave">Are you sure you want to leave queue?</string>
+
+    <string name="resolution_gone">You\'ve left queue</string>
+    <string name="resolution_kicked">You have been kicked</string>
+    <string name="resolution_serviced">Latest appointment</string>
+    <string name="resolution_not_serviced">Latest appointment</string>
 </resources>

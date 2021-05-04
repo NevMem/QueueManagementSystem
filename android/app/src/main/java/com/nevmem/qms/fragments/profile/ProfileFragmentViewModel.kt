@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.auth.AuthManager
-import com.nevmem.qms.auth.data.UserLoadingState
+import com.nevmem.qms.common.operations.OperationStatus
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.features.isFeatureEnabled
+import com.nevmem.qms.history.HistoryManager
 import com.nevmem.qms.knownfeatures.KnownFeatures
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.toast.manager.ShowToastManager
@@ -17,6 +19,7 @@ import kotlinx.coroutines.launch
 class ProfileFragmentViewModel(
     private val authManager: AuthManager,
     private val showToastManager: ShowToastManager,
+    private val historyManager: HistoryManager,
     featureManager: FeatureManager
 ) : ViewModel() {
 
@@ -26,7 +29,7 @@ class ProfileFragmentViewModel(
     private val visitedList = MutableLiveData<List<RVItem>>()
     internal val visited: LiveData<List<RVItem>> = visitedList
 
-    private var user: UserLoadingState.User? = null
+    private var user: ClientApiProto.User? = null
         set(value) {
             if (field == value) {
                 return
@@ -39,38 +42,26 @@ class ProfileFragmentViewModel(
         profileList.postValue(listOf(ProfileLoadingStub))
         viewModelScope.launch {
             authManager.currentUser().collect {
-                if (it is UserLoadingState.Error) {
+                if (it is OperationStatus.Error) {
                     showToastManager.error(it.message)
-                } else if (it is UserLoadingState.User) {
-                    user = it
+                } else if (it is OperationStatus.Success) {
+                    user = it.result
                 }
             }
         }
         if (featureManager.isFeatureEnabled(KnownFeatures.ShowHistoryOnProfilePage.value)) {
-            visitedList.postValue((0..30).map {
-                listOf(
-                    ProfileVisitedPlace(
-                        "Hospital",
-                        "https://gb2bel.belzdrav.ru/upload/medialibrary/1a8/%D0%B3%D0%BB%D0%B0%D0%B2.jpg",
-                        listOf("Medical", "Health care")
-                    ),
-                    ProfileVisitedPlace(
-                        "Yandex",
-                        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Yandex_Logo.svg/1200px-Yandex_Logo.svg.png",
-                        listOf("IT", "Company")
-                    ),
-                    ProfileVisitedPlace(
-                        "Check tags",
-                        "https://blackbirdesolutions.com/files/2020/02/tags-and-categories.jpg",
-                        (0..10).map { "Tag $it" })
-                )
-            }.flatten())
+            viewModelScope.launch {
+                val history = historyManager.historyChannel.receive()
+                visitedList.postValue(history.ticketsList.map {
+                    ProfileVisitedPlace(it.serviceId)
+                })
+            }
         }
     }
 
     private fun updateData() {
         profileList.postValue(mutableListOf<RVItem>().apply {
-            add(ProfileAvatar("https://pickaface.net/gallery/avatar/unr_sample_161118_2054_ynlrg.png"))
+            add(ProfileAvatar(user?.dataMap?.get("avatar")))
             addIf(user!!.name != null, ProfileName(user!!.name!!))
             addIf(user!!.surname != null, ProfileLastName(user!!.surname!!))
             addIf(user!!.email != null, ProfileEmail(user!!.email!!))

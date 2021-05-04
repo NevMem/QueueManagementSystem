@@ -3,6 +3,7 @@ package com.nevmem.qms
 import android.app.Application
 import android.content.Context
 import com.nevmem.qms.auth.createAuthManager
+import com.nevmem.qms.dialogs.createDialogsManager
 import com.nevmem.qms.features.createFeatureManager
 import com.nevmem.qms.feedback.createFeedbackManager
 import com.nevmem.qms.fragments.dev_settings.DeveloperSettingsFragmentViewModel
@@ -10,6 +11,7 @@ import com.nevmem.qms.fragments.login.LoginPageViewModel
 import com.nevmem.qms.fragments.profile.ProfileFragmentViewModel
 import com.nevmem.qms.fragments.registration.RegistrationPageViewModel
 import com.nevmem.qms.fragments.status.StatusFragmentViewModel
+import com.nevmem.qms.history.createHistoryManager
 import com.nevmem.qms.keyvalue.createKeyValueStorage
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.logger.LoggerImpl
@@ -69,11 +71,13 @@ class QMSApplication : Application() {
         }
         single { createFeedbackManager(get(), get()) }
         single { createRatingsManager(get(), get()) }
+        single { createDialogsManager() }
+        single { createHistoryManager(get(), get()) }
     }
 
     private val viewModelsModule = module {
         viewModel { LoginPageViewModel(get()) }
-        viewModel { ProfileFragmentViewModel(get(), get(), get()) }
+        viewModel { ProfileFragmentViewModel(get(), get(), get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
         viewModel { DeveloperSettingsFragmentViewModel(get()) }
         viewModel { StatusFragmentViewModel(get(), get(), get(), get()) }

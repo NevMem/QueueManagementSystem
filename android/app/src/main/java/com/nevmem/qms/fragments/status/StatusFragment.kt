@@ -6,11 +6,16 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.nevmem.qms.R
+import com.nevmem.qms.TicketProto
+import com.nevmem.qms.dialogs.DialogsManager
 import com.nevmem.qms.features.FeatureManager
+import com.nevmem.qms.features.internal.updateDelay
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.status.QueueStatus
 import com.nevmem.qms.suggests.Suggest
 import kotlinx.android.synthetic.main.fragment_queue_status.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -18,6 +23,7 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
 
     private val model: StatusFragmentViewModel by viewModel()
     private val featureManager: FeatureManager by inject()
+    private val dialogsManager: DialogsManager by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,6 +35,17 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
         model.smallServiceViewState.observe(viewLifecycleOwner, Observer {
             serviceInfo.state = it
         })
+
+        leaveButton.setOnClickListener {
+            GlobalScope.launch {
+                val resolution = dialogsManager.showSimpleDialog(
+                    requireContext().getString(R.string.ready_to_leave))
+                if (resolution == DialogsManager.SimpleDialogResolution.Ok) {
+                    val flow = model.handleLeave()
+                    dialogsManager.showOperationStatusDialog(flow)
+                }
+            }
+        }
     }
 
     private fun updateUiWith(content: StatusFragmentViewModel.Content) {
@@ -51,10 +68,71 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
     private fun updateUi(queueStatus: QueueStatus) {
         hideSuggestsUi()
         statusCard.isVisible = true
-        queueStatus.let {
-            numberInLine.text = resources.getQuantityString(R.plurals.numberInTheLine, it.numberInLine, it.numberInLine)
-            ticketNumber.text = it.ticket
-            eta.text = resources.getString(R.string.minutes_remaining, (it.etaInSeconds + 59) / 60)
+
+        listOf(
+            ::updateNumberInLine,
+            ::updateTicketId,
+            ::updateEta,
+            ::updateLeaveButton,
+            ::updateResolution
+        ).forEach {
+            it(queueStatus)
+        }
+    }
+
+    private fun updateNumberInLine(queueStatus: QueueStatus) {
+        if (queueStatus.ticketState == TicketProto.Ticket.State.WAITING) {
+            numberInLine.isVisible = true
+            numberInLine.text = resources.getQuantityString(
+                R.plurals.numberInTheLine, queueStatus.numberInLine, queueStatus.numberInLine)
+        } else {
+            numberInLine.isVisible = false
+        }
+    }
+
+    private fun updateTicketId(queueStatus: QueueStatus) {
+        if (queueStatus.ticketState == TicketProto.Ticket.State.WAITING
+            || queueStatus.ticketState == TicketProto.Ticket.State.PROCESSING) {
+            ticketNumber.isVisible = true
+            ticketNumber.text = queueStatus.ticketId
+        } else {
+            ticketNumber.isVisible = false
+        }
+    }
+
+    private fun updateEta(queueStatus: QueueStatus) {
+        if (queueStatus.ticketState == TicketProto.Ticket.State.WAITING) {
+            eta.isVisible = true
+            eta.text = resources.getString(
+                R.string.minutes_remaining, (queueStatus.etaInSeconds + 59) / 60)
+        } else {
+            eta.isVisible = false
+        }
+    }
+
+    private fun updateLeaveButton(queueStatus: QueueStatus) {
+        val state = queueStatus.ticketState
+        leaveButton.isVisible = false
+        when (state) {
+            TicketProto.Ticket.State.WAITING, TicketProto.Ticket.State.PROCESSING -> {
+                leaveButton.isVisible = true
+            }
+            else -> {}
+        }
+    }
+
+    private fun updateResolution(queueStatus: QueueStatus) {
+        if (queueStatus.ticketState == TicketProto.Ticket.State.PROCESSED) {
+            resolution.isVisible = true
+            resolution.text = when (queueStatus.resolution) {
+                TicketProto.Ticket.Resolution.GONE -> getString(R.string.resolution_gone)
+                TicketProto.Ticket.Resolution.SERVICED -> getString(R.string.resolution_serviced)
+                TicketProto.Ticket.Resolution.NOT_SERVICED -> getString(R.string.resolution_not_serviced)
+                TicketProto.Ticket.Resolution.KICKED -> getString(R.string.resolution_kicked)
+                else -> ""
+            }
+        } else {
+            resolution.isVisible = false
         }
     }
 
