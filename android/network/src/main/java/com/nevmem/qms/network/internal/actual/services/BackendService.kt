@@ -38,9 +38,6 @@ interface BackendService {
     @POST("/client/register")
     fun register(@Body body: RegisterRequest?): Call<Any>
 
-    @POST("/client/fetch_organization")
-    fun getOrganization(@Header("session") session: String, @Body body: OrganizationInfo): Call<Organization>
-
     @POST("/client/enter_queue")
     fun join(@Header("session") session: String, @Body body: ServiceInfo): Call<Unit>
 

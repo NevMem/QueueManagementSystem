@@ -38,18 +38,18 @@ internal class NetworkManagerImpl(
 
     private val protobufClient = OkHttpClient.Builder()
         .addInterceptor {
+            val newRequest = it.request().newBuilder()
+                .header("Content-Type", "application/protobuf")
+                .build()
+            it.proceed(newRequest)
+        }
+        .addInterceptor {
             logger.reportEvent("network-manager.request-to",
                 mapOf("url" to it.request().url().toString()))
             val response = it.proceed(it.request())
             logger.reportEvent("network-manager.from",
                 mapOf("url" to it.request().url().toString(), "code" to response.code()))
             response
-        }
-        .addInterceptor {
-            val newRequest = it.request().newBuilder()
-                .addHeader("Content-Type", "application/protobuf")
-                .build()
-            it.proceed(newRequest)
         }
         .build()
 
@@ -65,9 +65,9 @@ internal class NetworkManagerImpl(
 
     private val protoRetrofit by lazy {
         Retrofit.Builder()
+            .client(protobufClient)
             .addConverterFactory(ProtoConverterFactory.create())
             .baseUrl("http://qms-back.nikitonsky.tk")
-            .client(protobufClient)
             .build()
     }
 
@@ -88,35 +88,14 @@ internal class NetworkManagerImpl(
     private val featuresService by lazy { featuresRetrofit.create(FeaturesService::class.java) }
     private val javaBackendService by lazy { javaBackendRetrofit.create(JavaBackendService::class.java) }
 
-    override suspend fun fetchOrganization(token: String, invite: String): OrganizitionProto.Organization = suspendCoroutine { continuation ->
-        suspend fun wrap() = suspendCoroutine<Organization> { wrapRequest(service.getOrganization(token, OrganizationInfo(invite)), it) }
-        GlobalScope.launch {
-            try {
-                val response = wrap()
-                val organization = OrganizitionProto.Organization.newBuilder()
-                    .setInfo(OrganizitionProto.OrganizationInfo.newBuilder()
-                        .setId(response.info?.id)
-                        .setName(response.info?.name ?: "")
-                        .setAddress(response.info?.address ?: "")
-                        .putAllData(response.info?.data ?: mapOf())
-                        .build())
-                    .addAllServices(response.services.map {
-                        val service = ServiceProto.Service.newBuilder()
-                            .setInfo(ServiceProto.ServiceInfo.newBuilder()
-                                .setId(it.info.id)
-                                .setOrganizationId(it.info.organizationId)
-                                .setName(it.info.name)
-                                .putAllData(it.info.data)
-                                .build())
-                            .build()
-                        service
-                    })
-                    .build()
-                continuation.resumeWith(Result.success(organization))
-            } catch (t: Throwable) {
-                continuation.resumeWith(Result.failure(t))
-            }
-        }
+    override suspend fun fetchOrganization(
+        token: String, invite: String
+    ): OrganizitionProto.Organization = suspendCoroutine { continuation ->
+        wrapRequest(
+            protoService.getOrganization(
+                token,
+                OrganizitionProto.OrganizationInfo.newBuilder().setId(invite).build()),
+            continuation)
     }
 
     override suspend fun loadFeatures(): Map<String, String> = suspendCoroutine { continuation ->
