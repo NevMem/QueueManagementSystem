@@ -147,8 +147,16 @@ internal class NetworkManagerImpl(
         })
     }
 
-    override suspend fun getUser(token: String): ClientApiProto.User = suspendCoroutine { continuation ->
+    override suspend fun getUser(
+        token: String
+    ): ClientApiProto.User = suspendCoroutine { continuation ->
         wrapRequest(protoService.getUser(token), continuation)
+    }
+
+    override suspend fun updateUser(
+        token: String, user: ClientApiProto.User
+    ) = suspendCoroutine<Unit> { continuation ->
+        wrapRequest(protoService.updateUser(token, user), continuation)
     }
 
     override suspend fun registerNewPushToken(request: NewPushTokenRequest) = suspendCoroutine<Unit> { continuation ->

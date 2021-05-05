@@ -26,6 +26,7 @@ interface NetworkManager {
     suspend fun register(credentials: ClientApiProto.RegisterRequest): RegisterResponse
 
     suspend fun getUser(token: String): ClientApiProto.User
+    suspend fun updateUser(token: String, user: ClientApiProto.User)
 
     suspend fun registerNewPushToken(request: NewPushTokenRequest)
 

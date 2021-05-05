@@ -27,4 +27,8 @@ interface ProtoBackendService {
     fun getOrganization(
         @Body body: OrganizitionProto.OrganizationInfo
     ): Call<OrganizitionProto.Organization>
+
+    @POST("/client/update_user")
+    @Headers("Content-Type: application/protobuf")
+    fun updateUser(@Header("session") session: String, @Body user: ClientApiProto.User): Call<Unit>
 }
