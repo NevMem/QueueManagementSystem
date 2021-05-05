@@ -29,12 +29,22 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/visitedTitle"
+                android:id="@+id/visitedOrganizationName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/profileVisitedTitleTextSize"
                 android:fontFamily="@font/montserrat_light"
+                android:textColor="@color/defaultTextColor"
                 tools:text="Hospital" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/visitedServiceName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/profileVisitedSubtitleTextSize"
+                android:fontFamily="@font/montserrat_light"
+                android:textColor="@color/secondaryTextColor"
+                tools:text="Pills" />
 
             <com.nevmem.qms.tags.TagsContainer
                 android:id="@+id/tagsBox"

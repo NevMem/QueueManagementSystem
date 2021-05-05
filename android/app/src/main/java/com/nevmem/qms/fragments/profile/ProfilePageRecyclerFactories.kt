@@ -100,7 +100,8 @@ internal class ProfileVisitedFactory(
                 .load(item.imageUrl)
                 .placeholder(R.drawable.image_placeholder)
                 .into(itemView.placeIcon)
-            itemView.visitedTitle.text = item.service.info.name
+            itemView.visitedOrganizationName.text = item.organization.info.name
+            itemView.visitedServiceName.text = item.service.info.name
             itemView.tagsBox.setTags(item.tags)
 
             itemView.setOnClickListener {
