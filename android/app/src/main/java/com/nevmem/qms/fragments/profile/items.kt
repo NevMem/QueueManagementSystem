@@ -1,5 +1,7 @@
 package com.nevmem.qms.fragments.profile
 
+import com.nevmem.qms.OrganizitionProto
+import com.nevmem.qms.ServiceProto
 import com.nevmem.qms.recycler.RVItem
 
 
@@ -17,9 +19,10 @@ data class ProfileDocument(var type: DocumentType, var number: String? = null): 
 object ProfileAddDocument : RVItem()
 
 data class ProfileVisitedPlace(
-        var title: String = "",
-        var imageUrl: String? = null,
-        var tags: List<String> = emptyList()
+    var organization: OrganizitionProto.Organization,
+    var service: ServiceProto.Service,
+    var imageUrl: String? = null,
+    var tags: List<String> = emptyList()
 ) : RVItem()
 
 object HeaderStub : RVItem()

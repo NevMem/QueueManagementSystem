@@ -51,9 +51,9 @@ class ProfileFragmentViewModel(
         }
         if (featureManager.isFeatureEnabled(KnownFeatures.ShowHistoryOnProfilePage.value)) {
             viewModelScope.launch {
-                val history = historyManager.historyChannel.receive()
-                visitedList.postValue(history.ticketsList.map {
-                    ProfileVisitedPlace(it.serviceId)
+                val history = historyManager.resolvedHistory.receive()
+                visitedList.postValue(history.map {
+                    ProfileVisitedPlace(it.organization, it.service)
                 })
             }
         }

@@ -2,6 +2,7 @@ package com.nevmem.qms.fragments.profile
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.core.view.doOnAttach
 import androidx.core.view.doOnDetach
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
+import androidx.navigation.NavDeepLinkBuilder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.nevmem.qms.R
@@ -97,8 +99,19 @@ internal class ProfileVisitedFactory(
             Glide.with(context)
                 .load(item.imageUrl)
                 .into(itemView.placeIcon)
-            itemView.visitedTitle.text = item.title
+            itemView.visitedTitle.text = item.service.info.name
             itemView.tagsBox.setTags(item.tags)
+
+            itemView.setOnClickListener {
+                val intent = NavDeepLinkBuilder(context)
+                    .setGraph(R.navigation.navigation)
+                    .setDestination(R.id.navigation_join)
+                    .setArguments(Bundle().apply {
+                        putString("invite_id", item.organization.info.id)
+                    })
+                    .createPendingIntent()
+                intent.send()
+            }
 
             itemView.doOnAttach {
                 featureManager.addListener(this)

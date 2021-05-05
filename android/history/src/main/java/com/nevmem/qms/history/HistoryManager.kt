@@ -4,5 +4,7 @@ import com.nevmem.qms.TicketProto
 import kotlinx.coroutines.channels.Channel
 
 interface HistoryManager {
-    val historyChannel: Channel<TicketProto.TicketList>
+    val history: Channel<TicketProto.TicketList>
+
+    val resolvedHistory: Channel<List<ResolvedTicket>>
 }

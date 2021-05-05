@@ -73,7 +73,7 @@ class QMSApplication : Application() {
         single { createFeedbackManager(get(), get()) }
         single { createRatingsManager(get(), get()) }
         single { createDialogsManager() }
-        single { createHistoryManager(get(), get()) }
+        single { createHistoryManager(get(), get(), get()) }
         single { createOrganizationsRepo(get()) }
     }
 
