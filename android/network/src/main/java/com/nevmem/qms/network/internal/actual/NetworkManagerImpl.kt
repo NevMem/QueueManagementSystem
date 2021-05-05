@@ -168,7 +168,7 @@ internal class NetworkManagerImpl(
     }
 
     override suspend fun publishFeedback(request: PublishFeedbackRequest, token: String) = suspendCoroutine<Unit> { continuation ->
-        wrapRequest(javaBackendService.publishFeedback(request, token), continuation)
+        wrapRequest(javaBackendService.publishFeedback(token, request), continuation)
     }
 
     override suspend fun loadFeedback(entityId: String, token: String): List<Feedback> = suspendCoroutine { continuation ->
