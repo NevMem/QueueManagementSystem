@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nevmem.qms.ClientApiProto
 import com.nevmem.qms.auth.AuthManager
+import com.nevmem.qms.auth.avatar
 import com.nevmem.qms.common.operations.OperationStatus
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.features.isFeatureEnabled
@@ -61,7 +62,7 @@ class ProfileFragmentViewModel(
 
     private fun updateData() {
         profileList.postValue(mutableListOf<RVItem>().apply {
-            add(ProfileAvatar(user?.dataMap?.get("avatar")))
+            add(ProfileAvatar(user?.avatar))
             addIf(user!!.name != null, ProfileName(user!!.name!!))
             addIf(user!!.surname != null, ProfileLastName(user!!.surname!!))
             addIf(user!!.email != null, ProfileEmail(user!!.email!!))
