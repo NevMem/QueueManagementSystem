@@ -12,5 +12,13 @@ interface DialogsManager {
     }
     suspend fun showSimpleDialog(message: String): SimpleDialogResolution
 
+    sealed class TextInputDialogResolution {
+        object Dismissed : TextInputDialogResolution()
+        data class Text(val text: String) : TextInputDialogResolution()
+    }
+    suspend fun showTextInputDialog(
+        message: String, inputLabel: String
+    ) : TextInputDialogResolution
+
     fun showOperationStatusDialog(status: Flow<OperationStatus<*>>)
 }

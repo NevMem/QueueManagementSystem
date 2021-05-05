@@ -8,11 +8,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nevmem.qms.R
 import com.nevmem.qms.auth.AuthManager
+import com.nevmem.qms.dialogs.DialogsManager
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.knownfeatures.KnownFeatures
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.toast.manager.ShowToastManager
+import com.nevmem.qms.usecase.user.ChangeUserAvatarUsecaseFactory
 import com.nevmem.qms.utils.livedata.mergeLatestWithEmpty
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.android.ext.android.inject
@@ -25,6 +27,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val featureManager: FeatureManager by inject()
     private val showToastManager: ShowToastManager by inject()
     private val authManager: AuthManager by inject()
+    private val dialogsManager: DialogsManager by inject()
+
+    private val changeAvatarUsecaseFactory = ChangeUserAvatarUsecaseFactory(authManager)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,7 +39,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         mergeLatestWithEmpty(model.profile, model.visited).observe(viewLifecycleOwner, Observer { list ->
             recycler.adapter = BaseRecyclerAdapter(
                 listOf(HeaderStub) + list + listOf(SpaceStub),
-                ProfileAvatarFactory(requireContext()),
+                ProfileAvatarFactory(requireContext(), dialogsManager, changeAvatarUsecaseFactory),
                 ProfileNameFactory(requireContext()),
                 ProfileLastNameFactory(requireContext()),
                 ProfileEmailFactory(requireContext()),

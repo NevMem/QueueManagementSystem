@@ -47,4 +47,7 @@
     <string name="resolution_kicked">You have been kicked</string>
     <string name="resolution_serviced">Latest appointment</string>
     <string name="resolution_not_serviced">Latest appointment</string>
+
+    <string name="change_avatar">Change avatar</string>
+    <string name="new_avatar_url">Avatar image url</string>
 </resources>

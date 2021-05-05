@@ -13,6 +13,8 @@ interface AuthManager {
     fun currentUser(): Flow<OperationStatus<ClientApiProto.User>>
     suspend fun user(): ClientApiProto.User?
 
+    suspend fun updateUser(user: ClientApiProto.User)
+
     fun login(credentials: LoginCredentials): Flow<LoginState>
     fun register(credentials: RegisterCredentials): Flow<RegisterState>
     fun logout()

@@ -1,4 +1,4 @@
-package com.nevmem.qms.dialogs
+package com.nevmem.qms.dialogs.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.nevmem.qms.common.operations.OperationStatus
+import com.nevmem.qms.dialogs.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -58,6 +59,7 @@ class OperationStatusDialog : BottomSheetDialogFragment() {
     }
 
     companion object {
-        fun newInstance(): OperationStatusDialog = OperationStatusDialog()
+        fun newInstance(): OperationStatusDialog =
+            OperationStatusDialog()
     }
 }

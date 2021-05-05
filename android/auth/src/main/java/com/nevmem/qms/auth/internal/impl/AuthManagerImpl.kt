@@ -125,14 +125,18 @@ internal class AuthManagerImpl(
 
     override suspend fun user(): ClientApiProto.User? = suspendCoroutine { continuation ->
         GlobalScope.launch {
-            currentUser().collect { status ->
-                if (status is OperationStatus.Success<ClientApiProto.User>) {
-                    continuation.resumeWith(Result.success(status.result))
-                }
+            try {
+                val user = networkManager.getUser(token)
+                continuation.resumeWith(Result.success(user))
+            } catch (ex: Exception) {
+                continuation.resumeWith(Result.failure(ex))
             }
-            continuation.resumeWith(Result.success(null))
         }
     }
+
+    override suspend fun updateUser(
+        user: ClientApiProto.User
+    ) = networkManager.updateUser(token, user)
 
     override fun logout() {
         actualToken = null

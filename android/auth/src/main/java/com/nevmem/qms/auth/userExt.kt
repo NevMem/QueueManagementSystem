@@ -2,10 +2,13 @@ package com.nevmem.qms.auth
 
 import com.nevmem.qms.ClientApiProto
 
-var ClientApiProto.User.avatar: String?
+val ClientApiProto.User.avatar: String?
     get() {
         return dataMap["avatar"]
     }
-    set(value) {
-        dataMap["avatar"] = value
-    }
+
+fun ClientApiProto.User.changeAvatar(avatar: String): ClientApiProto.User {
+    return ClientApiProto.User.newBuilder(this)
+        .putData("avatar", avatar)
+        .build()
+}
