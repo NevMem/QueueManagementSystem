@@ -11,6 +11,7 @@ interface AuthManager {
     val authenticationStatus: Channel<AuthenticationStatus>
 
     fun currentUser(): Flow<OperationStatus<ClientApiProto.User>>
+    suspend fun user(): ClientApiProto.User?
 
     fun login(credentials: LoginCredentials): Flow<LoginState>
     fun register(credentials: RegisterCredentials): Flow<RegisterState>
