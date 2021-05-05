@@ -12,7 +12,7 @@ interface JavaBackendService {
     fun registerNewPushToken(@Body request: NewPushTokenRequest): Call<Unit>
 
     @POST("api/feedback/publish")
-    fun publishFeedback(@Body request: PublishFeedbackRequest, @Header("session") session: String): Call<Unit>
+    fun publishFeedback(@Header("session") session: String, @Body request: PublishFeedbackRequest): Call<Unit>
 
     @POST("api/feedback/load")
     fun loadFeedback(@Header("session") session: String, @Body body: LoadFeedbacksRequest): Call<List<Feedback>>
