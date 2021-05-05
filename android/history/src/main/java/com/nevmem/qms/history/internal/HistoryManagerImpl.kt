@@ -9,12 +9,11 @@ import com.nevmem.qms.history.internal.usecase.ResolutionUsecaseFactory
 import com.nevmem.qms.network.NetworkManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.map
+import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 internal class HistoryManagerImpl(
@@ -22,16 +21,18 @@ internal class HistoryManagerImpl(
     private val networkManager: NetworkManager,
     private val resolutionUsecaseFactory: ResolutionUsecaseFactory
 ) : HistoryManager {
-    override val history: Channel<TicketProto.TicketList> = Channel(Channel.CONFLATED)
+    private val mHistory = BroadcastChannel<TicketProto.TicketList>(CONFLATED)
+    override val history: ReceiveChannel<TicketProto.TicketList> get() = mHistory.openSubscription()
 
-    override val resolvedHistory: Channel<List<ResolvedTicket>> = Channel(Channel.CONFLATED)
+    private val mResolvedHistory = BroadcastChannel<List<ResolvedTicket>>(CONFLATED)
+    override val resolvedHistory: ReceiveChannel<List<ResolvedTicket>> get() = mResolvedHistory.openSubscription()
 
     init {
         GlobalScope.launch(Dispatchers.IO) {
             while (true) {
                 infiniteRetry {
                     val ticketsList = networkManager.ticketList(authManager.token)
-                    history.send(ticketsList)
+                    mHistory.send(ticketsList)
 
                     val resolvedList = ticketsList.ticketsList.mapNotNull {
                         val usecase = resolutionUsecaseFactory.createUsecase()
@@ -41,7 +42,7 @@ internal class HistoryManagerImpl(
                             null
                         }
                     }
-                    resolvedHistory.send(resolvedList)
+                    mResolvedHistory.send(resolvedList)
                 }
 
                 delay(10_000L)
