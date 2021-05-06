@@ -19,6 +19,7 @@ internal class ProfileDocumentFactory(private val context: Context) : RVItemFact
             DocumentType.Passport -> R.drawable.icon_passport
             DocumentType.InternationalPassport -> R.drawable.icon_international_passport
             DocumentType.Policy -> R.drawable.icon_insurance
+            DocumentType.TIN -> R.drawable.icon_insurance
         }
     }
 
@@ -27,6 +28,7 @@ internal class ProfileDocumentFactory(private val context: Context) : RVItemFact
             DocumentType.Passport -> R.string.profile_passport
             DocumentType.InternationalPassport -> R.string.profile_international_passport
             DocumentType.Policy -> R.string.profile_health_insurance
+            DocumentType.TIN -> R.string.profile_tin
         }
     }
 

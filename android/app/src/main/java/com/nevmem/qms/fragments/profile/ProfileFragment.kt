@@ -36,21 +36,22 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         recycler.layoutManager = LinearLayoutManager(context)
 
-        mergeLatestWithEmpty(model.profile, model.visited).observe(viewLifecycleOwner, Observer { list ->
-            recycler.adapter = BaseRecyclerAdapter(
-                listOf(HeaderStub) + list + listOf(SpaceStub),
-                ProfileAvatarFactory(requireContext(), dialogsManager, changeAvatarUsecaseFactory),
-                ProfileNameFactory(requireContext()),
-                ProfileLastNameFactory(requireContext()),
-                ProfileEmailFactory(requireContext()),
-                ProfileRatingFactory(requireContext()),
-                ProfileVisitedFactory(requireContext(), featureManager),
-                ProfileDocumentFactory(requireContext()),
-                ProfileAddDocumentFactory(requireContext(), showToastManager),
-                HeaderFactory(findNavController(), requireContext(), authManager),
-                SpaceStubFactory(requireContext()),
-                ProfileLoadingStubFactory(requireContext()),
-                useAnimation = featureManager.isFeatureEnabled(KnownFeatures.UseAnimationsOnProfilePage.value))
-        })
+        mergeLatestWithEmpty(mergeLatestWithEmpty(model.profile, model.documents), model.visited)
+            .observe(viewLifecycleOwner, Observer { list ->
+                recycler.adapter = BaseRecyclerAdapter(
+                    listOf(HeaderStub) + list + listOf(SpaceStub),
+                    ProfileAvatarFactory(requireContext(), dialogsManager, changeAvatarUsecaseFactory),
+                    ProfileNameFactory(requireContext()),
+                    ProfileLastNameFactory(requireContext()),
+                    ProfileEmailFactory(requireContext()),
+                    ProfileRatingFactory(requireContext()),
+                    ProfileVisitedFactory(requireContext(), featureManager),
+                    ProfileDocumentFactory(requireContext()),
+                    ProfileAddDocumentFactory(requireContext(), showToastManager),
+                    HeaderFactory(findNavController(), requireContext(), authManager),
+                    SpaceStubFactory(requireContext()),
+                    ProfileLoadingStubFactory(requireContext()),
+                    useAnimation = featureManager.isFeatureEnabled(KnownFeatures.UseAnimationsOnProfilePage.value))
+            })
     }
 }

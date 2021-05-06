@@ -14,6 +14,7 @@ enum class DocumentType {
     Passport,
     InternationalPassport,
     Policy,
+    TIN,
 }
 data class ProfileDocument(var type: DocumentType, var number: String? = null): RVItem()
 object ProfileAddDocument : RVItem()
