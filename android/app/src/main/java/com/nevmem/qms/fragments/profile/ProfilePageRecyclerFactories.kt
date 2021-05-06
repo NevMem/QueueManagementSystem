@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.doOnAttach
 import androidx.core.view.doOnDetach
 import androidx.core.view.isVisible
@@ -44,11 +45,16 @@ internal class ProfileAvatarFactory(
     private inner class Holder(view: View) : RVHolder(view) {
         override fun onBind(item: RVItem) {
             item as ProfileAvatar
-            Glide.with(context)
-                .load(item.avatarUrl)
-                .placeholder(R.drawable.icon_profile)
-                .apply(RequestOptions().circleCrop())
-                .into(itemView.avatarImage)
+            if (item.avatarUrl != null) {
+                Glide.with(context)
+                    .load(item.avatarUrl)
+                    .placeholder(ContextCompat.getDrawable(context, R.drawable.progress))
+                    .apply(RequestOptions().circleCrop())
+                    .into(itemView.avatarImage)
+            } else {
+                itemView.avatarImage.setImageDrawable(
+                    ContextCompat.getDrawable(context, R.drawable.icon_profile))
+            }
             itemView.avatarImage.setOnClickListener {
                 GlobalScope.launch {
                     val result = dialogsManager.showTextInputDialog(
