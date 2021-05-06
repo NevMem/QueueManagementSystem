@@ -16,7 +16,7 @@ val Document.name: String
         return when (this) {
             is Document.TIN -> tinName
             is Document.Passport -> passportName
-            is Document.HealthInsurancePolicy -> passportName
+            is Document.HealthInsurancePolicy -> healthInsurancePolicyName
             is Document.InternationalPassport -> internationalPassportName
         }
     }

@@ -20,7 +20,7 @@ class AddDocumentUsecase(
                 DialogsManager.OptionItem(
                     R.drawable.icon_passport, "Passport", DocumentType.Passport),
                 DialogsManager.OptionItem(
-                    R.drawable.icon_international_passport, "Insurance", DocumentType.InternationalPassport),
+                    R.drawable.icon_international_passport, "International passport", DocumentType.InternationalPassport),
                 DialogsManager.OptionItem(
                     R.drawable.icon_insurance, "TIN", DocumentType.TIN)
             )
