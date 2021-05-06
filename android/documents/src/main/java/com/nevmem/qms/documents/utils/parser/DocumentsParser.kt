@@ -1,4 +1,4 @@
-package com.nevmem.qms.documents.parser
+package com.nevmem.qms.documents.utils.parser
 
 import com.google.gson.Gson
 import com.nevmem.qms.documents.*

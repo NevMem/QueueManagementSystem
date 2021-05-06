@@ -4,6 +4,7 @@ import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.documents.Document
 import com.nevmem.qms.documents.DocumentsManager
 import com.nevmem.qms.documents.utils.parseDocuments
+import com.nevmem.qms.documents.utils.saveDocuments
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -25,7 +26,28 @@ internal class DocumentsManagerImpl(
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 val user = authManager.user()
-                continuation.resumeWith(Result.success(user.parseDocuments))
+                val result = user.parseDocuments
+                mDocuments.send(result)
+                continuation.resumeWith(Result.success(result))
+            } catch (ex: Exception) {
+                continuation.resumeWith(Result.failure(ex))
+            }
+        }
+    }
+
+    override suspend fun addDocument(document: Document) = suspendCoroutine<Unit> { continuation ->
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val user = authManager.user() ?: throw IllegalArgumentException()
+                val documents = getDocuments().toMutableList()
+                documents.find { it.javaClass == document.javaClass }?.also {
+                    documents.remove(it)
+                }
+                documents.add(document)
+                val newUser = user.saveDocuments(documents)
+                authManager.updateUser(newUser)
+                getDocuments()
+                continuation.resumeWith(Result.success(Unit))
             } catch (ex: Exception) {
                 continuation.resumeWith(Result.failure(ex))
             }
@@ -33,10 +55,6 @@ internal class DocumentsManagerImpl(
     }
 
     override suspend fun removeDocument(document: Document) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun addDocument(document: Document) {
         TODO("Not yet implemented")
     }
 }
