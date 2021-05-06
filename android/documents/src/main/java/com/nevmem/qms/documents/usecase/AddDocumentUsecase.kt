@@ -23,7 +23,7 @@ class AddDocumentUsecase(
                 DialogsManager.OptionItem(
                     R.drawable.icon_insurance, "TIN", DocumentType.TIN)
             )
-            val result = dialogsManager.showOptions(items)
+            val result = dialogsManager.showOptions("Choose document type", items)
             if (result is DialogsManager.OptionsResolution.Result) {
                 val number = dialogsManager.showTextInputDialog("Enter document number", "Number")
             }

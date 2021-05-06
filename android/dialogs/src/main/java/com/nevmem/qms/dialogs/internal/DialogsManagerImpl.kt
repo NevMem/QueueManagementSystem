@@ -5,6 +5,7 @@ import com.nevmem.qms.common.operations.OperationStatus
 import com.nevmem.qms.dialogs.DialogsManager
 import com.nevmem.qms.dialogs.FragmentManagerProvider
 import com.nevmem.qms.dialogs.fragments.OperationStatusDialog
+import com.nevmem.qms.dialogs.fragments.OptionsDialog
 import com.nevmem.qms.dialogs.fragments.SimpleDialogFragment
 import com.nevmem.qms.dialogs.fragments.TextInputDialog
 import kotlinx.coroutines.flow.Flow
@@ -63,8 +64,22 @@ internal class DialogsManagerImpl : DialogsManager {
     }
 
     override suspend fun <T> showOptions(
+        message: String,
         options: List<DialogsManager.OptionItem<T>>
-    ): DialogsManager.OptionsResolution<T> {
-        TODO("Not yet implemented")
+    ): DialogsManager.OptionsResolution<T> = suspendCoroutine { continuation ->
+        val fragment = OptionsDialog.newInstance()
+        fragment.options = options
+        fragment.onDismiss = {
+            continuation.resumeWith(Result.success(
+                DialogsManager.OptionsResolution.Dismissed()))
+        }
+        fragment.onResult = {
+            continuation.resumeWith(Result.success(
+                DialogsManager.OptionsResolution.Result(it.value as T)))
+        }
+        fragment.message = message
+        fragmentManager.let {
+            fragment.show(it, "options-dialog")
+        }
     }
 }
