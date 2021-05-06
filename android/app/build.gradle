@@ -80,6 +80,7 @@ dependencies {
     implementation project(':common-data')
     implementation project(':common-ui')
     implementation project(':dialogs')
+    implementation project(':documents')
     implementation project(':features')
     implementation project(':feedback')
     implementation project(':history')
