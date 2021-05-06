@@ -1,3 +1,4 @@
+include ':documents'
 include ':organizations'
 include ':history'
 include ':dialogs'
