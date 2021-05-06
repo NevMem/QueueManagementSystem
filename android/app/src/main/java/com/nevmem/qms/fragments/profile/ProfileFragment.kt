@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.nevmem.qms.R
 import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.dialogs.DialogsManager
+import com.nevmem.qms.documents.DocumentsManager
+import com.nevmem.qms.documents.usecase.AddDocumentUsecaseFactory
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.knownfeatures.KnownFeatures
@@ -25,11 +27,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val model: ProfileFragmentViewModel by viewModel()
 
     private val featureManager: FeatureManager by inject()
-    private val showToastManager: ShowToastManager by inject()
     private val authManager: AuthManager by inject()
     private val dialogsManager: DialogsManager by inject()
+    private val documentsManager: DocumentsManager by inject()
 
     private val changeAvatarUsecaseFactory = ChangeUserAvatarUsecaseFactory(authManager)
+    private val addDocumentUsecaseFactory = AddDocumentUsecaseFactory(documentsManager, dialogsManager)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,7 +50,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     ProfileRatingFactory(requireContext()),
                     ProfileVisitedFactory(requireContext(), featureManager),
                     ProfileDocumentFactory(requireContext()),
-                    ProfileAddDocumentFactory(requireContext(), showToastManager),
+                    ProfileAddDocumentFactory(requireContext(), addDocumentUsecaseFactory),
                     HeaderFactory(findNavController(), requireContext(), authManager),
                     SpaceStubFactory(requireContext()),
                     ProfileLoadingStubFactory(requireContext()),

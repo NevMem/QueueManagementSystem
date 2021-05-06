@@ -37,5 +37,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutinesCore"
 
     implementation project(':auth')
+    implementation project(':dialogs')
     implementation project(':protos')
 }

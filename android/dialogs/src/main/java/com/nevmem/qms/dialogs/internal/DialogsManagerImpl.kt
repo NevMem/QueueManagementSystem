@@ -61,4 +61,10 @@ internal class DialogsManagerImpl : DialogsManager {
             fragment.show(it, "operation-status")
         }
     }
+
+    override suspend fun <T> showOptions(
+        options: List<DialogsManager.OptionItem<T>>
+    ): DialogsManager.OptionsResolution<T> {
+        TODO("Not yet implemented")
+    }
 }

@@ -7,6 +7,10 @@ sealed class Document {
     data class HealthInsurancePolicy(val number: String) : Document()
 }
 
+enum class DocumentType {
+    Passport, InternationalPassport, TIN, HealthInsurancePolicy
+}
+
 val Document.name: String
     get() {
         return when (this) {

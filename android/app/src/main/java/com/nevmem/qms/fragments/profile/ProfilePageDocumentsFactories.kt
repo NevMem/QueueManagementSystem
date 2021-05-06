@@ -4,12 +4,11 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.nevmem.qms.R
+import com.nevmem.qms.documents.usecase.AddDocumentUsecaseFactory
 import com.nevmem.qms.inflate
 import com.nevmem.qms.recycler.RVHolder
 import com.nevmem.qms.recycler.RVItem
 import com.nevmem.qms.recycler.RVItemFactory
-import com.nevmem.qms.toast.manager.ShowToastManager
-import com.nevmem.qms.toast.manager.Type
 import kotlinx.android.synthetic.main.profile_document.view.*
 
 internal class ProfileDocumentFactory(private val context: Context) : RVItemFactory {
@@ -49,12 +48,12 @@ internal class ProfileDocumentFactory(private val context: Context) : RVItemFact
 
 internal class ProfileAddDocumentFactory(
     private val context: Context,
-    private val showToastManager: ShowToastManager
+    private val addDocumentUsecaseFactory: AddDocumentUsecaseFactory
 ) : RVItemFactory {
     private inner class Holder(view: View) : RVHolder(view) {
         override fun onBind(item: RVItem) {
             itemView.setOnClickListener {
-                showToastManager.showToast("Not supported yet", Type.Error)
+                addDocumentUsecaseFactory.createUsecase().launchUsecase()
             }
         }
     }

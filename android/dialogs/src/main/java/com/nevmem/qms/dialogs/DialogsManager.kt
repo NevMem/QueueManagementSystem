@@ -1,5 +1,6 @@
 package com.nevmem.qms.dialogs
 
+import androidx.annotation.IdRes
 import com.nevmem.qms.common.operations.OperationStatus
 import kotlinx.coroutines.flow.Flow
 
@@ -19,6 +20,13 @@ interface DialogsManager {
     suspend fun showTextInputDialog(
         message: String, inputLabel: String
     ) : TextInputDialogResolution
+
+    data class OptionItem<T>(val iconId: Int, val name: String, val value: T)
+    sealed class OptionsResolution<T> {
+        class Dismissed<T> : OptionsResolution<T>()
+        data class Result<T>(val value: T) : OptionsResolution<T>()
+    }
+    suspend fun<T> showOptions(options: List<OptionItem<T>>): OptionsResolution<T>
 
     fun showOperationStatusDialog(status: Flow<OperationStatus<*>>)
 }
