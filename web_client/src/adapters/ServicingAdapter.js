@@ -59,8 +59,8 @@ class ServicingAdapter {
             })
     }
 
-    nextUser(windowName, serviceIds) {
-        return nextUser(authAdapter.token, windowName, serviceIds)
+    nextUser() {
+        return nextUser(authAdapter.token, this.windowName, this.serviceIds.map(elem => elem.serviceId))
             .then(data => data.data)
             .then(data => {
                 this.rescheduleUpdate(true)

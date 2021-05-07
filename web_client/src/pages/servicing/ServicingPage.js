@@ -7,6 +7,7 @@ import Header from '../../components/header/Header'
 import ServiceNextButton from './ServiceNextButton'
 import servicingAdapter from '../../adapters/ServicingAdapter'
 import UserBlock from './CurrentUserBlock'
+import ServicingInfoBlock from './ServicingInfoBlock'
 
 const JustNextActionBlock = () => {
   return (
@@ -41,6 +42,9 @@ export default function ServicingPage() {
       <Header />
       <Grid container justify='center'>
         <Grid item xs={8}>
+          <div className='servicingCard'>
+            <ServicingInfoBlock servicingAdapter={servicingAdapter} />
+          </div>
           <div className='servicingCard'>
             <UserBlock servicingAdapter={servicingAdapter} />
 
