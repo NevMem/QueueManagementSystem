@@ -31,6 +31,7 @@ class ServicingAdapter {
         if (this.serviceIds === null || this.serviceIds === undefined) {
             this.serviceIds = []
         }
+        console.log(this.serviceIds)
     }
 
     scheduleUpdate() {
@@ -85,7 +86,8 @@ class ServicingAdapter {
     }
 
     addServiceToServicing(organizationId, serviceId) {
-        const newServiceIds = [...this.serviceIds]
+        let newServiceIds = [...this.serviceIds]
+        newServiceIds = newServiceIds.filter(elem => elem.organizationId === organizationId)
         newServiceIds.push({ organizationId: organizationId, serviceId: serviceId })
         this.serviceIds = newServiceIds
         this.saveState()
