@@ -1,0 +1,13 @@
+.document {
+    border-radius: 8px;
+    box-shadow: 0px 3px 6px #20202050;
+    background-color: #2E3444;
+    padding: 12px;
+    display: flex;
+    flex-direction: row;
+    color: #c0c0c0;
+    margin-right: 12px;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    cursor: pointer;
+}

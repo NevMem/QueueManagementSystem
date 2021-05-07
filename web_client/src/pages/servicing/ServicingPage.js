@@ -1,13 +1,14 @@
 import './ServicingPage.css'
 import { Fragment, } from 'react'
 import { observer } from 'mobx-react'
+import DocumentsBlock from './DocumentsBlock'
 import EndServicingButton from './EndServicingButton'
 import Grid from '@material-ui/core/Grid'
 import Header from '../../components/header/Header'
 import ServiceNextButton from './ServiceNextButton'
 import servicingAdapter from '../../adapters/ServicingAdapter'
-import UserBlock from './CurrentUserBlock'
 import ServicingInfoBlock from './ServicingInfoBlock'
+import UserBlock from './CurrentUserBlock'
 
 const JustNextActionBlock = () => {
   return (
@@ -47,6 +48,8 @@ export default function ServicingPage() {
           </div>
           <div className='servicingCard'>
             <UserBlock servicingAdapter={servicingAdapter} />
+
+            <DocumentsBlock servicingAdapter={servicingAdapter} />
 
             <ActionsBlock servicingAdapter={servicingAdapter} />
           </div>
