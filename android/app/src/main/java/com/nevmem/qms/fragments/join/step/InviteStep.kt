@@ -51,6 +51,9 @@ class InviteStep : JoinStep {
 
                 usecase.invite.observe(viewLifecycleOwner, Observer {
                     inviteField.setText(it)
+                    if (it.isNotEmpty()) {
+                        joinButton.callOnClick()
+                    }
                 })
 
                 view.doOnAttach {

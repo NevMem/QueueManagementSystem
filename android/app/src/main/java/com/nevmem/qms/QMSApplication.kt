@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.nevmem.qms.auth.createAuthManager
 import com.nevmem.qms.dialogs.createDialogsManager
+import com.nevmem.qms.documents.createDocumentsManager
 import com.nevmem.qms.features.createFeatureManager
 import com.nevmem.qms.feedback.createFeedbackManager
 import com.nevmem.qms.fragments.dev_settings.DeveloperSettingsFragmentViewModel
@@ -18,6 +19,7 @@ import com.nevmem.qms.logger.LoggerImpl
 import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.network.createNetworkManager
 import com.nevmem.qms.notifications.createNotificationsManager
+import com.nevmem.qms.organizations.createOrganizationsRepo
 import com.nevmem.qms.permissions.createPermissionsManager
 import com.nevmem.qms.push.PushProcessor
 import com.nevmem.qms.push.ToastPushProcessor
@@ -49,7 +51,7 @@ class QMSApplication : Application() {
         single<ShowToastManager> { get<ToastManager>() }
         single<ToastProvider> { get<ToastManager>() }
         single<NetworkManager> { createNetworkManager(get()) }
-        single<StatusProvider> { createStatusProvider(get(), get(), get(), get()) }
+        single<StatusProvider> { createStatusProvider(get(), get(), get(), get(), get()) }
         single {
             createFeatureManager(
                 get(),
@@ -72,15 +74,17 @@ class QMSApplication : Application() {
         single { createFeedbackManager(get(), get()) }
         single { createRatingsManager(get(), get()) }
         single { createDialogsManager() }
-        single { createHistoryManager(get(), get()) }
+        single { createHistoryManager(get(), get(), get()) }
+        single { createOrganizationsRepo(get()) }
+        single { createDocumentsManager(get()) }
     }
 
     private val viewModelsModule = module {
         viewModel { LoginPageViewModel(get()) }
-        viewModel { ProfileFragmentViewModel(get(), get(), get(), get()) }
+        viewModel { ProfileFragmentViewModel(get(), get(), get(), get(), get()) }
         viewModel { RegistrationPageViewModel(get(), get()) }
         viewModel { DeveloperSettingsFragmentViewModel(get()) }
-        viewModel { StatusFragmentViewModel(get(), get(), get(), get()) }
+        viewModel { StatusFragmentViewModel(get(), get(), get()) }
     }
 
     override fun onCreate() {

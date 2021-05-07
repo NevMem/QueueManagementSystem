@@ -9,6 +9,8 @@ import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.notifications.Channel
 import com.nevmem.qms.notifications.Notification
 import com.nevmem.qms.notifications.NotificationsManager
+import com.nevmem.qms.organizations.OrganizationsRepo
+import com.nevmem.qms.organizations.exceptions.toOrganizationInfo
 import com.nevmem.qms.status.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +22,8 @@ internal class NetworkStatusProvider(
     private val context: Context,
     private val networkManager: NetworkManager,
     private val notificationsManager: NotificationsManager,
-    private val authManager: AuthManager
+    private val authManager: AuthManager,
+    private val organizationsRepo: OrganizationsRepo
 ) : StatusProvider {
 
     override var queueStatus: QueueStatus? = null
@@ -76,7 +79,7 @@ internal class NetworkStatusProvider(
     override fun fetchDataForInvite(invite: String): Flow<FetchStatus> = flow {
         emit(FetchStatus.Pending)
         try {
-            val result = networkManager.fetchOrganization(authManager.token, invite)
+            val result = organizationsRepo.findOrganization(invite.toOrganizationInfo())
             emit(FetchStatus.Success(result))
         } catch (ex: Exception) {
             emit(FetchStatus.Error(ex.message ?: context.getString(R.string.unknown_error)))

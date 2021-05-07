@@ -1,42 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="@dimen/indent_double">
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/placeIcon"
-        android:layout_width="@dimen/profileVisitedIconWidth"
-        android:layout_height="wrap_content"
-        tools:src="@drawable/icon_profile" />
+    android:padding="@dimen/indent"
+    android:layout_margin="@dimen/indent">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/indent"
-        android:paddingLeft="@dimen/indent_double"
-        android:paddingRight="@dimen/indent_double"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:padding="@dimen/indent_double">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/visitedTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/profileVisitedTitleTextSize"
-            android:fontFamily="@font/montserrat_light"
-            tools:text="Hospital" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/placeIcon"
+            android:layout_width="@dimen/profileVisitedIconWidth"
+            android:layout_height="@dimen/profileVisitedIconWidth"
+            tools:src="@drawable/icon_profile" />
 
-        <com.nevmem.qms.tags.TagsContainer
-            android:id="@+id/tagsBox"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/indent"
-            app:colorized="false" />
+            android:layout_marginStart="@dimen/indent"
+            android:paddingLeft="@dimen/indent_double"
+            android:paddingRight="@dimen/indent_double"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/visitedOrganizationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/profileVisitedTitleTextSize"
+                android:fontFamily="@font/montserrat_light"
+                android:textColor="@color/defaultTextColor"
+                tools:text="Hospital" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/visitedServiceName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/profileVisitedSubtitleTextSize"
+                android:fontFamily="@font/montserrat_light"
+                android:textColor="@color/secondaryTextColor"
+                tools:text="Pills" />
+
+            <com.nevmem.qms.tags.TagsContainer
+                android:id="@+id/tagsBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/indent"
+                app:colorized="false" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</com.google.android.material.card.MaterialCardView>

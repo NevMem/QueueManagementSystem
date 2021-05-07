@@ -41,5 +41,6 @@ dependencies {
     implementation project(':common')
     implementation project(':network')
     implementation project(':notifications')
+    implementation project(':organizations')
     implementation project(':protos')
 }

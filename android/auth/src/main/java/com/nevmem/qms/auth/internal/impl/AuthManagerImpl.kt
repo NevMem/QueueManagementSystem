@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlin.coroutines.suspendCoroutine
 
 private const val AUTH_MANAGER_TOKEN_KEY_NAME = "token_key"
 
@@ -121,6 +122,21 @@ internal class AuthManagerImpl(
             emit(OperationStatus.Error(exception.message ?: ""))
         }
     }
+
+    override suspend fun user(): ClientApiProto.User? = suspendCoroutine { continuation ->
+        GlobalScope.launch {
+            try {
+                val user = networkManager.getUser(token)
+                continuation.resumeWith(Result.success(user))
+            } catch (ex: Exception) {
+                continuation.resumeWith(Result.failure(ex))
+            }
+        }
+    }
+
+    override suspend fun updateUser(
+        user: ClientApiProto.User
+    ) = networkManager.updateUser(token, user)
 
     override fun logout() {
         actualToken = null

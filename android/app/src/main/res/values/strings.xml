@@ -22,6 +22,7 @@
     <string name="profile_passport">Passport</string>
     <string name="profile_international_passport">International passport</string>
     <string name="profile_health_insurance">Health insurance policy</string>
+    <string name="profile_tin">TIN</string>
     <string name="profile_document_number">Number:</string>
     <string name="add_document">Add new document</string>
     <string name="invite_step_action_text">Enter invite code to join queue</string>
@@ -47,4 +48,7 @@
     <string name="resolution_kicked">You have been kicked</string>
     <string name="resolution_serviced">Latest appointment</string>
     <string name="resolution_not_serviced">Latest appointment</string>
+
+    <string name="change_avatar">Change avatar</string>
+    <string name="new_avatar_url">Avatar image url</string>
 </resources>
