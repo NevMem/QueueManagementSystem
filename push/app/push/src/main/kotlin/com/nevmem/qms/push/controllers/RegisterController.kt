@@ -1,7 +1,7 @@
 package com.nevmem.qms.push.controllers
 
 import com.nevmem.qms.data.NewPushTokenRequest
-import com.nevmem.qms.push.client.BackendClient
+import com.nevmem.qms.commonclient.client.BackendClient
 import com.nevmem.qms.push.service.TokenStorageService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
