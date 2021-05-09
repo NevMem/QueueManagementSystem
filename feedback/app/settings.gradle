@@ -1,6 +1,6 @@
-include ':push'
+include ':feedback'
 include ':common-data'
 
 project(':common-data').projectDir = file('../../shared/common-data')
 
-rootProject.name = 'push'
+rootProject.name = 'feedback'
