@@ -2,7 +2,7 @@ package com.nevmem.qms.feedback.controllers
 
 import com.nevmem.qms.data.feedback.LoadRatingRequest
 import com.nevmem.qms.data.feedback.LoadRatingResponse
-import com.nevmem.qms.feedback.client.BackendClient
+import com.nevmem.qms.commonclient.client.BackendClient
 import com.nevmem.qms.feedback.service.FeedbacksService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*

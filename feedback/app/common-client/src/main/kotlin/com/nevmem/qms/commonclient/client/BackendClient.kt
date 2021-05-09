@@ -1,4 +1,4 @@
-package com.nevmem.qms.feedback.client
+package com.nevmem.qms.commonclient.client
 
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service

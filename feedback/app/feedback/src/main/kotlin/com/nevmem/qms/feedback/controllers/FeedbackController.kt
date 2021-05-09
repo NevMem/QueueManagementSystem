@@ -3,10 +3,10 @@ package com.nevmem.qms.feedback.controllers
 import com.google.api.client.util.Base64
 import com.google.api.client.util.StringUtils
 import com.google.gson.Gson
+import com.nevmem.qms.commonclient.client.BackendClient
 import com.nevmem.qms.data.feedback.Feedback
 import com.nevmem.qms.data.feedback.LoadFeedbacksRequest
 import com.nevmem.qms.data.feedback.PublishFeedbackRequest
-import com.nevmem.qms.feedback.client.BackendClient
 import com.nevmem.qms.feedback.service.FeedbacksService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
