@@ -1,9 +1,9 @@
-package com.nevmem.qms.push.controllers
+package com.nevmem.qms.feedback.controllers
 
 import com.nevmem.qms.data.feedback.LoadRatingRequest
 import com.nevmem.qms.data.feedback.LoadRatingResponse
-import com.nevmem.qms.push.client.BackendClient
-import com.nevmem.qms.push.service.FeedbacksService
+import com.nevmem.qms.feedback.client.BackendClient
+import com.nevmem.qms.feedback.service.FeedbacksService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 

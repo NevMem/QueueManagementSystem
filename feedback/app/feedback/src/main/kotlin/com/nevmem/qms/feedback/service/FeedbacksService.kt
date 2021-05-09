@@ -1,8 +1,8 @@
-package com.nevmem.qms.push.service
+package com.nevmem.qms.feedback.service
 
 import com.nevmem.qms.data.feedback.Feedback
-import com.nevmem.qms.push.data.RepoFeedback
-import com.nevmem.qms.push.repository.FeedbackRepository
+import com.nevmem.qms.feedback.data.RepoFeedback
+import com.nevmem.qms.feedback.repository.FeedbackRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

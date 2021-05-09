@@ -1,6 +1,6 @@
-package com.nevmem.qms.push.repository
+package com.nevmem.qms.feedback.repository
 
-import com.nevmem.qms.push.data.RepoFeedback
+import com.nevmem.qms.feedback.data.RepoFeedback
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface FeedbackRepository : JpaRepository<RepoFeedback, Long> {

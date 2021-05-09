@@ -1,5 +1,5 @@
 buildscript {
-    apply from: '../shared/versions.gradle'
+    apply from: '../../shared/versions.gradle'
     repositories {
         google()
         jcenter()

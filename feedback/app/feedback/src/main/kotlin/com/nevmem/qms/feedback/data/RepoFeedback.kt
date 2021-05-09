@@ -1,4 +1,4 @@
-package com.nevmem.qms.push.data
+package com.nevmem.qms.feedback.data
 
 import javax.persistence.*
 

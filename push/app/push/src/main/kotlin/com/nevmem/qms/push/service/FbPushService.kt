@@ -14,8 +14,7 @@ import java.io.FileInputStream
 @Service
 class FbPushService {
     init {
-        val serviceAccount = FileInputStream(
-            "${System.getenv("PUSH_WORKING_DIR")}/nevmem-qms-firebase-adminsdk-jq1o6-e98d0d8f16.json")
+        val serviceAccount = FileInputStream(System.getenv("FIREBASE_CREDENTIALS"))
 
         val options = FirebaseOptions.builder()
             .setCredentials(GoogleCredentials.fromStream(serviceAccount))
