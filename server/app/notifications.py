@@ -49,26 +49,27 @@ class NotificationsWorker:
                     yield i, ticket
 
     async def loop(self):
-        async with aioboto3.resource('sqs', region_name='ru-central1', endpoint_url='https://message-queue.api.cloud.yandex.net/') as resource:
-            queue = await resource.Queue(url=Config.SQS_URL)
+        with contextlib.suppress(Exception):
+            async with aioboto3.resource('sqs', region_name='ru-central1', endpoint_url='https://message-queue.api.cloud.yandex.net/') as resource:
+                queue = await resource.Queue(url=Config.SQS_URL)
 
-            while True:
-                with contextlib.suppress(Exception):
-                    async with session_scope() as session:
-                        async for position, ticket in self.get_tickets(session):
-                            with contextlib.suppress(Exception):
-                                await queue.send_message(MessageBody=ujson.dumps(
-                                    {
-                                        'target': ticket.user.email,
-                                        'time_left': ticket.service.average_waiting_time * position,
-                                        'position': position,
-                                        'from': self.__class__.__name__
-                                    }
-                                ))
+                while True:
+                    with contextlib.suppress(Exception):
+                        async with session_scope() as session:
+                            async for position, ticket in self.get_tickets(session):
+                                with contextlib.suppress(Exception):
+                                    await queue.send_message(MessageBody=ujson.dumps(
+                                        {
+                                            'target': ticket.user.email,
+                                            'time_left': ticket.service.average_waiting_time * position,
+                                            'position': position,
+                                            'from': self.__class__.__name__
+                                        }
+                                    ))
 
-                                ticket.pushed = True
+                                    ticket.pushed = True
 
-                await asyncio.sleep(self.SLEEP_INTERVAL)
+                    await asyncio.sleep(self.SLEEP_INTERVAL)
 
     def start(self):
         asyncio.get_event_loop().create_task(self.loop())
