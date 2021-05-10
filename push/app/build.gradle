@@ -1,0 +1,21 @@
+buildscript {
+    apply from: '../../shared/versions.gradle'
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:3.5.0"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.7.3"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'

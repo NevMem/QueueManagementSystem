@@ -1,0 +1,8 @@
+include ':feedback'
+include ':common-client'
+include ':common-data'
+
+project(':common-data').projectDir = file('../../shared/common-data')
+project(':common-client').projectDir = file('../../shared/common-client')
+
+rootProject.name = 'feedback'
