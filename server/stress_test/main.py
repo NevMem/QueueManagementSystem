@@ -31,13 +31,13 @@ class QMSUser(HttpUser):
         if not random.randint(0, 10) or not organizations:
             self.client.post('/admin/create_organization', json={'name': str(uuid.uuid4())}, headers={'session': self.user_session})
 
-            organization_id = self.client.post('/admin/get_organizations_list', headers={'session': self.user_session}).json()[0]['info']['id']
+            organization_id = self.client.post('/admin/get_organizations_list', headers={'session': self.user_session}).json()['organizations'][0]['info']['id']
 
             for _ in range(3):
                 self.client.post('/admin/create_service', json={'name': str(uuid.uuid4()), 'organization_id': organization_id}, headers={'session': self.user_session})
 
             services: tp.List[str] = []
-            for service in self.client.post('/admin/get_organizations_list', headers={'session': self.user_session}).json()[0]['services']:
+            for service in self.client.post('/admin/get_organizations_list', headers={'session': self.user_session}).json()['organizations'][0]['services']:
                 services.append(service['info']['id'])
 
             organizations.append(Organization(organization_id, services))
