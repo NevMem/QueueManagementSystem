@@ -1,7 +1,8 @@
 import base64
 import itsdangerous
-import logging
 import json
+import logging
+import typing as tp
 from google.protobuf.json_format import ParseDict
 from itsdangerous.exc import BadTimeSignature, SignatureExpired
 from sqlalchemy.sql import select
@@ -18,7 +19,11 @@ from server.app import model
 from server.app.config import Config
 from server.app.utils import isiterable
 from server.app.utils.db_utils import session_scope
-from server.app.utils.web import get_signature, get_check_attr
+from server.app.utils.web import get_signature, get_check_attr, should_use_db_connection
+
+
+class BasicUser(tp.NamedTuple):
+    email: str
 
 
 class BasicAuthBackend(AuthenticationBackend):
@@ -27,6 +32,9 @@ class BasicAuthBackend(AuthenticationBackend):
     async def authenticate(self, request):
         if not request.session.get('user'):
             return AuthCredentials([]), UnauthenticatedUser()
+
+        if '_connection' not in request.scope:
+            return AuthCredentials(['authenticated']), BasicUser(email=request.session['user'])
 
         query = (
             select(model.User)
@@ -123,9 +131,11 @@ class SessionMiddleware:
 
 class DBSessionMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
-        async with session_scope() as session:
-            request.scope['_connection'] = session
-            return await call_next(request)
+        if should_use_db_connection(request.url.path):
+            async with session_scope() as session:
+                request.scope['_connection'] = session
+                return await call_next(request)
+        return await call_next(request)
 
 
 middleware = [

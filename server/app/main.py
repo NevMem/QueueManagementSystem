@@ -19,12 +19,15 @@ from server.app.middleware import middleware
 from server.app.notifications import NotificationsWorker
 from server.app.statistic import StatisticWorker
 from server.app.utils import sha_hash, generate_next_ticket, now
-from server.app.utils.db_utils import prepare_db
+from server.app.utils.db_utils import prepare_db, session_scope
+from server.app.utils.long_polling import EventManager
 from server.app.utils.protobuf import patch_enums
 from server.app.utils.web import route, prepare_app, Request, ProtobufResponse, Response
 
 
 patch_enums()
+
+event_manager = EventManager()
 
 
 def user_from_permission(permission: model.Permission) -> user_pb2.User:
@@ -705,6 +708,54 @@ async def get_current_queue_info(request: Request):
     ))
 
 
+@route('/client/notify_ticket_state_changed', methods=['POST', 'GET'], request_type=ticket_pb2.TicketInfo, use_connection=False)
+@requires('authenticated')
+async def notify_ticket_state_changed(request: Request):
+    async with session_scope() as session:
+        query = (
+            select(model.Ticket)
+            .join(model.User, model.User.id == model.Ticket.user_id)
+            .where(
+                model.User.email == request.user.email,
+            )
+            .options(
+                selectinload(model.Ticket.service),
+                selectinload(model.Ticket.user),
+            )
+            .order_by(model.Ticket.enqueue_at.desc())
+            .limit(1)
+        )
+
+        result = await session.execute(query)
+        ticket = result.scalars().first()
+
+        query = (
+            select(func.count(model.Ticket.id))
+            .where(
+                model.Ticket.service_id == ticket.service_id,
+                model.Ticket.state != 'PROCESSED',
+                model.Ticket.enqueue_at < ticket.enqueue_at,
+            )
+        )
+
+        result = await session.execute(query)
+        order = result.scalar()
+
+        if ticket is None:
+            return ProtobufResponse(ticket_pb2.Ticket())
+
+        if ticket.state != ticket_pb2.Ticket.State[request.parsed.ticket.state] or order != request.parsed.people_in_front_count:
+            return ProtobufResponse(ticket_pb2.TicketInfo(
+                ticket=ticket_from_model(ticket, with_user=True),
+                people_in_front_count=order,
+                remaining_time=ticket.service.average_waiting_time * order,
+            ))
+
+        service_id = ticket.service.id
+
+    return ProtobufResponse(await event_manager.listen('ticket_state_changed', service_id=service_id))
+
+
 @route('/admin/service_next_user', methods=['POST'], request_type=management_pb2.NextUserRequest, permission_check_attr='service_ids')
 @requires(['authenticated', 'serve_users'])
 async def service_next_user(request: Request):
@@ -749,7 +800,10 @@ async def service_next_user(request: Request):
     ticket.accepted_at = now()
     ticket.window = request.parsed.window
 
-    return ProtobufResponse(ticket_from_model(ticket, with_user=True))
+    ticket_proto = ticket_from_model(ticket, with_user=True)
+    event_manager.publish('ticket_state_changed', ticket_proto, service_id=ticket.service_id)
+
+    return ProtobufResponse(ticket_proto)
 
 
 @route('/admin/end_servicing', methods=['POST'], request_type=management_pb2.EndServicingRequest)
@@ -760,6 +814,9 @@ async def end_servicing(request: Request):
         .where(
             model.Ticket.servicing_by == request.user.id,
             model.Ticket.state == 'PROCESSING',
+        )
+        .options(
+            selectinload(model.Ticket.service),
         )
         .with_for_update(nowait=True)
         .limit(1)
@@ -777,7 +834,10 @@ async def end_servicing(request: Request):
     if ticket.resolution == 'NONE':
         ticket.resolution = 'SERVICED'
 
-    return ProtobufResponse(empty_pb2.Empty())
+    ticket_proto = ticket_from_model(ticket)
+    event_manager.publish('ticket_state_changed', ticket_proto, service_id=ticket.service_id)
+
+    return ProtobufResponse(ticket_proto)
 
 
 @route('/admin/get_current_ticket', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
@@ -814,6 +874,9 @@ async def left_queue(request: Request):
             model.Ticket.user_id == request.user.id,
             model.Ticket.state == 'WAITING',
         )
+        .options(
+            selectinload(model.Ticket.service),
+        )
         .with_for_update(nowait=True)
         .limit(1)
     )
@@ -828,7 +891,10 @@ async def left_queue(request: Request):
     ticket.resolution = 'GONE'
     ticket.finished_at = now()
 
-    return ProtobufResponse(empty_pb2.Empty())
+    ticket_proto = ticket_from_model(ticket)
+    event_manager.publish('ticket_state_changed', ticket_proto, service_id=ticket.service_id)
+
+    return ProtobufResponse(ticket_proto)
 
 
 @route('/admin/service_tickets_history', methods=['POST'], request_type=service_pb2.ServiceInfo)

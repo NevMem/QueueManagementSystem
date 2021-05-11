@@ -17,6 +17,7 @@ from starlette_prometheus import metrics, PrometheusMiddleware
 _routes = []
 _signatures: tp.Dict[str, tp.Tuple[Message, Message]] = {}
 _check_attrs: tp.Dict[str, str] = {}
+_connections: tp.Dict[str, bool] = {}
 
 
 class Request(StarletteRequest):
@@ -48,17 +49,18 @@ class ProtobufResponse(Response):
         await super().__call__(scope, receive, send)
 
 
-def route(path: str, request_type: Message = empty_pb2.Empty, response_type: Message = empty_pb2.Empty, permission_check_attr: str = 'id', **kwargs):
+def route(path: str, request_type: Message = empty_pb2.Empty, response_type: Message = empty_pb2.Empty, permission_check_attr: str = 'id', use_connection=True, **kwargs):
     def _decorator(func):
 
         @functools.wraps(func)
         async def _wrapped(request, **fn_kwargs):
             request.parsed = request.scope['_parsed']
-            request.connection = request.scope['_connection']
+            request.connection = request.scope.get('_connection', None)
             return await func(request, **fn_kwargs)
 
         _signatures[path] = (request_type, response_type)
         _check_attrs[path] = permission_check_attr
+        _connections[path] = use_connection
         _routes.append(Route(path, _wrapped, **kwargs))
 
         return _wrapped
@@ -81,3 +83,7 @@ def get_signature(path: str):
 
 def get_check_attr(path: str):
     return _check_attrs.get(path, 'id')
+
+
+def should_use_db_connection(path: str):
+    return _connections.get(path, True)
