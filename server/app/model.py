@@ -29,7 +29,7 @@ class Service(BaseModel):
     organization_id = sqlalchemy.Column(types.String, sqlalchemy.ForeignKey('Organizations.id'))
 
     admins = relationship('Permission', cascade='all, delete-orphan')
-    tickets = relationship('Ticket', backref='service')
+    tickets = relationship('Ticket', backref='service', order_by='desc(Ticket.enqueue_at)')
 
     default_waiting_time = sqlalchemy.Column(types.Integer, server_default='300')
     average_waiting_time = sqlalchemy.Column(types.Integer, server_default='300')
@@ -94,6 +94,7 @@ class Ticket(BaseModel):
 
     servicing_by = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey('Users.id'), index=True)
     manager = relationship('User', foreign_keys=[servicing_by])
+    pushed = sqlalchemy.Column(types.BOOLEAN, server_default='f')
 
 
 class User(BaseModel):
