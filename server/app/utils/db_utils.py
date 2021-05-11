@@ -117,7 +117,7 @@ class Timeout(Exception):
     pass
 
 
-engine = create_async_engine(Config.DB_URL, echo=True)
+engine = create_async_engine(Config.DB_URL, echo=Config.DEBUG)
 
 
 @contextlib.asynccontextmanager
