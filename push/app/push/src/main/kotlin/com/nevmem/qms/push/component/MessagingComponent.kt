@@ -30,7 +30,7 @@ class MessagingComponent @Autowired constructor(
             try {
                 val messages = messaging.getMessages()
                 val resolvedMessages = messages.map {
-                        val email = tokenStorageService.tokenByEmail(it.target)
+                        val email = tokenStorageService.tokenByEmail(it.second.target)
                         email to it
                     }
                     .filter { it.first != null }
@@ -38,8 +38,8 @@ class MessagingComponent @Autowired constructor(
                 resolvedMessages.forEach {
                     fbPushService.sendToOne(
                         it.first,
-                        it.second.asMap(),
-                        it.second.notificationConfig)
+                        it.second.second.asMap(),
+                        it.second.second.notificationConfig)
                 }
             } catch(exception: Exception) {
                 println(exception.message)
