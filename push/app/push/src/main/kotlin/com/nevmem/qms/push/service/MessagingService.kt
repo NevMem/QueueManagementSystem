@@ -34,7 +34,7 @@ class MessagingService {
 
     fun getMessages(): List<Pair<Message, MessageQueueEntity>> {
         val request = ReceiveMessageRequest(queueUrl).apply {
-            maxNumberOfMessages = 10
+            waitTimeSeconds = 10
         }
 
         return client.receiveMessage(request).messages.mapNotNull {

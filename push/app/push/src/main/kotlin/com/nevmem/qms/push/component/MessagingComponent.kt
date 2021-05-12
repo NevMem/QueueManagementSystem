@@ -25,8 +25,6 @@ class MessagingComponent @Autowired constructor(
 
     private fun runLoop() {
         while (true) {
-            Thread.sleep(1000L)
-
             try {
                 val messages = messaging.getMessages()
                 val resolvedMessages = messages.map {
@@ -44,8 +42,6 @@ class MessagingComponent @Autowired constructor(
             } catch(exception: Exception) {
                 println(exception.message)
             }
-
-            Thread.sleep(10000L)
         }
     }
 }
