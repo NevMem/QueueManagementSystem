@@ -241,3 +241,17 @@ Request:  proto.management.EndServicingRequest
 Response:  google.protobuf.Empty
 
 Заканчивает обработку пользователя. Дефолтная резолюция SERVICED, нельзя поставить NONE
+
+
+#### Оповестить, когда сменится статус тикета
+#### Долгий запрос!
+
+POST `/client/notify_ticket_state_changed`
+
+Request:  proto.ticket.TicketInfo
+
+Response:  proto.ticket.TicketInfo
+
+На вход подается proto TicketInfo с полями ticket.state и people_in_front_count (по версии клиента)
+Если текущее состояние тикета отличается от заданного - моментально вернется ответ с текущим состоянием.
+Иначе запрос поставится на удержание до изменения статуса.
