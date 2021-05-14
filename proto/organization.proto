@@ -16,7 +16,7 @@ message OrganizationInfo {
   map<string, string> data = 4;
   int32 timezone = 5;
 
-  repeated WorkInterval works;
+  repeated WorkInterval works = 6;
 }
 
 
