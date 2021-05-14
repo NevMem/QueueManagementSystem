@@ -12,6 +12,7 @@ _sym_db = _symbol_database.Default()
 
 
 from proto import service_pb2 as proto_dot_service__pb2
+from proto import timetable_pb2 as proto_dot_timetable__pb2
 from proto import user_pb2 as proto_dot_user__pb2
 
 
@@ -21,9 +22,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\021OrganizitionProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x18proto/organization.proto\x12\x03qms\x1a\x13proto/service.proto\x1a\x10proto/user.proto\"\xcd\x01\n\x10OrganizationInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0f\n\x07\x61\x64\x64ress\x18\x03 \x01(\t\x12-\n\x04\x64\x61ta\x18\x04 \x03(\x0b\x32\x1f.qms.OrganizationInfo.DataEntry\x12\x10\n\x08timezone\x18\x05 \x01(\x05\x12 \n\x05works\x18\x06 \x03(\x0b\x32\x11.qms.WorkInterval\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"n\n\x0cOrganization\x12#\n\x04info\x18\x01 \x01(\x0b\x32\x15.qms.OrganizationInfo\x12\x19\n\x06\x61\x64mins\x18\x03 \x03(\x0b\x32\t.qms.User\x12\x1e\n\x08services\x18\x02 \x03(\x0b\x32\x0c.qms.Service\"D\n\x14OrganizationInfoList\x12,\n\rorganizations\x18\x01 \x03(\x0b\x32\x15.qms.OrganizationInfo\"<\n\x10OrganizationList\x12(\n\rorganizations\x18\x01 \x03(\x0b\x32\x11.qms.OrganizationB#\n\x0e\x63om.nevmem.qmsB\x11OrganizitionProtob\x06proto3'
+  serialized_pb=b'\n\x18proto/organization.proto\x12\x03qms\x1a\x13proto/service.proto\x1a\x15proto/timetable.proto\x1a\x10proto/user.proto\"\xce\x01\n\x10OrganizationInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0f\n\x07\x61\x64\x64ress\x18\x03 \x01(\t\x12-\n\x04\x64\x61ta\x18\x04 \x03(\x0b\x32\x1f.qms.OrganizationInfo.DataEntry\x12\x10\n\x08timezone\x18\x05 \x01(\x05\x12!\n\ttimetable\x18\x06 \x01(\x0b\x32\x0e.qms.Timetable\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"n\n\x0cOrganization\x12#\n\x04info\x18\x01 \x01(\x0b\x32\x15.qms.OrganizationInfo\x12\x19\n\x06\x61\x64mins\x18\x03 \x03(\x0b\x32\t.qms.User\x12\x1e\n\x08services\x18\x02 \x03(\x0b\x32\x0c.qms.Service\"D\n\x14OrganizationInfoList\x12,\n\rorganizations\x18\x01 \x03(\x0b\x32\x15.qms.OrganizationInfo\"<\n\x10OrganizationList\x12(\n\rorganizations\x18\x01 \x03(\x0b\x32\x11.qms.OrganizationB#\n\x0e\x63om.nevmem.qmsB\x11OrganizitionProtob\x06proto3'
   ,
-  dependencies=[proto_dot_service__pb2.DESCRIPTOR,proto_dot_user__pb2.DESCRIPTOR,])
+  dependencies=[proto_dot_service__pb2.DESCRIPTOR,proto_dot_timetable__pb2.DESCRIPTOR,proto_dot_user__pb2.DESCRIPTOR,])
 
 
 
@@ -62,8 +63,8 @@ _ORGANIZATIONINFO_DATAENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=235,
-  serialized_end=278,
+  serialized_start=259,
+  serialized_end=302,
 )
 
 _ORGANIZATIONINFO = _descriptor.Descriptor(
@@ -110,9 +111,9 @@ _ORGANIZATIONINFO = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='works', full_name='qms.OrganizationInfo.works', index=5,
-      number=6, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
+      name='timetable', full_name='qms.OrganizationInfo.timetable', index=5,
+      number=6, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -128,8 +129,8 @@ _ORGANIZATIONINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=73,
-  serialized_end=278,
+  serialized_start=96,
+  serialized_end=302,
 )
 
 
@@ -174,8 +175,8 @@ _ORGANIZATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=280,
-  serialized_end=390,
+  serialized_start=304,
+  serialized_end=414,
 )
 
 
@@ -206,8 +207,8 @@ _ORGANIZATIONINFOLIST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=392,
-  serialized_end=460,
+  serialized_start=416,
+  serialized_end=484,
 )
 
 
@@ -238,13 +239,13 @@ _ORGANIZATIONLIST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=462,
-  serialized_end=522,
+  serialized_start=486,
+  serialized_end=546,
 )
 
 _ORGANIZATIONINFO_DATAENTRY.containing_type = _ORGANIZATIONINFO
 _ORGANIZATIONINFO.fields_by_name['data'].message_type = _ORGANIZATIONINFO_DATAENTRY
-_ORGANIZATIONINFO.fields_by_name['works'].message_type = proto_dot_service__pb2._WORKINTERVAL
+_ORGANIZATIONINFO.fields_by_name['timetable'].message_type = proto_dot_timetable__pb2._TIMETABLE
 _ORGANIZATION.fields_by_name['info'].message_type = _ORGANIZATIONINFO
 _ORGANIZATION.fields_by_name['admins'].message_type = proto_dot_user__pb2._USER
 _ORGANIZATION.fields_by_name['services'].message_type = proto_dot_service__pb2._SERVICE

@@ -13,7 +13,7 @@ import typing as tp
 from starlette.authentication import requires
 from starlette.exceptions import HTTPException
 
-from proto import user_pb2, permissions_pb2, organization_pb2, service_pb2, ticket_pb2, management_pb2
+from proto import user_pb2, permissions_pb2, organization_pb2, service_pb2, ticket_pb2, management_pb2, timetable_pb2
 from server.app import model
 from server.app.middleware import middleware
 from server.app.notifications import NotificationsWorker
@@ -64,7 +64,7 @@ def user_from_model(user: model.User, with_permissions=True) -> user_pb2.User:
 
 
 def service_from_model(service: model.Service) -> service_pb2.Service:
-    return service_pb2.Service(
+    service_proto = service_pb2.Service(
         info=service_pb2.ServiceInfo(
             id=str(service.id),
             name=service.name,
@@ -78,14 +78,17 @@ def service_from_model(service: model.Service) -> service_pb2.Service:
         ],
     )
 
+    service_proto.info.timetable.MergeFromString(service.timetable or b'')
+    return service_proto
+
 
 def organization_from_model(organization: model.Organization, with_services: bool = True) -> organization_pb2.Organization:
-    return organization_pb2.Organization(
+    organization_proto = organization_pb2.Organization(
         info=organization_pb2.OrganizationInfo(
             id=str(organization.id),
             name=organization.name,
             address=organization.address,
-            data=organization.data
+            data=organization.data,
         ),
         services=[
             service_from_model(service)
@@ -96,6 +99,9 @@ def organization_from_model(organization: model.Organization, with_services: boo
             for permission in organization.admins
         ],
     )
+
+    organization_proto.info.timetable.MergeFromString(organization.timetable or b'')
+    return organization_proto
 
 
 def ticket_from_model(ticket: model.Ticket, with_user=False, with_permissions=False) -> ticket_pb2.Ticket:
@@ -210,7 +216,8 @@ async def create_organization(request: Request):
     new_organization = model.Organization(
         name=request.parsed.name,
         address=request.parsed.address,
-        data=dict(**request.parsed.data)
+        data=dict(**request.parsed.data),
+        timetable=request.parsed.timetable.SerializeToString(),
     )
 
     new_permission = model.Permission(
@@ -233,7 +240,8 @@ async def update_organization(request: Request) -> empty_pb2.Empty:
         .values({
             model.Organization.name: request.parsed.name,
             model.Organization.address: request.parsed.address,
-            model.Organization.data: dict(**request.parsed.data)
+            model.Organization.data: dict(**request.parsed.data),
+            model.Organization.timetable: request.parsed.timetable.SerializeToString(),
         })
     )
 
@@ -343,6 +351,7 @@ async def create_service(request: Request):
         data=dict(request.parsed.data),
         index=next_index,
         default_waiting_time=request.parsed.default_waiting_time or 300,
+        timetable=request.parsed.timetable.SerializeToString(),
     )
 
     new_permission = model.Permission(
@@ -366,6 +375,7 @@ async def update_service(request: Request) -> empty_pb2.Empty:
             model.Service.name: request.parsed.name,
             model.Service.data: dict(**request.parsed.data),
             model.Service.default_waiting_time: request.parsed.default_waiting_time,
+            model.Service.timetable: request.parsed.timetable.SerializeToString(),
         })
     )
 
