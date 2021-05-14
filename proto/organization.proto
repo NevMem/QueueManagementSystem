@@ -6,6 +6,7 @@ option java_package = "com.nevmem.qms";
 option java_outer_classname = "OrganizitionProto";
 
 import "proto/service.proto";
+import "proto/timetable.proto";
 import "proto/user.proto";
 
 
@@ -16,7 +17,7 @@ message OrganizationInfo {
   map<string, string> data = 4;
   int32 timezone = 5;
 
-  repeated WorkInterval works = 6;
+  Timetable timetable = 6;
 }
 
 

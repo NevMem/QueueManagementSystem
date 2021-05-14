@@ -11,6 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+from proto import timetable_pb2 as proto_dot_timetable__pb2
 from proto import user_pb2 as proto_dot_user__pb2
 
 
@@ -20,146 +21,11 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\016com.nevmem.qmsB\014ServiceProto',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x13proto/service.proto\x12\x03qms\x1a\x10proto/user.proto\"\x86\x02\n\x0cWorkInterval\x12*\n\x07weekday\x18\x01 \x01(\x0e\x32\x19.qms.WorkInterval.WeekDay\x12*\n\x04\x66rom\x18\x02 \x01(\x0b\x32\x1c.qms.WorkInterval.TimeMarker\x12(\n\x02to\x18\x03 \x01(\x0b\x32\x1c.qms.WorkInterval.TimeMarker\x1a*\n\nTimeMarker\x12\x0c\n\x04hour\x18\x01 \x01(\r\x12\x0e\n\x06minute\x18\x02 \x01(\r\"H\n\x07WeekDay\x12\x07\n\x03MON\x10\x00\x12\x07\n\x03TUE\x10\x01\x12\x07\n\x03WED\x10\x02\x12\x07\n\x03THU\x10\x03\x12\x07\n\x03\x46RI\x10\x04\x12\x07\n\x03SAT\x10\x05\x12\x07\n\x03SUN\x10\x06\"\xf5\x01\n\x0bServiceInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x17\n\x0forganization_id\x18\x04 \x01(\t\x12\x1c\n\x14\x64\x65\x66\x61ult_waiting_time\x18\x05 \x01(\r\x12\x1c\n\x14\x61verage_waiting_time\x18\x06 \x01(\r\x12(\n\x04\x64\x61ta\x18\x03 \x03(\x0b\x32\x1a.qms.ServiceInfo.DataEntry\x12 \n\x05works\x18\x07 \x03(\x0b\x32\x11.qms.WorkInterval\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"5\n\x0fServiceInfoList\x12\"\n\x08services\x18\x01 \x03(\x0b\x32\x10.qms.ServiceInfo\"D\n\x07Service\x12\x1e\n\x04info\x18\x01 \x01(\x0b\x32\x10.qms.ServiceInfo\x12\x19\n\x06\x61\x64mins\x18\x03 \x03(\x0b\x32\t.qms.UserB\x1e\n\x0e\x63om.nevmem.qmsB\x0cServiceProtob\x06proto3'
+  serialized_pb=b'\n\x13proto/service.proto\x12\x03qms\x1a\x15proto/timetable.proto\x1a\x10proto/user.proto\"\xf6\x01\n\x0bServiceInfo\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x17\n\x0forganization_id\x18\x04 \x01(\t\x12\x1c\n\x14\x64\x65\x66\x61ult_waiting_time\x18\x05 \x01(\r\x12\x1c\n\x14\x61verage_waiting_time\x18\x06 \x01(\r\x12(\n\x04\x64\x61ta\x18\x03 \x03(\x0b\x32\x1a.qms.ServiceInfo.DataEntry\x12!\n\ttimetable\x18\x07 \x01(\x0b\x32\x0e.qms.Timetable\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"5\n\x0fServiceInfoList\x12\"\n\x08services\x18\x01 \x03(\x0b\x32\x10.qms.ServiceInfo\"D\n\x07Service\x12\x1e\n\x04info\x18\x01 \x01(\x0b\x32\x10.qms.ServiceInfo\x12\x19\n\x06\x61\x64mins\x18\x03 \x03(\x0b\x32\t.qms.UserB\x1e\n\x0e\x63om.nevmem.qmsB\x0cServiceProtob\x06proto3'
   ,
-  dependencies=[proto_dot_user__pb2.DESCRIPTOR,])
+  dependencies=[proto_dot_timetable__pb2.DESCRIPTOR,proto_dot_user__pb2.DESCRIPTOR,])
 
 
-
-_WORKINTERVAL_WEEKDAY = _descriptor.EnumDescriptor(
-  name='WeekDay',
-  full_name='qms.WorkInterval.WeekDay',
-  filename=None,
-  file=DESCRIPTOR,
-  create_key=_descriptor._internal_create_key,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='MON', index=0, number=0,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='TUE', index=1, number=1,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='WED', index=2, number=2,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='THU', index=3, number=3,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='FRI', index=4, number=4,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='SAT', index=5, number=5,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='SUN', index=6, number=6,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=237,
-  serialized_end=309,
-)
-_sym_db.RegisterEnumDescriptor(_WORKINTERVAL_WEEKDAY)
-
-
-_WORKINTERVAL_TIMEMARKER = _descriptor.Descriptor(
-  name='TimeMarker',
-  full_name='qms.WorkInterval.TimeMarker',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='hour', full_name='qms.WorkInterval.TimeMarker.hour', index=0,
-      number=1, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='minute', full_name='qms.WorkInterval.TimeMarker.minute', index=1,
-      number=2, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=193,
-  serialized_end=235,
-)
-
-_WORKINTERVAL = _descriptor.Descriptor(
-  name='WorkInterval',
-  full_name='qms.WorkInterval',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='weekday', full_name='qms.WorkInterval.weekday', index=0,
-      number=1, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='from', full_name='qms.WorkInterval.from', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='to', full_name='qms.WorkInterval.to', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[_WORKINTERVAL_TIMEMARKER, ],
-  enum_types=[
-    _WORKINTERVAL_WEEKDAY,
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=47,
-  serialized_end=309,
-)
 
 
 _SERVICEINFO_DATAENTRY = _descriptor.Descriptor(
@@ -196,8 +62,8 @@ _SERVICEINFO_DATAENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=514,
-  serialized_end=557,
+  serialized_start=273,
+  serialized_end=316,
 )
 
 _SERVICEINFO = _descriptor.Descriptor(
@@ -251,9 +117,9 @@ _SERVICEINFO = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='works', full_name='qms.ServiceInfo.works', index=6,
-      number=7, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
+      name='timetable', full_name='qms.ServiceInfo.timetable', index=6,
+      number=7, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -269,8 +135,8 @@ _SERVICEINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=312,
-  serialized_end=557,
+  serialized_start=70,
+  serialized_end=316,
 )
 
 
@@ -301,8 +167,8 @@ _SERVICEINFOLIST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=559,
-  serialized_end=612,
+  serialized_start=318,
+  serialized_end=371,
 )
 
 
@@ -340,41 +206,20 @@ _SERVICE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=614,
-  serialized_end=682,
+  serialized_start=373,
+  serialized_end=441,
 )
 
-_WORKINTERVAL_TIMEMARKER.containing_type = _WORKINTERVAL
-_WORKINTERVAL.fields_by_name['weekday'].enum_type = _WORKINTERVAL_WEEKDAY
-_WORKINTERVAL.fields_by_name['from'].message_type = _WORKINTERVAL_TIMEMARKER
-_WORKINTERVAL.fields_by_name['to'].message_type = _WORKINTERVAL_TIMEMARKER
-_WORKINTERVAL_WEEKDAY.containing_type = _WORKINTERVAL
 _SERVICEINFO_DATAENTRY.containing_type = _SERVICEINFO
 _SERVICEINFO.fields_by_name['data'].message_type = _SERVICEINFO_DATAENTRY
-_SERVICEINFO.fields_by_name['works'].message_type = _WORKINTERVAL
+_SERVICEINFO.fields_by_name['timetable'].message_type = proto_dot_timetable__pb2._TIMETABLE
 _SERVICEINFOLIST.fields_by_name['services'].message_type = _SERVICEINFO
 _SERVICE.fields_by_name['info'].message_type = _SERVICEINFO
 _SERVICE.fields_by_name['admins'].message_type = proto_dot_user__pb2._USER
-DESCRIPTOR.message_types_by_name['WorkInterval'] = _WORKINTERVAL
 DESCRIPTOR.message_types_by_name['ServiceInfo'] = _SERVICEINFO
 DESCRIPTOR.message_types_by_name['ServiceInfoList'] = _SERVICEINFOLIST
 DESCRIPTOR.message_types_by_name['Service'] = _SERVICE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
-
-WorkInterval = _reflection.GeneratedProtocolMessageType('WorkInterval', (_message.Message,), {
-
-  'TimeMarker' : _reflection.GeneratedProtocolMessageType('TimeMarker', (_message.Message,), {
-    'DESCRIPTOR' : _WORKINTERVAL_TIMEMARKER,
-    '__module__' : 'proto.service_pb2'
-    # @@protoc_insertion_point(class_scope:qms.WorkInterval.TimeMarker)
-    })
-  ,
-  'DESCRIPTOR' : _WORKINTERVAL,
-  '__module__' : 'proto.service_pb2'
-  # @@protoc_insertion_point(class_scope:qms.WorkInterval)
-  })
-_sym_db.RegisterMessage(WorkInterval)
-_sym_db.RegisterMessage(WorkInterval.TimeMarker)
 
 ServiceInfo = _reflection.GeneratedProtocolMessageType('ServiceInfo', (_message.Message,), {
 

@@ -36,6 +36,7 @@ class Service(BaseModel):
 
     last_updated_at = sqlalchemy.Column(types.DateTime, default=datetime.datetime(1970, 1, 1))
 
+    timetable = sqlalchemy.Column(types.LargeBinary)
     data = sqlalchemy.Column(postgresql.JSONB, default={})
 
 
@@ -49,6 +50,7 @@ class Organization(BaseModel):
     admins = relationship('Permission', cascade='all, delete-orphan')
 
     address = sqlalchemy.Column(types.Text)
+    timetable = sqlalchemy.Column(types.LargeBinary)
     data = sqlalchemy.Column(types.JSON, default={})
 
 
