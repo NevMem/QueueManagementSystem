@@ -7,6 +7,26 @@ option java_outer_classname = "ServiceProto";
 
 import "proto/user.proto";
 
+message WorkInterval {
+  enum WeekDay {
+    MON = 0;
+    TUE = 1;
+    WED = 2;
+    THU = 3;
+    FRI = 4;
+    SAT = 5;
+    SUN = 6;
+  }
+
+  message TimeMarker {
+    uint32 hour = 1;
+    uint32 minute = 2;
+  }
+
+  WeekDay weekday = 1;
+  TimeMarker from = 2;
+  TimeMarker to = 3;
+}
 
 message ServiceInfo {
   string id = 1;
@@ -17,6 +37,8 @@ message ServiceInfo {
   uint32 average_waiting_time = 6;  // read-only
 
   map<string, string> data = 3;
+
+  repeated WorkInterval works = 7; // overrides organization work interval
 }
 
 message ServiceInfoList {
