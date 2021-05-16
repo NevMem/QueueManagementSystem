@@ -19,7 +19,9 @@ const TimetableView = ({ timetable, updateTimetable }) => {
         const { from, to } = interval
 
         return (
-            <div>{from.hour}:{from.minute}-{to.hour}:{to.minute}</div>
+            <div style={{padding: '4px', paddingLeft: '8px', paddingRight: '8px', margin: '4px', display: 'inline-block', backgroundColor: '#ffffff20', borderRadius: '4px'}}>
+                {from.hour}:{from.minute}-{to.hour}:{to.minute}
+            </div>
         )
     }
 
@@ -87,7 +89,7 @@ const TimetableView = ({ timetable, updateTimetable }) => {
 
         return (
             <div style={{marginTop: '8px', marginBottom: '8px', display: 'flex', flexDirection: 'column'}}>
-                <div>{localizedString('day_name_' + day)}</div>
+                <div style={{marginBottom: '16px'}}>{localizedString('day_name_' + day)}</div>
 
                 <div>
                     {times.map((elem, index) => {
