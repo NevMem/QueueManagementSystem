@@ -5,6 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import IconButton from '@material-ui/core/IconButton'
 import localizedString from '../../localization/localizedString'
+import orgAdapter from '../../adapters/OrgAdapter'
 import StyledDialog from './StyledDialog'
 
 const TimetableView = ({ timetable, updateTimetable }) => {
@@ -116,18 +117,30 @@ const TimetableView = ({ timetable, updateTimetable }) => {
 
 export default function ChangeTimetableDialog({ organization, onClose, open }) {
 
-    const handleOk = () => {
-
-    }
-
-    const handleClose = () => {
-        onClose()
-    }
-
     const [timetable, setTimetable] = useState(organization.timetable)
 
     const updateTimetable = (table) => {
         setTimetable(table)
+    }
+
+    const handleOk = () => {
+        orgAdapter.updateOrganization(
+            organization.id,
+            organization.name,
+            organization.address,
+            organization.data,
+            timetable)
+            .then(data => {
+                handleClose()
+            })
+            .catch(err => {
+                alert(err)
+                alert(JSON.stringify(err))
+            })
+    }
+
+    const handleClose = () => {
+        onClose()
     }
 
     return (

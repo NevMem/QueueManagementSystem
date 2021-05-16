@@ -122,6 +122,17 @@ export default function OrganizationCard({organizationData, ...props}) {
                                 onClose={handleTimetableClose} />
                         </Grid>
                     }
+                    { hasTimetable &&
+                        <Grid container>
+                            <Button onClick={openTimetable} style={{color: '#a0a0a0', fontSize: '14px'}} variant='text'>
+                                {localizedString('edit_timetable')}
+                            </Button>
+                            <ChangeTimetableDialog
+                                organization={organizationData}
+                                open={timetableDialogOpen}
+                                onClose={handleTimetableClose} />
+                        </Grid>
+                    }
                 </div>
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                     <Link to={'/table/' + organizationData.id}>
