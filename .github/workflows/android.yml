@@ -25,3 +25,7 @@ jobs:
       run: chmod +x android/gradlew
     - name: Build with Gradle
       run: cd android && ./gradlew buildDebug
+    - uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: android/*.apk
