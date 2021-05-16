@@ -60,6 +60,7 @@ const parseOrganization = (json) => {
         address: json.info.address,
         services: parseServices(json.services),
         admins: parseAdmins(json.admins),
+        timetable: json.info.timetable,
         data: json.info.data
     }
     return organization
