@@ -27,6 +27,7 @@ class MessagingComponent @Autowired constructor(
         while (true) {
             try {
                 val messages = messaging.getMessages()
+                messaging.removeMessages(messages.map { it.first})
                 val resolvedMessages = messages.map {
                         val email = tokenStorageService.tokenByEmail(it.second.target)
                         email to it
