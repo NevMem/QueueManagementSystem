@@ -1,14 +1,18 @@
-name: Android CI
+name: Android Build
 
 on:
   push:
     branches: [ main ]
     paths:
       - android/**
+      - protos/**
+      - shared/**
   pull_request:
     branches: [ main ]
     paths:
       - android/**
+      - protos/**
+      - shared/**
 
 jobs:
   build:
