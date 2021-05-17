@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/indent"
+    android:paddingBottom="@dimen/indent"
+    android:paddingEnd="@dimen/indent_double"
+    android:paddingStart="@dimen/indent_double"
+    android:layout_marginEnd="@dimen/indent"
+    android:orientation="horizontal"
+    android:background="@drawable/time_interval_background">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fromTextView"
+        android:fontFamily="@font/medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:fontFamily="@font/medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dash" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/toTextView"
+        android:fontFamily="@font/medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

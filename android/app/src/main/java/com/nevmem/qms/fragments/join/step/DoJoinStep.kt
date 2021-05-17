@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import com.nevmem.qms.OrganizitionProto
 import com.nevmem.qms.R
+import com.nevmem.qms.dialogs.FragmentManagerProvider
 import com.nevmem.qms.features.FeatureManager
 import com.nevmem.qms.features.isFeatureEnabled
 import com.nevmem.qms.feedback.FeedbackManager
@@ -22,6 +24,7 @@ import com.nevmem.qms.fragments.join.step.services.ServiceItem
 import com.nevmem.qms.fragments.join.step.services.ServiceItemFactory
 import com.nevmem.qms.inflate
 import com.nevmem.qms.knownfeatures.KnownFeatures
+import com.nevmem.qms.organizations.OrganizationsRepo
 import com.nevmem.qms.rating.RatingsManager
 import com.nevmem.qms.recycler.BaseRecyclerAdapter
 import com.nevmem.qms.status.FetchStatus
@@ -39,6 +42,7 @@ class DoJoinStep : JoinStep {
             private val featureManager: FeatureManager by inject()
             private val ratingsManager: RatingsManager by inject()
             private val feedbackManager: FeedbackManager by inject()
+            private val organizationsRepo: OrganizationsRepo by inject()
 
             override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                 super.onViewCreated(view, savedInstanceState)
@@ -94,6 +98,13 @@ class DoJoinStep : JoinStep {
                 } else {
                     feedbackRecycler.isVisible = false
                 }
+
+                timetableView.provideDependencies(
+                    object : FragmentManagerProvider {
+                        override fun provideFragmentManager(): FragmentManager = parentFragmentManager
+                    },
+                    organizationsRepo,
+                    org.info.id)
 
                 leaveFeedbackButton.setOnClickListener {
                     parentFragmentManager.let { fragmentManager ->
