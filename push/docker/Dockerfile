@@ -15,8 +15,11 @@ RUN apt update && \
  curl \
  less \
  openjdk-8-jdk
+ nginx
 
 
 RUN python3 -m pip install supervisor
 
 CMD [ "/bin/bash", "/etc/runner/run.sh" ]
+
+EXPOSE 80 443 8080

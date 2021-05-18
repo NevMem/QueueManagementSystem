@@ -9,6 +9,11 @@ while supervisorctl status | grep -q -v "RUNNING\|STOPPED\|STOPPING"; do
     sleep 5
 done
 
+if [[ -f "/run/secrets/SSL_KEY" ]]; then
+    supervisorctl start nginx
+fi
+
+
 wait $SUPERVISORD_PID || :
 supervisorctl shutdown
 wait $SUPERVISORD_PID || :
