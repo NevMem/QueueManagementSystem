@@ -3,10 +3,12 @@ import itsdangerous
 import json
 import logging
 import typing as tp
-from google.protobuf.json_format import ParseDict
+
+from aiocache import caches, cached, Cache
+from google.protobuf.json_format import MessageToDict, ParseDict
 from itsdangerous.exc import BadTimeSignature, SignatureExpired
-from sqlalchemy.sql import select
 from sqlalchemy.orm import selectinload
+from sqlalchemy.sql import select
 
 from starlette.datastructures import MutableHeaders
 from starlette.middleware import Middleware
@@ -15,6 +17,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import HTTPConnection
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
+from proto import user_pb2
 from server.app import model
 from server.app.config import Config
 from server.app.utils import isiterable
@@ -22,23 +25,23 @@ from server.app.utils.db_utils import session_scope
 from server.app.utils.web import get_signature, get_check_attr, should_use_db_connection
 
 
-class BasicUser(tp.NamedTuple):
-    email: str
-
-
 class BasicAuthBackend(AuthenticationBackend):
     logger = logging.getLogger('app')
 
-    async def authenticate(self, request):
-        if not request.session.get('user'):
-            return AuthCredentials([]), UnauthenticatedUser()
-
-        if '_connection' not in request.scope:
-            return AuthCredentials(['authenticated']), BasicUser(email=request.session['user'])
-
+    @cached(
+        namespace='users',
+        cache=Cache.REDIS,
+        ttl=60,
+        key_builder=lambda f, self, request, email: f'user_{email}',
+        endpoint=Config.REDIS_HOST,
+        port=Config.REDIS_PORT,
+        password=Config.REDIS_PASSWORD,
+        timeout=0.5
+    )
+    async def _get_user(self, request, email: str) -> tp.Tuple[tp.List[str], tp.Optional[tp.Dict]]:
         query = (
             select(model.User)
-            .where(model.User.email == request.session['user'])
+            .where(model.User.email == email)
             .options(selectinload(model.User.permissions))
         )
 
@@ -46,7 +49,7 @@ class BasicAuthBackend(AuthenticationBackend):
         user: model.User = result.scalar()
 
         if user is None:
-            return AuthCredentials([]), UnauthenticatedUser()
+            return [], None
 
         credentials = {'authenticated', }
 
@@ -63,7 +66,21 @@ class BasicAuthBackend(AuthenticationBackend):
                     if str(permission.service_id) in target or permission.organization_id in target:
                         credentials |= permission.permissions_list
 
-        return AuthCredentials(list(credentials)), user
+        return list(credentials), MessageToDict(user.to_protobuf())
+
+    async def authenticate(self, request):
+        if not request.session.get('user'):
+            return AuthCredentials([]), UnauthenticatedUser()
+
+        if '_connection' not in request.scope:
+            return AuthCredentials(['authenticated']), user_pb2.User(email=request.session['user'])
+
+        credentials, user = await self._get_user(request, request.session['user'])
+
+        if user is None:
+            return AuthCredentials([]), UnauthenticatedUser()
+
+        return AuthCredentials(credentials), ParseDict(user, user_pb2.User())
 
 
 class Proto2JsonMiddleware(BaseHTTPMiddleware):
@@ -92,7 +109,7 @@ class SessionMiddleware:
         self,
         app: ASGIApp,
         secret_key: str,
-        session_header: str = "session",
+        session_header: str = 'session',
         max_age: int = 14 * 24 * 60 * 60,  # 14 days, in seconds
     ) -> None:
         self.app = app
@@ -101,26 +118,26 @@ class SessionMiddleware:
         self.max_age = max_age
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        if scope["type"] not in ("http", "websocket"):
+        if scope['type'] not in ('http', 'websocket'):
             await self.app(scope, receive, send)
             return
 
         connection = HTTPConnection(scope)
 
         if self.session_header in connection.headers:
-            data = connection.headers[self.session_header].encode("utf-8")
+            data = connection.headers[self.session_header].encode('utf-8')
             try:
                 data = self.signer.unsign(data, max_age=self.max_age)
-                scope["session"] = json.loads(base64.b64decode(data))
+                scope['session'] = json.loads(base64.b64decode(data))
             except (BadTimeSignature, SignatureExpired):
-                scope["session"] = {}
+                scope['session'] = {}
         else:
-            scope["session"] = {}
+            scope['session'] = {}
 
         async def send_wrapper(message: Message) -> None:
-            if message["type"] == "http.response.start":
-                if scope["session"]:
-                    _data = base64.b64encode(json.dumps(scope["session"]).encode("utf-8"))
+            if message['type'] == 'http.response.start':
+                if scope['session']:
+                    _data = base64.b64encode(json.dumps(scope['session']).encode('utf-8'))
                     _data = self.signer.sign(_data)
                     headers = MutableHeaders(scope=message)
                     headers.append('session', _data.decode('utf-8'))

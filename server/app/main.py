@@ -10,10 +10,11 @@ import qrcode
 import qrcode.image.svg
 import typing as tp
 
+from aiocache import caches
 from starlette.authentication import requires
 from starlette.exceptions import HTTPException
 
-from proto import user_pb2, permissions_pb2, organization_pb2, service_pb2, ticket_pb2, management_pb2, timetable_pb2
+from proto import user_pb2, permissions_pb2, organization_pb2, service_pb2, ticket_pb2, management_pb2
 from server.app import model
 from server.app.middleware import middleware
 from server.app.notifications import NotificationsWorker
@@ -30,96 +31,6 @@ patch_enums()
 event_manager = EventManager()
 
 
-def user_from_permission(permission: model.Permission) -> user_pb2.User:
-    return user_pb2.User(
-        name=permission.user.name,
-        surname=permission.user.surname,
-        email=permission.user.email,
-        id=str(permission.user.id),
-        permission_type=permission.permission_type,
-    )
-
-
-def permission_from_model(permission: model.Permission) -> permissions_pb2.Permission:
-    return permissions_pb2.Permission(
-        id=str(permission.id),
-        organization_id=str(permission.organization_id) if permission.organization_id else None,
-        service_id=str(permission.service_id) if permission.service_id else None,
-        permission_type=permission.permission_type,
-    )
-
-
-def user_from_model(user: model.User, with_permissions=True) -> user_pb2.User:
-    return user_pb2.User(
-        name=user.name,
-        surname=user.surname,
-        email=user.email,
-        id=str(user.id),
-        data=user.data,
-        permissions=[
-            permission_from_model(permission)
-            for permission in user.permissions
-        ] if with_permissions else []
-    )
-
-
-def service_from_model(service: model.Service) -> service_pb2.Service:
-    service_proto = service_pb2.Service(
-        info=service_pb2.ServiceInfo(
-            id=str(service.id),
-            name=service.name,
-            data=service.data,
-            default_waiting_time=service.default_waiting_time,
-            average_waiting_time=service.average_waiting_time,
-        ),
-        admins=[
-            user_from_permission(permission)
-            for permission in service.admins
-        ],
-    )
-
-    service_proto.info.timetable.MergeFromString(service.timetable or b'')
-    return service_proto
-
-
-def organization_from_model(organization: model.Organization, with_services: bool = True) -> organization_pb2.Organization:
-    organization_proto = organization_pb2.Organization(
-        info=organization_pb2.OrganizationInfo(
-            id=str(organization.id),
-            name=organization.name,
-            address=organization.address,
-            data=organization.data,
-        ),
-        services=[
-            service_from_model(service)
-            for service in organization.services
-        ] if with_services else [],
-        admins=[
-            user_from_permission(permission)
-            for permission in organization.admins
-        ],
-    )
-
-    organization_proto.info.timetable.MergeFromString(organization.timetable or b'')
-    return organization_proto
-
-
-def ticket_from_model(ticket: model.Ticket, with_user=False, with_permissions=False) -> ticket_pb2.Ticket:
-    return ticket_pb2.Ticket(
-        id=str(ticket.id),
-        user_id=str(ticket.user_id),
-        service_id=str(ticket.service_id),
-        organization_id=ticket.service.organization_id,
-        ticket_id=ticket.ticket_id,
-        enqueue_at=ticket.enqueue_at.timestamp(),
-        accepted_at=ticket.accepted_at.timestamp() if ticket.accepted_at else 0,
-        state=ticket_pb2.Ticket.State[ticket.state],
-        window=ticket.window,
-        resolution=ticket_pb2.Ticket.Resolution[ticket.resolution],
-        user=user_from_model(ticket.user, with_permissions=with_permissions) if with_user else user_pb2.User()
-    )
-
-
 @route('/check_auth', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
 @requires('authenticated')
 async def check_auth(request: Request):
@@ -134,7 +45,7 @@ async def ping(_: Request):
 @route('/client/get_user', methods=['POST'], request_type=empty_pb2.Empty)
 @requires('authenticated')
 async def get_user(request: Request):
-    return ProtobufResponse(user_from_model(request.user))
+    return ProtobufResponse(request.user)
 
 
 @route('/client/register', methods=['POST'], request_type=user_pb2.RegisterRequest)
@@ -172,6 +83,8 @@ async def update_user(request: Request) -> ProtobufResponse:
         })
     )
     await request.connection.execute(query)
+
+    await caches.get('default').delete(f'user_{request.parsed.email}')
     return ProtobufResponse(empty_pb2.Empty())
 
 
@@ -272,7 +185,7 @@ async def get_organizations_list(request: Request):
     response: tp.List[organization_pb2.Organization] = []
     for organization in organizations:
         response.append(
-            organization_from_model(organization)
+            organization.to_protobuf()
         )
 
     query_service = (
@@ -297,8 +210,8 @@ async def get_organizations_list(request: Request):
     services = result.scalars().all()
 
     for service in services:
-        organization = organization_from_model(service.organization, with_services=False)
-        organization.services.extend((service_from_model(service), ))
+        organization = service.organization.to_protobuf(with_services=False)
+        organization.services.extend((service.to_protobuf(), ))
         response.append(organization)
 
     return ProtobufResponse(organization_pb2.OrganizationList(organizations=response))
@@ -325,7 +238,7 @@ async def fetch_organization(request: Request):
     if organization is None:
         raise HTTPException(404)
 
-    return ProtobufResponse(organization_from_model(organization))
+    return ProtobufResponse(organization.to_protobuf())
 
 
 @route('/admin/create_service', methods=['POST'], request_type=service_pb2.ServiceInfo, permission_check_attr='organization_id')
@@ -496,7 +409,7 @@ async def queue_tickets(request: Request):
 
     response = []
     for ticket in tickets:
-        response.append(ticket_from_model(ticket))
+        response.append(ticket.to_protobuf())
 
     return ProtobufResponse(ticket_pb2.TicketList(tickets=response))
 
@@ -556,6 +469,8 @@ async def add_user(request: Request):
 
     permission_object.admins.append(new_permission)
     request.connection.add(new_permission)
+
+    await caches.get('default').delete(f'user_{user.email}')
     return ProtobufResponse(empty_pb2.Empty())
 
 
@@ -615,6 +530,8 @@ async def remove_user(request: Request):
     )
 
     await request.connection.execute(delete_query)
+
+    await caches.get('default').delete(f'user_{user.email}')
     return ProtobufResponse(empty_pb2.Empty())
 
 
@@ -666,6 +583,8 @@ async def update_user_privilege(request: Request):
     result = await request.connection.execute(permission_query)
     permission = result.scalars().first()
     permission.permission_type = permissions_pb2.PermissionType[request.parsed.permission_type]
+
+    await caches.get('default').delete(f'user_{user.email}')
     return ProtobufResponse(empty_pb2.Empty())
 
 
@@ -692,7 +611,7 @@ async def get_current_queue_info(request: Request):
 
     if ticket.state == 'PROCESSED':
         return ProtobufResponse(ticket_pb2.TicketInfo(
-            ticket=ticket_from_model(ticket),
+            ticket=ticket.to_protobuf(),
         ))
 
     query = (
@@ -708,8 +627,8 @@ async def get_current_queue_info(request: Request):
 
     people_count = result.scalar()
 
-    ticket_proto = ticket_from_model(ticket)
-    ticket_proto.user.CopyFrom(user_from_model(request.user, with_permissions=False))
+    ticket_proto = ticket.to_protobuf()
+    ticket_proto.user.CopyFrom(request.user.to_protobuf(with_permissions=False))
 
     return ProtobufResponse(ticket_pb2.TicketInfo(
         ticket=ticket_proto,
@@ -756,7 +675,7 @@ async def notify_ticket_state_changed(request: Request):
 
         if ticket.state != ticket_pb2.Ticket.State[request.parsed.ticket.state] or order != request.parsed.people_in_front_count:
             return ProtobufResponse(ticket_pb2.TicketInfo(
-                ticket=ticket_from_model(ticket, with_user=True),
+                ticket=ticket.to_protobuf(with_user=True),
                 people_in_front_count=order,
                 remaining_time=ticket.service.average_waiting_time * order,
             ))
@@ -810,7 +729,7 @@ async def service_next_user(request: Request):
     ticket.accepted_at = now()
     ticket.window = request.parsed.window
 
-    ticket_proto = ticket_from_model(ticket, with_user=True)
+    ticket_proto = ticket.to_protobuf(with_user=True)
     event_manager.publish('ticket_state_changed', ticket_proto, service_id=ticket.service_id)
 
     return ProtobufResponse(ticket_proto)
@@ -844,7 +763,7 @@ async def end_servicing(request: Request):
     if ticket.resolution == 'NONE':
         ticket.resolution = 'SERVICED'
 
-    ticket_proto = ticket_from_model(ticket)
+    ticket_proto = ticket.to_protobuf()
     event_manager.publish('ticket_state_changed', ticket_proto, service_id=ticket.service_id)
 
     return ProtobufResponse(ticket_proto)
@@ -872,7 +791,7 @@ async def get_current_ticket(request: Request):
     if ticket is None:
         raise HTTPException(404)
 
-    return ProtobufResponse(ticket_from_model(ticket, with_user=True))
+    return ProtobufResponse(ticket.to_protobuf(with_user=True))
 
 
 @route('/client/left_queue', methods=['POST'], request_type=empty_pb2.Empty)
@@ -901,7 +820,7 @@ async def left_queue(request: Request):
     ticket.resolution = 'GONE'
     ticket.finished_at = now()
 
-    ticket_proto = ticket_from_model(ticket)
+    ticket_proto = ticket.to_protobuf()
     event_manager.publish('ticket_state_changed', ticket_proto, service_id=ticket.service_id)
 
     return ProtobufResponse(ticket_proto)
@@ -926,7 +845,7 @@ async def service_tickets_history(request: Request):
     tickets = result.scalars().all()
 
     return ProtobufResponse(ticket_pb2.TicketList(
-        tickets=[ticket_from_model(ticket, with_user=True) for ticket in tickets]
+        tickets=[ticket.to_protobuf(with_user=True) for ticket in tickets]
     ))
 
 
@@ -949,7 +868,7 @@ async def user_tickets_history(request: Request):
     tickets = result.scalars().all()
 
     return ProtobufResponse(ticket_pb2.TicketList(
-        tickets=[ticket_from_model(ticket, with_user=True) for ticket in tickets]
+        tickets=[ticket.to_protobuf(with_user=True) for ticket in tickets]
     ))
 
 

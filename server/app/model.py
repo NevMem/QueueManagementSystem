@@ -7,6 +7,9 @@ from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
+
+from proto import user_pb2, permissions_pb2, organization_pb2, service_pb2, ticket_pb2
+
 from server.app.permissions import PERMISSIONS_MAP, UserPermissions
 from server.app.utils import fixed_uuid
 from server.app.utils.db_utils import BaseModel, UUID
@@ -39,6 +42,24 @@ class Service(BaseModel):
     timetable = sqlalchemy.Column(types.LargeBinary)
     data = sqlalchemy.Column(postgresql.JSONB, default={})
 
+    def to_protobuf(self) -> service_pb2.Service:
+        service_proto = service_pb2.Service(
+            info=service_pb2.ServiceInfo(
+                id=str(self.id),
+                name=self.name,
+                data=self.data,
+                default_waiting_time=self.default_waiting_time,
+                average_waiting_time=self.average_waiting_time,
+            ),
+            admins=[
+                permission.user.to_protobuf(with_permissions=False, permission_type=permission.permission_type)
+                for permission in self.admins
+            ],
+        )
+
+        service_proto.info.timetable.MergeFromString(self.timetable or b'')
+        return service_proto
+
 
 class Organization(BaseModel):
     __tablename__ = 'Organizations'
@@ -52,6 +73,27 @@ class Organization(BaseModel):
     address = sqlalchemy.Column(types.Text)
     timetable = sqlalchemy.Column(types.LargeBinary)
     data = sqlalchemy.Column(types.JSON, default={})
+
+    def to_protobuf(self, with_services: bool = True) -> organization_pb2.Organization:
+        organization_proto = organization_pb2.Organization(
+            info=organization_pb2.OrganizationInfo(
+                id=str(self.id),
+                name=self.name,
+                address=self.address,
+                data=self.data,
+            ),
+            services=[
+                service.to_protobuf()
+                for service in self.services
+            ] if with_services else [],
+            admins=[
+                permission.user.to_protobuf(with_permissions=False, permission_type=permission.permission_type)
+                for permission in self.admins
+            ],
+        )
+
+        organization_proto.info.timetable.MergeFromString(self.timetable or b'')
+        return organization_proto
 
 
 class Permission(BaseModel):
@@ -74,6 +116,14 @@ class Permission(BaseModel):
     @property
     def permissions_list(self):
         return PERMISSIONS_MAP[self.permission_type].permissions
+
+    def to_protobuf(self) -> permissions_pb2.Permission:
+        return permissions_pb2.Permission(
+            id=str(self.id),
+            organization_id=str(self.organization_id) if self.organization_id else None,
+            service_id=str(self.service_id) if self.service_id else None,
+            permission_type=self.permission_type,
+        )
 
 
 class Ticket(BaseModel):
@@ -98,6 +148,21 @@ class Ticket(BaseModel):
     manager = relationship('User', foreign_keys=[servicing_by])
     pushed = sqlalchemy.Column(types.BOOLEAN, server_default='f')
 
+    def to_protobuf(self, with_user=False, with_permissions=False) -> ticket_pb2.Ticket:
+        return ticket_pb2.Ticket(
+            id=str(self.id),
+            user_id=str(self.user_id),
+            service_id=str(self.service_id),
+            organization_id=self.service.organization_id,
+            ticket_id=self.ticket_id,
+            enqueue_at=self.enqueue_at.timestamp(),
+            accepted_at=self.accepted_at.timestamp() if self.accepted_at else 0,
+            state=ticket_pb2.Ticket.State[self.state],
+            window=self.window,
+            resolution=ticket_pb2.Ticket.Resolution[self.resolution],
+            user=self.user.to_protobuf(with_permissions=with_permissions) if with_user else user_pb2.User()
+        )
+
 
 class User(BaseModel):
     __tablename__ = 'Users'
@@ -115,3 +180,17 @@ class User(BaseModel):
     tickets = relationship(Ticket, backref='user', foreign_keys=[Ticket.user_id])
 
     data = sqlalchemy.Column(types.JSON, default={})
+
+    def to_protobuf(self, with_permissions=True, permission_type='') -> user_pb2.User:
+        return user_pb2.User(
+            name=self.name,
+            surname=self.surname,
+            email=self.email,
+            id=str(self.id),
+            data=self.data,
+            permissions=[
+                permission.to_protobuf()
+                for permission in self.permissions
+            ] if with_permissions else [],
+            permission_type=permission_type,
+        )
