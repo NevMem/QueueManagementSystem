@@ -4,8 +4,8 @@ import json
 import logging
 import typing as tp
 
-from aiocache import caches, cached
-from google.protobuf.json_format import ParseDict
+from aiocache import caches, cached, Cache
+from google.protobuf.json_format import MessageToDict, ParseDict
 from itsdangerous.exc import BadTimeSignature, SignatureExpired
 from sqlalchemy.orm import selectinload
 from sqlalchemy.sql import select
@@ -17,6 +17,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import HTTPConnection
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
+from proto import user_pb2
 from server.app import model
 from server.app.config import Config
 from server.app.utils import isiterable
@@ -24,32 +25,19 @@ from server.app.utils.db_utils import session_scope
 from server.app.utils.web import get_signature, get_check_attr, should_use_db_connection
 
 
-caches.set_config({
-    'default': {
-        'cache': 'aiocache.RedisCache',
-        'endpoint': Config.REDIS_HOST,
-        'port': Config.REDIS_PORT,
-        'password': Config.REDIS_PASSWORD,
-        'timeout': 0.5,
-        'serializer': {
-            'class': 'aiocache.serializers.JsonSerializer'
-        },
-    }
-})
-
-cache = caches.create('default')
-
-
-class BasicUser(tp.NamedTuple):
-    email: str
-    id: tp.Optional[str] = None
-    name: tp.Optional[str] = None
-
-
 class BasicAuthBackend(AuthenticationBackend):
     logger = logging.getLogger('app')
 
-    @cached(namespace='users', ttl=60, key_builder=lambda f, self, request, email: f'user_{email}')
+    @cached(
+        namespace='users',
+        cache=Cache.REDIS,
+        ttl=60,
+        key_builder=lambda f, self, request, email: f'user_{email}',
+        endpoint=Config.REDIS_HOST,
+        port=Config.REDIS_PORT,
+        password=Config.REDIS_PASSWORD,
+        timeout=0.5
+    )
     async def _get_user(self, request, email: str) -> tp.Tuple[tp.List[str], tp.Optional[tp.Dict]]:
         query = (
             select(model.User)
@@ -78,21 +66,21 @@ class BasicAuthBackend(AuthenticationBackend):
                     if str(permission.service_id) in target or permission.organization_id in target:
                         credentials |= permission.permissions_list
 
-        return list(credentials), {'email': user.email, 'id': user.id, 'name': user.name}
+        return list(credentials), MessageToDict(user.to_protobuf())
 
     async def authenticate(self, request):
         if not request.session.get('user'):
             return AuthCredentials([]), UnauthenticatedUser()
 
         if '_connection' not in request.scope:
-            return AuthCredentials(['authenticated']), BasicUser(email=request.session['user'])
+            return AuthCredentials(['authenticated']), user_pb2.User(email=request.session['user'])
 
         credentials, user = await self._get_user(request, request.session['user'])
 
         if user is None:
             return AuthCredentials([]), UnauthenticatedUser()
 
-        return AuthCredentials(credentials), BasicUser(**user)
+        return AuthCredentials(credentials), ParseDict(user, user_pb2.User())
 
 
 class Proto2JsonMiddleware(BaseHTTPMiddleware):
