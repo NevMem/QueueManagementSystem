@@ -3,6 +3,7 @@ import itsdangerous
 import json
 import logging
 import typing as tp
+import contextlib
 
 from aiocache import caches, cached, Cache
 from google.protobuf.json_format import MessageToDict, ParseDict
@@ -24,8 +25,10 @@ from server.app.utils import isiterable
 from server.app.utils.db_utils import session_scope
 from server.app.utils.web import get_signature, get_check_attr, should_use_db_connection
 
-cache = Cache.from_url(f'redis://{Config.REDIS_USER}:{Config.REDIS_PASSWORD}@{Config.REDIS_HOST}:{Config.REDIS_PORT}/0')
-caches._caches['redis'] = cache
+
+with contextlib.suppress(Exception):
+    cache = Cache.from_url(f'redis://{Config.REDIS_USER}:{Config.REDIS_PASSWORD}@{Config.REDIS_HOST}:{Config.REDIS_PORT}/0')
+    caches._caches['redis'] = cache
 
 
 class BasicAuthBackend(AuthenticationBackend):
