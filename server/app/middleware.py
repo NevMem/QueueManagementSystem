@@ -24,18 +24,18 @@ from server.app.utils import isiterable
 from server.app.utils.db_utils import session_scope
 from server.app.utils.web import get_signature, get_check_attr, should_use_db_connection
 
+cache = Cache.from_url(f'redis://{Config.REDIS_USER}:{Config.REDIS_PASSWORD}@{Config.REDIS_HOST}:{Config.REDIS_PORT}/0')
+caches._caches['redis'] = cache
+
 
 class BasicAuthBackend(AuthenticationBackend):
     logger = logging.getLogger('app')
 
     @cached(
         namespace='users',
-        cache=Cache.REDIS,
+        alias='redis',
         ttl=60,
         key_builder=lambda f, self, request, email: f'user_{email}',
-        endpoint=Config.REDIS_HOST,
-        port=Config.REDIS_PORT,
-        password=Config.REDIS_PASSWORD,
         timeout=0.5
     )
     async def _get_user(self, request, email: str) -> tp.Tuple[tp.List[str], tp.Optional[tp.Dict]]:

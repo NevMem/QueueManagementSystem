@@ -3,6 +3,7 @@ from google.protobuf import empty_pb2
 from sqlalchemy.sql import select, delete, update, exists
 from sqlalchemy.orm import selectinload
 from sqlalchemy import func
+import contextlib
 
 import io
 import json
@@ -84,7 +85,7 @@ async def update_user(request: Request) -> ProtobufResponse:
     )
     await request.connection.execute(query)
 
-    await caches.get('default').delete(f'user_{request.parsed.email}')
+    await caches.get('redis').delete(f'user_{request.parsed.email}')
     return ProtobufResponse(empty_pb2.Empty())
 
 
@@ -470,7 +471,9 @@ async def add_user(request: Request):
     permission_object.admins.append(new_permission)
     request.connection.add(new_permission)
 
-    await caches.get('default').delete(f'user_{user.email}')
+    with contextlib.suppress(Exception):
+        await caches.get('redis').delete(f'user_{user.email}')
+
     return ProtobufResponse(empty_pb2.Empty())
 
 
@@ -531,7 +534,9 @@ async def remove_user(request: Request):
 
     await request.connection.execute(delete_query)
 
-    await caches.get('default').delete(f'user_{user.email}')
+    with contextlib.suppress(Exception):
+        await caches.get('redis').delete(f'user_{user.email}')
+
     return ProtobufResponse(empty_pb2.Empty())
 
 
@@ -584,7 +589,9 @@ async def update_user_privilege(request: Request):
     permission = result.scalars().first()
     permission.permission_type = permissions_pb2.PermissionType[request.parsed.permission_type]
 
-    await caches.get('default').delete(f'user_{user.email}')
+    with contextlib.suppress(Exception):
+        await caches.get('redis').delete(f'user_{user.email}', timeout=0.5)
+
     return ProtobufResponse(empty_pb2.Empty())
 
 
