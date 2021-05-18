@@ -30,19 +30,7 @@ jobs:
       run: chmod +x android/gradlew
     - name: Build with Gradle
       run: cd android && ./gradlew buildDebug assembleDebug
-    - name: Debug output 1
-      run: ls android
-    - name: Debug output 2
-      run: ls android/app
-    - name: Debug output 3
-      run: ls android/app/build
-    - name: Debug output 4
-      run: ls android/app/build/outputs
-    - name: Debug output 5
-      run: ls android/app/build/outputs/apk
-    - name: Debug output 6
-      run: ls android/app/build/outputs/apk/debug
     - uses: actions/upload-artifact@v2
       with:
         name: apks
-        path: ./android/**/*.apk
+        path: android/app/build/outputs/apk/**/*.apk
