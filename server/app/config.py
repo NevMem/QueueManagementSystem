@@ -7,3 +7,7 @@ class Config:
     DB_URL = os.environ['DB_URL']
     DEBUG = bool(os.environ.get('DEBUG', False))
     SQS_URL = os.environ.get('SQS_URL')
+
+    REDIS_HOST = os.environ.get('REDIS_HOST')
+    REDIS_PORT = os.environ.get('REDIS_PORT', 26379)
+    REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD')

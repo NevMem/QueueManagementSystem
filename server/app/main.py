@@ -10,6 +10,7 @@ import qrcode
 import qrcode.image.svg
 import typing as tp
 
+from aiocache import caches
 from starlette.authentication import requires
 from starlette.exceptions import HTTPException
 
@@ -172,6 +173,8 @@ async def update_user(request: Request) -> ProtobufResponse:
         })
     )
     await request.connection.execute(query)
+
+    caches.get('default').delete(f'user_{request.parsed.email}')
     return ProtobufResponse(empty_pb2.Empty())
 
 
@@ -556,6 +559,8 @@ async def add_user(request: Request):
 
     permission_object.admins.append(new_permission)
     request.connection.add(new_permission)
+
+    caches.get('default').delete(f'user_{user.email}')
     return ProtobufResponse(empty_pb2.Empty())
 
 
@@ -615,6 +620,8 @@ async def remove_user(request: Request):
     )
 
     await request.connection.execute(delete_query)
+
+    caches.get('default').delete(f'user_{user.email}')
     return ProtobufResponse(empty_pb2.Empty())
 
 
@@ -666,6 +673,8 @@ async def update_user_privilege(request: Request):
     result = await request.connection.execute(permission_query)
     permission = result.scalars().first()
     permission.permission_type = permissions_pb2.PermissionType[request.parsed.permission_type]
+
+    caches.get('default').delete(f'user_{user.email}')
     return ProtobufResponse(empty_pb2.Empty())
 
 
