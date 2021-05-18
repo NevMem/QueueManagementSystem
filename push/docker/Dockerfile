@@ -14,7 +14,7 @@ RUN apt update && \
  syslog-ng \
  curl \
  less \
- openjdk-8-jdk
+ openjdk-8-jdk \
  nginx
 
 
