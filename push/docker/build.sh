@@ -4,7 +4,7 @@ mkdir -p tmp || exit 1
 rm -rf tmp/* || exit 1
 mkdir -p tmp/usr/lib/qms/push/ || exit 1
 cd ../app || exit 1
-./gradelew build || exit 1
+./gradlew build || exit 1
 cp -r push/build/libs/push* ../docker/tmp/usr/lib/qms/push.jar || exit 1
 cd ../docker || exit 1
 
