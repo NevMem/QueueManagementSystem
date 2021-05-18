@@ -85,7 +85,9 @@ async def update_user(request: Request) -> ProtobufResponse:
     )
     await request.connection.execute(query)
 
-    await caches.get('redis').delete(f'user_{request.parsed.email}')
+    with contextlib.suppress(Exception):
+        await caches.get('redis').delete(f'user_{request.parsed.email}', timeout=0.5)
+
     return ProtobufResponse(empty_pb2.Empty())
 
 
@@ -472,7 +474,7 @@ async def add_user(request: Request):
     request.connection.add(new_permission)
 
     with contextlib.suppress(Exception):
-        await caches.get('redis').delete(f'user_{user.email}')
+        await caches.get('redis').delete(f'user_{user.email}', timeout=0.5)
 
     return ProtobufResponse(empty_pb2.Empty())
 
@@ -535,7 +537,7 @@ async def remove_user(request: Request):
     await request.connection.execute(delete_query)
 
     with contextlib.suppress(Exception):
-        await caches.get('redis').delete(f'user_{user.email}')
+        await caches.get('redis').delete(f'user_{user.email}', timeout=0.5)
 
     return ProtobufResponse(empty_pb2.Empty())
 
