@@ -101,6 +101,7 @@ dependencies {
     implementation project(':status')
     implementation project(':suggests')
     implementation project(':tags')
+    implementation project(':timetable')
     implementation project(':toast')
 
     testImplementation 'junit:junit:4.12'

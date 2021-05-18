@@ -3,7 +3,7 @@ syntax = "proto3";
 package qms;
 
 option java_package = "com.nevmem.qms";
-option java_outer_classname = "Timetable";
+option java_outer_classname = "TimetableProto";
 
 
 message WorkInterval {

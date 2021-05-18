@@ -4,6 +4,8 @@ import { useState, Component } from 'react'
 import AddButton from '../../components/buttons/add_button/AddButton'
 import AddServiceDialog from '../dialogs/AddServiceDialog'
 import authAdapter from '../../adapters/AuthAdapter'
+import Button from '@material-ui/core/Button'
+import ChangeTimetableDialog from '../dialogs/ChangeTimetableDialog'
 import Edit from '@material-ui/icons/Edit'
 import EditOrganizationDialog from '../dialogs/EditOrganizationDialog'
 import feedbackAdapter from '../../adapters/FeedbackAdapter'
@@ -63,6 +65,7 @@ export default function OrganizationCard({organizationData, ...props}) {
 
     const [open, setOpen] = useState(false)
     const [editDialogOpen, setOpenEditDialog] = useState(false)
+    const [timetableDialogOpen, setTimetableDialogOpened] = useState(false)
 
     const handleOpen = () => {
         setOpen(true)
@@ -80,9 +83,19 @@ export default function OrganizationCard({organizationData, ...props}) {
         setOpenEditDialog(false)
     }
 
+    const handleTimetableClose = () => {
+        setTimetableDialogOpened(false)
+    }
+
+    const openTimetable = () => {
+        setTimetableDialogOpened(true)
+    }
+
     const self = admins.find(admin => {
         return admin.email === authAdapter.user.login
     })
+
+    const hasTimetable = organizationData.timetable !== undefined && organizationData.timetable.works.length > 0
 
     return (
         <div className = 'organizationCard' {...props}>
@@ -98,6 +111,28 @@ export default function OrganizationCard({organizationData, ...props}) {
                         open={editDialogOpen}
                         onClose={handleStopEdit}
                         organization={organizationData} />
+                    { !hasTimetable &&
+                        <Grid container>
+                            <Button onClick={openTimetable} style={{color: '#a0a0a0', fontSize: '14px'}} variant='text'>
+                                {localizedString('setup_timetable')}
+                            </Button>
+                            <ChangeTimetableDialog
+                                organization={organizationData}
+                                open={timetableDialogOpen}
+                                onClose={handleTimetableClose} />
+                        </Grid>
+                    }
+                    { hasTimetable &&
+                        <Grid container>
+                            <Button onClick={openTimetable} style={{color: '#a0a0a0', fontSize: '14px'}} variant='text'>
+                                {localizedString('edit_timetable')}
+                            </Button>
+                            <ChangeTimetableDialog
+                                organization={organizationData}
+                                open={timetableDialogOpen}
+                                onClose={handleTimetableClose} />
+                        </Grid>
+                    }
                 </div>
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                     <Link to={'/table/' + organizationData.id}>

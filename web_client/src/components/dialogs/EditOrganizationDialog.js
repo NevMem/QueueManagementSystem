@@ -46,7 +46,12 @@ export default function EditOrganizationDialog({ organization, open, onClose, ..
         for (let i = 0; i !== images.length; ++i) {
             data['image_' + i] = images[i]
         }
-        orgAdapter.updateOrganization(organization.id, organizationName, organizationAddress, data)
+        orgAdapter.updateOrganization(
+            organization.id,
+            organizationName,
+            organizationAddress,
+            data,
+            organization.timetable)
             .then(() => {
                 onClose()
             })

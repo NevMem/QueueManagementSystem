@@ -55,8 +55,8 @@ class OrgAdapter {
             })
     }
 
-    updateOrganization(id, name, address, data) {
-        return updateOrganization(authAdapter.token, id, name, address, data)
+    updateOrganization(id, name, address, data, timetable) {
+        return updateOrganization(authAdapter.token, id, name, address, data, timetable)
             .then(data => {
                 this.loadOrganizations()
             })

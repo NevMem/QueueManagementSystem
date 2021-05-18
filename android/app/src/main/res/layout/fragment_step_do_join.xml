@@ -116,6 +116,11 @@
                     android:gravity="center"
                     tools:text="Some long long long long long description" />
 
+                <com.nevmem.qms.timetable.TimetableInfoView
+                    android:id="@+id/timetableView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <LinearLayout
                     android:id="@+id/socialIcons"
                     android:layout_width="wrap_content"

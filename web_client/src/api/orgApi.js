@@ -29,10 +29,10 @@ export const createOrganization = (token, name, address, data) => {
         { headers: { session: token } }))
 }
 
-export const updateOrganization = (token, id, name, address, data) => {
+export const updateOrganization = (token, id, name, address, data, timetable) => {
     return authorizedRequestWrapper(axios.post(
         paths.updateOrganization,
-        { id: id, name: name, address: address, data: data },
+        { id: id, name: name, address: address, timetable: timetable, data: data },
         { headers: { session: token } }
     ))
 }
