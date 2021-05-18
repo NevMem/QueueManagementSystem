@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: "Install java"
-        run: apt update && apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages  openjdk-8-jdk
+        run: sudo apt update && sudo apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages  openjdk-8-jdk
       - name: "Login to registry"
         uses: docker/login-action@v1
         with:
