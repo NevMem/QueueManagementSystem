@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/indent_double">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:textColor="@color/errorColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/closed" />
+
+     <include layout="@layout/layout_show_timetable" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
