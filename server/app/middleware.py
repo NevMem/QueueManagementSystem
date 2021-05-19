@@ -3,6 +3,7 @@ import itsdangerous
 import json
 import logging
 import typing as tp
+import aioredis
 
 from aiocache import caches, cached
 from server.app.aiocache.aiocache.backends.redis import RedisCache
@@ -27,7 +28,8 @@ from server.app.utils.db_utils import session_scope
 from server.app.utils.web import get_signature, get_check_attr, should_use_db_connection
 
 
-cache = RedisCache(sentinels=[f'redis://{Config.REDIS_HOST}:{Config.REDIS_PORT}'], password=Config.REDIS_PASSWORD)
+sentinel = aioredis.create_sentinel(sentinels=[f'redis://{Config.REDIS_HOST}:{Config.REDIS_PORT}'], password=Config.REDIS_PASSWORD)
+cache = RedisCache(sentinel=sentinel, master=Config.REDIS_USER)
 caches._caches['redis'] = cache
 
 
