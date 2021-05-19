@@ -1,10 +1,14 @@
+import aioredis
 import base64
+import contextlib
 import itsdangerous
 import json
 import logging
 import typing as tp
 
-from aiocache import caches, cached, Cache
+from aiocache import caches, cached
+from server.app.aiocache.aiocache.backends.redis import RedisCache
+
 from google.protobuf.json_format import MessageToDict, ParseDict
 from itsdangerous.exc import BadTimeSignature, SignatureExpired
 from sqlalchemy.orm import selectinload
@@ -25,49 +29,49 @@ from server.app.utils.db_utils import session_scope
 from server.app.utils.web import get_signature, get_check_attr, should_use_db_connection
 
 
-cache = Cache.from_url(f'redis://{Config.REDIS_USER}:{Config.REDIS_PASSWORD}@{Config.REDIS_HOST}:{Config.REDIS_PORT}/0')
-caches._caches['redis'] = cache
+async def _get_user(request, email: str) -> tp.Tuple[tp.List[str], tp.Optional[tp.Dict]]:
+    query = (
+        select(model.User)
+        .where(model.User.email == email)
+        .options(selectinload(model.User.permissions))
+    )
+
+    result = await request.scope['_connection'].execute(query)
+    user: model.User = result.scalar()
+
+    if user is None:
+        return [], None
+
+    credentials = {'authenticated', }
+
+    target = getattr(request.scope['_parsed'], get_check_attr(request.url.path), None)
+
+    if target:
+        if isinstance(target, str):
+            for permission in user.permissions:
+                if str(permission.service_id) == target or permission.organization_id == target:
+                    credentials |= permission.permissions_list
+
+        elif isiterable(target):
+            for permission in user.permissions:
+                if str(permission.service_id) in target or permission.organization_id in target:
+                    credentials |= permission.permissions_list
+
+    return list(credentials), MessageToDict(user.to_protobuf())
+
+
+async def redis_prepare():
+    with contextlib.suppress(Exception):
+        sentinel = await aioredis.create_sentinel(sentinels=[f'redis://{Config.REDIS_HOST}:{Config.REDIS_PORT}'], password=Config.REDIS_PASSWORD)
+        cache = RedisCache(sentinel=sentinel, master=Config.REDIS_USER)
+        caches._caches['redis'] = cache
+
+        global _get_user
+        _get_user = cached(namespace='users', alias='redis', ttl=60, key_builder=lambda f, request, email: f'user_{email}', timeout=0.5)(_get_user)
 
 
 class BasicAuthBackend(AuthenticationBackend):
     logger = logging.getLogger('app')
-
-    @cached(
-        namespace='users',
-        alias='redis',
-        ttl=60,
-        key_builder=lambda f, self, request, email: f'user_{email}',
-        timeout=0.5
-    )
-    async def _get_user(self, request, email: str) -> tp.Tuple[tp.List[str], tp.Optional[tp.Dict]]:
-        query = (
-            select(model.User)
-            .where(model.User.email == email)
-            .options(selectinload(model.User.permissions))
-        )
-
-        result = await request.scope['_connection'].execute(query)
-        user: model.User = result.scalar()
-
-        if user is None:
-            return [], None
-
-        credentials = {'authenticated', }
-
-        target = getattr(request.scope['_parsed'], get_check_attr(request.url.path), None)
-
-        if target:
-            if isinstance(target, str):
-                for permission in user.permissions:
-                    if str(permission.service_id) == target or permission.organization_id == target:
-                        credentials |= permission.permissions_list
-
-            elif isiterable(target):
-                for permission in user.permissions:
-                    if str(permission.service_id) in target or permission.organization_id in target:
-                        credentials |= permission.permissions_list
-
-        return list(credentials), MessageToDict(user.to_protobuf())
 
     async def authenticate(self, request):
         if not request.session.get('user'):
@@ -76,7 +80,7 @@ class BasicAuthBackend(AuthenticationBackend):
         if '_connection' not in request.scope:
             return AuthCredentials(['authenticated']), user_pb2.User(email=request.session['user'])
 
-        credentials, user = await self._get_user(request, request.session['user'])
+        credentials, user = await _get_user(request, request.session['user'])
 
         if user is None:
             return AuthCredentials([]), UnauthenticatedUser()
