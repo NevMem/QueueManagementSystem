@@ -6,7 +6,7 @@ import json
 import logging
 import typing as tp
 
-from aiocache import caches, cached
+from aiocache import caches, cached, Cache
 from server.app.aiocache.aiocache.backends.redis import RedisCache
 
 from google.protobuf.json_format import MessageToDict, ParseDict
@@ -61,13 +61,19 @@ async def _get_user(request, email: str) -> tp.Tuple[tp.List[str], tp.Optional[t
 
 
 async def redis_prepare():
-    with contextlib.suppress(Exception):
-        sentinel = await aioredis.create_sentinel(sentinels=[f'redis://{Config.REDIS_HOST}:{Config.REDIS_PORT}'], password=Config.REDIS_PASSWORD)
-        cache = RedisCache(sentinel=sentinel, master=Config.REDIS_USER)
-        caches._caches['redis'] = cache
+    if Config.IN_MEMORY_CACHE:
+        cache = Cache()
+    else:
+        # noinspection PyBroadException
+        try:
+            sentinel = await aioredis.create_sentinel(sentinels=[f'redis://{Config.REDIS_HOST}:{Config.REDIS_PORT}'], password=Config.REDIS_PASSWORD)
+            cache = RedisCache(sentinel=sentinel, master=Config.REDIS_USER)
+        except:
+            cache = Cache()
 
-        global _get_user
-        _get_user = cached(namespace='users', alias='redis', ttl=60, key_builder=lambda f, request, email: f'user_{email}', timeout=0.5)(_get_user)
+    caches._caches['redis'] = cache
+    global _get_user
+    _get_user = cached(alias='redis', ttl=60, key_builder=lambda f, request, email: f'user_{email}', timeout=0.5)(_get_user)
 
 
 class BasicAuthBackend(AuthenticationBackend):

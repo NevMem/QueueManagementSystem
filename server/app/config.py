@@ -8,6 +8,8 @@ class Config:
     DEBUG = bool(os.environ.get('DEBUG', False))
     SQS_URL = os.environ.get('SQS_URL')
 
+    IN_MEMORY_CACHE = os.environ.get('IN_MEMORY_CACHE', False)
+
     REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
     REDIS_PORT = os.environ.get('REDIS_PORT', 26379)
     REDIS_USER = os.environ.get('REDIS_USER', 'lol')
