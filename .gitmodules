@@ -1,0 +1,3 @@
+[submodule "server/app/aiocache"]
+	path = server/app/aiocache
+	url = https://github.com/pufit/aiocache.git
