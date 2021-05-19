@@ -31,3 +31,4 @@ jobs:
         run: python3 -m pytest server/tests/*py
         env:
           DB_URL: postgresql+asyncpg:///postgres?host=postgres&port=5432&user=postgres&password=postgres
+          IN_MEMORY_CACHE: yes
