@@ -21,11 +21,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-      redis:
-        image: bitnami/redis:6.2
-        env:
-          REDIS_REPLICATION_MODE: master
-          REDIS_PASSWORD: password
     steps:
       - uses: actions/checkout@v2
         with:
@@ -36,7 +31,4 @@ jobs:
         run: python3 -m pytest server/tests/*py
         env:
           DB_URL: postgresql+asyncpg:///postgres?host=postgres&port=5432&user=postgres&password=postgres
-          REDIS_HOST: redis
-          REDIS_PORT: 6379
-          REDIS_PASSWORD: password
-          REDIS_USER: default
+          IN_MEMORY_CACHE: yes
