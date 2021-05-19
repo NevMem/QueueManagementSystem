@@ -643,7 +643,7 @@ async def get_current_queue_info(request: Request):
     people_count = result.scalar()
 
     ticket_proto = ticket.to_protobuf()
-    ticket_proto.user.CopyFrom(request.user.to_protobuf(with_permissions=False))
+    ticket_proto.user.CopyFrom(request.user)
 
     return ProtobufResponse(ticket_pb2.TicketInfo(
         ticket=ticket_proto,
