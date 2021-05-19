@@ -2,4 +2,5 @@
 <resources>
     <string name="show_timetable">Show timetable</string>
     <string name="dash">-</string>
+    <string name="closed">Closed</string>
 </resources>
