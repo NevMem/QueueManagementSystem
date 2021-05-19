@@ -4,7 +4,9 @@ import json
 import logging
 import typing as tp
 
-from server.app.aiocache.aiocache import caches, cached, Cache
+from aiocache import caches, cached
+from server.app.aiocache.aiocache.backends.redis import RedisCache
+
 from google.protobuf.json_format import MessageToDict, ParseDict
 from itsdangerous.exc import BadTimeSignature, SignatureExpired
 from sqlalchemy.orm import selectinload
@@ -25,7 +27,7 @@ from server.app.utils.db_utils import session_scope
 from server.app.utils.web import get_signature, get_check_attr, should_use_db_connection
 
 
-cache = Cache(Cache.REDIS, sentinels=[f'redis://{Config.REDIS_HOST}:{Config.REDIS_PORT}'], password=Config.REDIS_PASSWORD)
+cache = RedisCache(sentinels=[f'redis://{Config.REDIS_HOST}:{Config.REDIS_PORT}'], password=Config.REDIS_PASSWORD)
 caches._caches['redis'] = cache
 
 
