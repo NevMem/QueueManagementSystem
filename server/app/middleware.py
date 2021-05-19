@@ -29,7 +29,7 @@ from server.app.utils.db_utils import session_scope
 from server.app.utils.web import get_signature, get_check_attr, should_use_db_connection
 
 
-async def _get_user(request, email: str) -> tp.Tuple[tp.List[str], tp.Optional[tp.Dict]]:
+async def _get_user(request, email: str) -> tp.Optional[tp.Dict]:
     query = (
         select(model.User)
         .where(model.User.email == email)
@@ -40,24 +40,9 @@ async def _get_user(request, email: str) -> tp.Tuple[tp.List[str], tp.Optional[t
     user: model.User = result.scalar()
 
     if user is None:
-        return [], None
+        return None
 
-    credentials = {'authenticated', }
-
-    target = getattr(request.scope['_parsed'], get_check_attr(request.url.path), None)
-
-    if target:
-        if isinstance(target, str):
-            for permission in user.permissions:
-                if str(permission.service_id) == target or permission.organization_id == target:
-                    credentials |= permission.permissions_list
-
-        elif isiterable(target):
-            for permission in user.permissions:
-                if str(permission.service_id) in target or permission.organization_id in target:
-                    credentials |= permission.permissions_list
-
-    return list(credentials), MessageToDict(user.to_protobuf())
+    return MessageToDict(user.to_protobuf())
 
 
 async def redis_prepare():
@@ -86,12 +71,28 @@ class BasicAuthBackend(AuthenticationBackend):
         if '_connection' not in request.scope:
             return AuthCredentials(['authenticated']), user_pb2.User(email=request.session['user'])
 
-        credentials, user = await _get_user(request, request.session['user'])
+        user = await _get_user(request, request.session['user'])
 
         if user is None:
             return AuthCredentials([]), UnauthenticatedUser()
 
-        return AuthCredentials(credentials), ParseDict(user, user_pb2.User())
+        user = ParseDict(user, user_pb2.User())
+        credentials = {'authenticated', }
+
+        target = getattr(request.scope['_parsed'], get_check_attr(request.url.path), None)
+
+        if target:
+            if isinstance(target, str):
+                for permission in user.permissions:
+                    if str(permission.service_id) == target or permission.organization_id == target:
+                        credentials |= permission.permissions_list
+
+            elif isiterable(target):
+                for permission in user.permissions:
+                    if str(permission.service_id) in target or permission.organization_id in target:
+                        credentials |= permission.permissions_list
+
+        return AuthCredentials(list(credentials)), user
 
 
 class Proto2JsonMiddleware(BaseHTTPMiddleware):
