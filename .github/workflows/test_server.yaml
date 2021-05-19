@@ -22,7 +22,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
       redis:
-        image: bitnami/redis:6
+        image: bitnami/redis:6.2
         env:
           REDIS_REPLICATION_MODE: master
           REDIS_PASSWORD: password
