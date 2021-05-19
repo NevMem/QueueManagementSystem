@@ -67,7 +67,7 @@ async def redis_prepare():
         caches._caches['redis'] = cache
 
         global _get_user
-        _get_user = cached(namespace='users', alias='redis', ttl=60, key_builder=lambda f, self, request, email: f'user_{email}', timeout=0.5)(_get_user)
+        _get_user = cached(namespace='users', alias='redis', ttl=60, key_builder=lambda f, request, email: f'user_{email}', timeout=0.5)(_get_user)
 
 
 class BasicAuthBackend(AuthenticationBackend):
