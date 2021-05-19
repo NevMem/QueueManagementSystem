@@ -28,9 +28,10 @@ from server.app.utils.db_utils import session_scope
 from server.app.utils.web import get_signature, get_check_attr, should_use_db_connection
 
 
-sentinel = aioredis.create_sentinel(sentinels=[f'redis://{Config.REDIS_HOST}:{Config.REDIS_PORT}'], password=Config.REDIS_PASSWORD)
-cache = RedisCache(sentinel=sentinel, master=Config.REDIS_USER)
-caches._caches['redis'] = cache
+async def redis_prepare():
+    sentinel = await aioredis.create_sentinel(sentinels=[f'redis://{Config.REDIS_HOST}:{Config.REDIS_PORT}'], password=Config.REDIS_PASSWORD)
+    cache = RedisCache(sentinel=sentinel, master=Config.REDIS_USER)
+    caches._caches['redis'] = cache
 
 
 class BasicAuthBackend(AuthenticationBackend):

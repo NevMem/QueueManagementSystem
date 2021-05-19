@@ -17,7 +17,7 @@ from starlette.exceptions import HTTPException
 
 from proto import user_pb2, permissions_pb2, organization_pb2, service_pb2, ticket_pb2, management_pb2
 from server.app import model
-from server.app.middleware import middleware
+from server.app.middleware import middleware, redis_prepare
 from server.app.notifications import NotificationsWorker
 from server.app.statistic import StatisticWorker
 from server.app.utils import sha_hash, generate_next_ticket, now
@@ -881,4 +881,4 @@ async def user_tickets_history(request: Request):
     ))
 
 
-app = prepare_app(debug=True, middleware=middleware, on_startup=[prepare_db, StatisticWorker().start, NotificationsWorker().start])
+app = prepare_app(debug=True, middleware=middleware, on_startup=[prepare_db, StatisticWorker().start, NotificationsWorker().start, redis_prepare])
