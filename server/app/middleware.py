@@ -1,6 +1,5 @@
 import aioredis
 import base64
-import contextlib
 import itsdangerous
 import json
 import logging
@@ -24,6 +23,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 from proto import user_pb2
 from server.app import model
 from server.app.config import Config
+from server.app.permissions import PERMISSIONS_MAP
 from server.app.utils import isiterable
 from server.app.utils.db_utils import session_scope
 from server.app.utils.web import get_signature, get_check_attr, should_use_db_connection
@@ -85,12 +85,12 @@ class BasicAuthBackend(AuthenticationBackend):
             if isinstance(target, str):
                 for permission in user.permissions:
                     if str(permission.service_id) == target or permission.organization_id == target:
-                        credentials |= permission.permissions_list
+                        credentials |= PERMISSIONS_MAP[permission.permission_type].permissions
 
             elif isiterable(target):
                 for permission in user.permissions:
                     if str(permission.service_id) in target or permission.organization_id in target:
-                        credentials |= permission.permissions_list
+                        credentials |= PERMISSIONS_MAP[permission.permission_type].permissions
 
         return AuthCredentials(list(credentials)), user
 
