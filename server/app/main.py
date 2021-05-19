@@ -144,6 +144,9 @@ async def create_organization(request: Request):
     new_organization.admins.append(new_permission)
     request.connection.add(new_organization)
 
+    with contextlib.suppress(Exception):
+        await caches.get('redis').delete(f'user_{request.user.email}', timeout=0.5)
+
     return ProtobufResponse(empty_pb2.Empty())
 
 
@@ -277,6 +280,9 @@ async def create_service(request: Request):
 
     new_service.admins.append(new_permission)
     request.connection.add(new_service)
+
+    with contextlib.suppress(Exception):
+        await caches.get('redis').delete(f'user_{request.user.email}', timeout=0.5)
 
     return ProtobufResponse(empty_pb2.Empty())
 
