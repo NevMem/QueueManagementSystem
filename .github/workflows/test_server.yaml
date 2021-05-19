@@ -22,7 +22,10 @@ jobs:
           --health-timeout 5s
           --health-retries 5
       redis:
-        image: redis:6
+        image: bitnami/redis:6
+        env:
+          REDIS_REPLICATION_MODE: master
+          REDIS_PASSWORD: password
     steps:
       - uses: actions/checkout@v2
         with:
@@ -35,4 +38,4 @@ jobs:
           DB_URL: postgresql+asyncpg:///postgres?host=postgres&port=5432&user=postgres&password=postgres
           REDIS_HOST: redis
           REDIS_PORT: 6379
-
+          REDIS_PASSWORD: password
