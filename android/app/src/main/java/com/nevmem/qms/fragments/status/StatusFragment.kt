@@ -74,7 +74,8 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
             ::updateTicketId,
             ::updateEta,
             ::updateLeaveButton,
-            ::updateResolution
+            ::updateResolution,
+            ::updateWindowName
         ).forEach {
             it(queueStatus)
         }
@@ -134,6 +135,12 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
         } else {
             resolution.isVisible = false
         }
+    }
+
+    private fun updateWindowName(queueStatus: QueueStatus) {
+        val window = queueStatus.window
+        windowName.isVisible = window != null
+        windowName.text = window
     }
 
     private fun hideSuggestsUi() {

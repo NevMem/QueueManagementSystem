@@ -36,4 +36,7 @@ data class QueueStatus(
     val resolution: TicketProto.Ticket.Resolution by lazy {
         ticketInfo.ticket.resolution
     }
+
+    val window: String?
+        get() = ticketInfo.ticket.window
 }
