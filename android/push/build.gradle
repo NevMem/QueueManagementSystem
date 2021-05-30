@@ -32,10 +32,11 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    // implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutinesCore"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutinesCore"
     implementation platform("com.google.firebase:firebase-bom:$versions.firebaseBom")
     implementation 'com.google.firebase:firebase-messaging'
 
+    implementation project(':auth')
     implementation project(':common')
     implementation project(':common-data')
     implementation project(':logger')

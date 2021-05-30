@@ -71,9 +71,15 @@ internal class NetworkManagerImpl(
             .build()
     }
 
-    private val javaBackendRetrofit by lazy {
+    private val pushBackendRetrofit by lazy {
         createDefaultRetrofitBuilder()
-            .baseUrl("https://nevmem.com/qms/")
+            .baseUrl("https://push.qms.nikitonsky.tk")
+            .build()
+    }
+
+    private val feedbackBackendRetrofit by lazy {
+        createDefaultRetrofitBuilder()
+            .baseUrl("https://feedback.qms.nikitonsky.tk")
             .build()
     }
 
@@ -86,7 +92,8 @@ internal class NetworkManagerImpl(
     private val service by lazy { retrofit.create(BackendService::class.java) }
     private val protoService by lazy { protoRetrofit.create(ProtoBackendService::class.java) }
     private val featuresService by lazy { featuresRetrofit.create(FeaturesService::class.java) }
-    private val javaBackendService by lazy { javaBackendRetrofit.create(JavaBackendService::class.java) }
+    private val pushBackendService by lazy { pushBackendRetrofit.create(PushBackendService::class.java) }
+    private val feedbackBackendService by lazy { feedbackBackendRetrofit.create(FeedbackBackendService::class.java) }
 
     override suspend fun fetchOrganization(
         organizationInfo: OrganizitionProto.OrganizationInfo
@@ -159,8 +166,8 @@ internal class NetworkManagerImpl(
         wrapRequest(protoService.updateUser(token, user), continuation)
     }
 
-    override suspend fun registerNewPushToken(request: NewPushTokenRequest) = suspendCoroutine<Unit> { continuation ->
-        javaBackendService.registerNewPushToken(request).enqueue(object : Callback<Unit> {
+    override suspend fun registerNewPushToken(request: NewPushTokenRequest, token: String) = suspendCoroutine<Unit> { continuation ->
+        pushBackendService.registerNewPushToken(token, request).enqueue(object : Callback<Unit> {
             override fun onFailure(call: Call<Unit>, t: Throwable) {
                 continuation.resumeWith(Result.failure(t))
             }
@@ -176,16 +183,16 @@ internal class NetworkManagerImpl(
     }
 
     override suspend fun publishFeedback(request: PublishFeedbackRequest, token: String) = suspendCoroutine<Unit> { continuation ->
-        wrapRequest(javaBackendService.publishFeedback(token, request), continuation)
+        wrapRequest(feedbackBackendService.publishFeedback(token, request), continuation)
     }
 
     override suspend fun loadFeedback(entityId: String, token: String): List<Feedback> = suspendCoroutine { continuation ->
-        wrapRequest(javaBackendService.loadFeedback(token, LoadFeedbacksRequest(entityId)), continuation)
+        wrapRequest(feedbackBackendService.loadFeedback(token, LoadFeedbacksRequest(entityId)), continuation)
     }
 
     override suspend fun loadRating(entityId: String, token: String): Float? = suspendCoroutine { continuation ->
         suspend fun wrap() = suspendCoroutine<LoadRatingResponse> {
-            wrapRequest(javaBackendService.loadRating(token, LoadRatingRequest(entityId)), it)
+            wrapRequest(feedbackBackendService.loadRating(token, LoadRatingRequest(entityId)), it)
         }
         GlobalScope.launch {
             try {

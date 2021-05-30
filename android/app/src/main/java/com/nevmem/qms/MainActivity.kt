@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.dialogs.DialogsManager
 import com.nevmem.qms.dialogs.FragmentManagerProvider
 import com.nevmem.qms.logger.Logger
@@ -35,9 +36,10 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate, FragmentManagerPr
     private val permissionsManager: PermissionsManager by inject()
     private val logger: Logger by inject()
     private val networkManager: NetworkManager by inject()
+    private val authManager: AuthManager by inject()
 
     private val pushManager = createPushManager(
-        this, networkManager, this, logger)
+        this, networkManager, authManager, this, logger)
 
     private val processors = listOf(
         inject<PushProcessor>(named("toast-push-processor"))

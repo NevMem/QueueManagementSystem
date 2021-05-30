@@ -27,13 +27,15 @@ class MessagingComponent @Autowired constructor(
         while (true) {
             try {
                 val messages = messaging.getMessages()
-                messaging.removeMessages(messages.map { it.first})
+                messaging.removeMessages(messages.map { it.first })
+                messages.forEach { println("not resolved $it") }
                 val resolvedMessages = messages.map {
                         val email = tokenStorageService.tokenByEmail(it.second.target)
                         email to it
                     }
                     .filter { it.first != null }
                     .map { it.first!! to it.second }
+                resolvedMessages.forEach { println("resolved $it") }
                 resolvedMessages.forEach {
                     fbPushService.sendToOne(
                         it.first,

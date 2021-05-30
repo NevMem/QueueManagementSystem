@@ -10,7 +10,6 @@ suspend fun infiniteRetry(block: suspend () -> Unit) {
             block()
             return
         } catch (exception: Exception) {
-            println(exception.message)
             delay(min(attempt * 1000L, 10000L))
             attempt += 1
         }
