@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import Button from '@material-ui/core/Button'
+import Delete from '@material-ui/icons/Delete'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import IconButton from '@material-ui/core/IconButton'
@@ -82,18 +83,43 @@ const TimetableView = ({ timetable, updateTimetable }) => {
         return timetable.works.filter(elem => elem.weekday === day)
     }
 
-    const TimeIntervalView = ({ interval }) => {
+    const TimeIntervalView = ({ interval, deleteInterval }) => {
         const { from, to } = interval
 
+        const handleDelete = () => {
+            deleteInterval(interval)
+        }
+
         return (
-            <div style={{padding: '4px', paddingLeft: '8px', paddingRight: '8px', margin: '4px', display: 'inline-block', backgroundColor: '#ffffff20', borderRadius: '4px'}}>
-                {from.hour}:{from.minute}-{to.hour}:{to.minute}
+            <div style={{display: 'inline-block'}}>
+                <div style={{
+                    padding: '4px',
+                    paddingLeft: '8px',
+                    paddingRight: '8px',
+                    margin: '4px',
+                    display: 'inline-block',
+                    backgroundColor: '#ffffff20',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                }}>
+                    {from.hour}:{from.minute}-{to.hour}:{to.minute}
+                </div>
+                <Delete
+                    style={{position: 'relative', top: '-4px', right: '14px', cursor: 'pointer'}}
+                    onClick={handleDelete} />
             </div>
         )
     }
 
     const OneDayView = ({ day }) => {
         const times = timesForDay(day)
+
+        const handleDelete = (interval) => {
+            const newWorks = timetable.works.filter(elem => elem !== interval)
+            updateTimetable({
+                works: [ ...newWorks ]
+            })
+        }
 
         return (
             <div style={{marginTop: '8px', marginBottom: '8px', display: 'flex', flexDirection: 'column'}}>
@@ -104,7 +130,8 @@ const TimetableView = ({ timetable, updateTimetable }) => {
                         return (
                             <TimeIntervalView
                                 key={index}
-                                interval={{from: elem.from, to: elem.to}} />
+                                deleteInterval={handleDelete}
+                                interval={elem} />
                         )
                     })}
                     <NewTimeIntervalView day={day} timetable={timetable} updateTimetable={updateTimetable} />
