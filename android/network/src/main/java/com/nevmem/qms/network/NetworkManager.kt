@@ -28,7 +28,7 @@ interface NetworkManager {
     suspend fun getUser(token: String): ClientApiProto.User
     suspend fun updateUser(token: String, user: ClientApiProto.User)
 
-    suspend fun registerNewPushToken(request: NewPushTokenRequest)
+    suspend fun registerNewPushToken(request: NewPushTokenRequest, token: String)
 
     suspend fun publishFeedback(request: PublishFeedbackRequest, token: String)
     suspend fun loadFeedback(entityId: String, token: String): List<Feedback>

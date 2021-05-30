@@ -7,6 +7,8 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import com.google.firebase.messaging.FirebaseMessaging
+import com.nevmem.qms.auth.AuthManager
+import com.nevmem.qms.auth.data.AuthenticationStatus
 import com.nevmem.qms.common.NEW_PUSH_BROADCAST
 import com.nevmem.qms.common.NEW_PUSH_TOKEN_BROADCAST
 import com.nevmem.qms.common.utils.infiniteRetry
@@ -17,10 +19,12 @@ import com.nevmem.qms.network.NetworkManager
 import com.nevmem.qms.push.PushManager
 import com.nevmem.qms.push.PushProcessor
 import com.nevmem.qms.push.broadcast.PushBroadcastReceiver
+import kotlinx.coroutines.channels.consume
 
 internal class PushManagerImpl(
     lifecycleOwner: LifecycleOwner,
     private val networkManager: NetworkManager,
+    private val authManager: AuthManager,
     private val context: Context,
     private val logger: Logger
 ) : PushManager, LifecycleObserver {
@@ -71,8 +75,12 @@ internal class PushManagerImpl(
     private fun onNewToken(token: String) {
         logger.reportEvent("push-manager.new-token", mapOf("token" to token))
         runOnIO {
-            infiniteRetry {
-                networkManager.registerNewPushToken(NewPushTokenRequest(token))
+            for (status in authManager.authenticationStatus) {
+                if (status is AuthenticationStatus.LoggedIn) {
+                    infiniteRetry {
+                        networkManager.registerNewPushToken(NewPushTokenRequest(token), authManager.token)
+                    }
+                }
             }
         }
     }

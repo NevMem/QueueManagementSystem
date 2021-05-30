@@ -166,8 +166,8 @@ internal class NetworkManagerImpl(
         wrapRequest(protoService.updateUser(token, user), continuation)
     }
 
-    override suspend fun registerNewPushToken(request: NewPushTokenRequest) = suspendCoroutine<Unit> { continuation ->
-        pushBackendService.registerNewPushToken(request).enqueue(object : Callback<Unit> {
+    override suspend fun registerNewPushToken(request: NewPushTokenRequest, token: String) = suspendCoroutine<Unit> { continuation ->
+        pushBackendService.registerNewPushToken(token, request).enqueue(object : Callback<Unit> {
             override fun onFailure(call: Call<Unit>, t: Throwable) {
                 continuation.resumeWith(Result.failure(t))
             }
