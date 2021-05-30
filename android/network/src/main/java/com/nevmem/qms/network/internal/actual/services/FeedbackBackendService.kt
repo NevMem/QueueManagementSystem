@@ -1,16 +1,12 @@
 package com.nevmem.qms.network.internal.actual.services
 
-import com.nevmem.qms.data.NewPushTokenRequest
 import com.nevmem.qms.data.feedback.*
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 
-interface JavaBackendService {
-    @POST("api/push/register")
-    fun registerNewPushToken(@Body request: NewPushTokenRequest): Call<Unit>
-
+interface FeedbackBackendService {
     @POST("api/feedback/publish")
     fun publishFeedback(@Header("session") session: String, @Body request: PublishFeedbackRequest): Call<Unit>
 
