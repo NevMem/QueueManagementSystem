@@ -59,6 +59,7 @@ export default function LoginSection({ changeMode }) {
                     <TextField
                         style={{width: '100%', marginTop: '16px'}}
                         variant="outlined"
+                        type='password'
                         label={localizedString('password_label')}
                         {...bindPassword} />
                     <div style={{display: 'flex', flexDirection: 'row', marginTop: '48px', justifyContent: 'left'}}>
