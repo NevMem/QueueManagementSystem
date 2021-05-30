@@ -53,7 +53,8 @@ const dictionary = {
     'ok': 'Ok',
     'your_organizations': 'Your organizations',
     'zero_organizations_card_desc': 'Click on the button above to create!',
-    'zero_organizations_card_title': 'You don\'t have any organizations yet'
+    'zero_organizations_card_title': 'You don\'t have any organizations yet',
+    'window_name': 'Window name'
 }
 
 export default dictionary
