@@ -139,7 +139,7 @@ class StatusFragment : Fragment(R.layout.fragment_queue_status) {
 
     private fun updateWindowName(queueStatus: QueueStatus) {
         val window = queueStatus.window
-        windowName.isVisible = window != null
+        windowName.isVisible = window != null && window.isNotEmpty()
         windowName.text = window
     }
 

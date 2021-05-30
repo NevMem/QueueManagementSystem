@@ -6,6 +6,7 @@ class ToastPushProcessor(
     private val showToastManager: ShowToastManager
 ): PushProcessor {
     override fun onPushData(data: Map<String, String>) {
+        println("cur_deb $data")
         if (data.containsKey("message")) {
             val message = data.getValue("message")
             when (data["type"]) {
