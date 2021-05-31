@@ -296,7 +296,7 @@ async def update_service(request: Request) -> empty_pb2.Empty:
         .values({
             model.Service.name: request.parsed.name,
             model.Service.data: dict(**request.parsed.data),
-            model.Service.default_waiting_time: request.parsed.default_waiting_time,
+            model.Service.default_waiting_time: request.parsed.default_waiting_time or 300,
             model.Service.timetable: request.parsed.timetable.SerializeToString(),
         })
     )

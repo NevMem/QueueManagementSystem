@@ -40,7 +40,10 @@ class NotificationsWorker:
         services = result.scalars().unique().all()
 
         for service in services:
-            index = self.NOTIFY_THRESHOLD // service.average_waiting_time
+            if not service.average_waiting_time:
+                index = len(service.tickets)
+            else:
+                index = self.NOTIFY_THRESHOLD // service.average_waiting_time
 
             for i in range(0, min(index, len(service.tickets))):
                 ticket = service.tickets[i]

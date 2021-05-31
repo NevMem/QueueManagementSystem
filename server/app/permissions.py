@@ -39,7 +39,3 @@ PERMISSIONS_MAP = {
     'USER': UserPermissions,
     'MANAGER': ManagerPermissions,
 }
-
-
-if __name__ == '__main__':
-    print(OwnerPermissions.permissions)

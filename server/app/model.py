@@ -10,7 +10,6 @@ from sqlalchemy.sql import func
 
 from proto import user_pb2, permissions_pb2, organization_pb2, service_pb2, ticket_pb2
 
-from server.app.permissions import PERMISSIONS_MAP, UserPermissions
 from server.app.utils import fixed_uuid
 from server.app.utils.db_utils import BaseModel, UUID
 
@@ -106,16 +105,6 @@ class Permission(BaseModel):
     service_id = sqlalchemy.Column(UUID(), sqlalchemy.ForeignKey(Service.id, ondelete="CASCADE"))
 
     permission_type = sqlalchemy.Column(types.Text)
-
-    def __getattribute__(self, item: str):
-        if item.startswith('can_'):
-            item = item.split('can_')[1]
-            return getattr(PERMISSIONS_MAP.get(super().__getattribute__('permission_type'), UserPermissions), item)
-        return super().__getattribute__(item)
-
-    @property
-    def permissions_list(self):
-        return PERMISSIONS_MAP[self.permission_type].permissions
 
     def to_protobuf(self) -> permissions_pb2.Permission:
         return permissions_pb2.Permission(
