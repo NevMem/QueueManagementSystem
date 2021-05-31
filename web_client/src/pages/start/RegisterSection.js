@@ -67,6 +67,7 @@ export default function RegisterSection({ changeMode }) {
                     <TextField
                         style={{width: '100%', marginTop: '16px'}}
                         variant="outlined"
+                        type='password'
                         label={localizedString('password_label')}
                         {...bindPassword} />
                     <TextField

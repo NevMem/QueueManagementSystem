@@ -1,12 +1,79 @@
 import { Fragment, useState } from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import Button from '@material-ui/core/Button'
+import Delete from '@material-ui/icons/Delete'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import IconButton from '@material-ui/core/IconButton'
 import localizedString from '../../localization/localizedString'
 import orgAdapter from '../../adapters/OrgAdapter'
 import StyledDialog from './StyledDialog'
+
+const NewTimeIntervalView = ({ day, timetable, updateTimetable }) => {
+
+    const [fromTimepoint, setFromTimepoint] = useState({hour: undefined, minute: undefined})
+    const [toTimepoint, setToTimepoint] = useState({hour: undefined, minute: undefined})
+
+    const handleAdd = () => {
+        if (fromTimepoint.hour === undefined
+            || fromTimepoint.minute === undefined
+            || toTimepoint.hour === undefined
+            || toTimepoint.minute === undefined) {
+                alert('Some field is missing')
+                return
+            }
+
+        updateTimetable({
+            works: [
+                ...timetable.works,
+                { weekday: day, from: { ...fromTimepoint }, to: { ...toTimepoint } }
+            ]
+        })
+    }
+
+    const handleFromHourChange = (event) => {
+        setFromTimepoint({ ...fromTimepoint, hour: event.target.value | 0 })
+    }
+
+    const handleFromMinuteChange = (event) => {
+        setFromTimepoint({ ...fromTimepoint, minute: event.target.value | 0 })
+    }
+
+    const handleToHourChange = (event) => {
+        setToTimepoint({ ...toTimepoint, hour: event.target.value | 0 })
+    }
+
+    const handleToMinuteChange = (event) => {
+        setToTimepoint({ ...toTimepoint, minute: event.target.value | 0 })
+    }
+
+    return (
+        <div>
+            <input
+                onChange={handleFromHourChange}
+                style={{width: '16px', outline: 'none', padding: '4px', backgroundColor: '#ffffff20', border: 'none'}}
+                value={fromTimepoint.hour} />
+            :
+            <input
+                onChange={handleFromMinuteChange}
+                style={{width: '16px', outline: 'none', padding: '4px', backgroundColor: '#ffffff20', border: 'none'}}
+                value={fromTimepoint.minute} />
+            -
+            <input
+                onChange={handleToHourChange}
+                style={{width: '16px', outline: 'none', padding: '4px', backgroundColor: '#ffffff20', border: 'none'}}
+                value={toTimepoint.hour} />
+            :
+            <input
+                onChange={handleToMinuteChange}
+                style={{width: '16px', outline: 'none', padding: '4px', backgroundColor: '#ffffff20', border: 'none'}}
+                value={toTimepoint.minute} />
+            <IconButton onClick={handleAdd}>
+                <AddIcon />
+            </IconButton>
+        </div>
+    )
+}
 
 const TimetableView = ({ timetable, updateTimetable }) => {
 
@@ -16,77 +83,43 @@ const TimetableView = ({ timetable, updateTimetable }) => {
         return timetable.works.filter(elem => elem.weekday === day)
     }
 
-    const TimeIntervalView = ({ interval }) => {
+    const TimeIntervalView = ({ interval, deleteInterval }) => {
         const { from, to } = interval
 
+        const handleDelete = () => {
+            deleteInterval(interval)
+        }
+
         return (
-            <div style={{padding: '4px', paddingLeft: '8px', paddingRight: '8px', margin: '4px', display: 'inline-block', backgroundColor: '#ffffff20', borderRadius: '4px'}}>
-                {from.hour}:{from.minute}-{to.hour}:{to.minute}
-            </div>
-        )
-    }
-
-    const NewTimeIntervalView = ({ day }) => {
-
-        const TimePointView = ({ timepoint, setTimepoint }) => {
-
-            const handleHourChange = (event) => {
-                setTimepoint({ ...timepoint, hour: event.target.value | 0 })
-            }
-
-            const handleMinuteChange = (event) => {
-                setTimepoint({ ...timepoint, minute: event.target.value | 0 })
-            }
-
-            return (
-                <div style={{display: 'inline-block'}}>
-                    <input
-                        onChange={handleHourChange}
-                        style={{width: '16px', outline: 'none', padding: '4px', backgroundColor: '#ffffff20', border: 'none'}}
-                        value={timepoint.hour} />
-                    :
-                    <input
-                        onChange={handleMinuteChange}
-                        style={{width: '16px', outline: 'none', padding: '4px', backgroundColor: '#ffffff20', border: 'none'}}
-                        value={timepoint.minute} />
+            <div style={{display: 'inline-block'}}>
+                <div style={{
+                    padding: '4px',
+                    paddingLeft: '8px',
+                    paddingRight: '8px',
+                    margin: '4px',
+                    display: 'inline-block',
+                    backgroundColor: '#ffffff20',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                }}>
+                    {from.hour}:{from.minute}-{to.hour}:{to.minute}
                 </div>
-            )
-        }
-
-        const [fromTimepoint, setFromTimepoint] = useState({hour: undefined, minute: undefined})
-        const [toTimepoint, setToTimepoint] = useState({hour: undefined, minute: undefined})
-
-        const handleAdd = () => {
-            if (fromTimepoint.hour === undefined
-                || fromTimepoint.minute === undefined
-                || toTimepoint.hour === undefined
-                || toTimepoint.minute === undefined) {
-                    alert('Some field is missing')
-                    return
-                }
-
-            updateTimetable({
-                works: [
-                    ...timetable.works,
-                    { weekday: day, from: { ...fromTimepoint }, to: { ...toTimepoint } }
-                ]
-            })
-        }
-
-        return (
-            <div>
-                <TimePointView timepoint={fromTimepoint} setTimepoint={setFromTimepoint} />
-                -
-                <TimePointView timepoint={toTimepoint} setTimepoint={setToTimepoint} />
-                <IconButton onClick={handleAdd}>
-                    <AddIcon />
-                </IconButton>
+                <Delete
+                    style={{position: 'relative', top: '-4px', right: '14px', cursor: 'pointer'}}
+                    onClick={handleDelete} />
             </div>
         )
     }
 
     const OneDayView = ({ day }) => {
         const times = timesForDay(day)
+
+        const handleDelete = (interval) => {
+            const newWorks = timetable.works.filter(elem => elem !== interval)
+            updateTimetable({
+                works: [ ...newWorks ]
+            })
+        }
 
         return (
             <div style={{marginTop: '8px', marginBottom: '8px', display: 'flex', flexDirection: 'column'}}>
@@ -97,10 +130,11 @@ const TimetableView = ({ timetable, updateTimetable }) => {
                         return (
                             <TimeIntervalView
                                 key={index}
-                                interval={{from: elem.from, to: elem.to}} />
+                                deleteInterval={handleDelete}
+                                interval={elem} />
                         )
                     })}
-                    <NewTimeIntervalView day={day} />
+                    <NewTimeIntervalView day={day} timetable={timetable} updateTimetable={updateTimetable} />
                 </div>
             </div>
         )
