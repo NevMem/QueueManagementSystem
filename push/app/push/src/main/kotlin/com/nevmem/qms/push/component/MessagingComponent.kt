@@ -1,6 +1,5 @@
 package com.nevmem.qms.push.component
 
-import com.nevmem.qms.push.data.NotificationConfig
 import com.nevmem.qms.push.service.FbPushService
 import com.nevmem.qms.push.service.MessagingService
 import com.nevmem.qms.push.service.TokenStorageService
@@ -44,6 +43,7 @@ class MessagingComponent @Autowired constructor(
                 }
             } catch(exception: Exception) {
                 println(exception.message)
+                Thread.sleep(5000L)
             }
         }
     }

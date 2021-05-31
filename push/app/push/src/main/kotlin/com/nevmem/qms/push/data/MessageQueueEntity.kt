@@ -10,7 +10,7 @@ data class MessageQueueEntity(
         return mapOf(
             "timeLeft" to timeLeft.toString(),
             "position" to position.toString(),
-            "from" to from
+            "messageFrom" to from
         )
     }
 
