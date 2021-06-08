@@ -10,9 +10,11 @@ import json
 import qrcode
 import qrcode.image.svg
 import typing as tp
+import uuid
 
 from aiocache import caches
 from starlette.authentication import requires
+from starlette.background import BackgroundTask
 from starlette.exceptions import HTTPException
 
 from proto import user_pb2, permissions_pb2, organization_pb2, service_pb2, ticket_pb2, management_pb2
@@ -20,6 +22,7 @@ from server.app import model
 from server.app.middleware import middleware, redis_prepare
 from server.app.notifications import NotificationsWorker
 from server.app.statistic import StatisticWorker
+from server.app.registration import MailManager
 from server.app.utils import sha_hash, generate_next_ticket, now
 from server.app.utils.db_utils import prepare_db, session_scope
 from server.app.utils.long_polling import EventManager
@@ -30,6 +33,7 @@ from server.app.utils.web import route, prepare_app, Request, ProtobufResponse, 
 patch_enums()
 
 event_manager = EventManager()
+mail_manager = MailManager()
 
 
 @route('/check_auth', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
@@ -63,12 +67,42 @@ async def register(request: Request) -> ProtobufResponse:
         name=request.parsed.name,
         surname=request.parsed.surname,
         email=request.parsed.identity.email,
-        password=sha_hash(request.parsed.identity.password)
+        password=sha_hash(request.parsed.identity.password),
+        confirmation_id=uuid.uuid4()
     )
 
     request.connection.add(new_user)
-    # TODO: add confirmation email sending
-    return ProtobufResponse(empty_pb2.Empty())
+
+    if 'X-No-Confirmation' in request.headers:
+        new_user.confirmed = True
+        return ProtobufResponse(empty_pb2.Empty())
+
+    task = BackgroundTask(mail_manager.send_confirmation_email, destination=new_user.email, confirmation_id=str(new_user.confirmation_id))
+    return ProtobufResponse(empty_pb2.Empty(), background=task)
+
+
+@route('/confirm_registration', methods=['GET'])
+async def confirm_registration(request: Request):
+    if 'confirmation_id' not in request.query_params:
+        raise HTTPException(400)
+
+    confirmation_id = request.query_params['confirmation_id']
+
+    query = (
+        select(model.User)
+        .where(
+            model.User.confirmation_id == confirmation_id
+        )
+    )
+
+    result = await request.connection.execute(query)
+    user = result.scalars().first()
+
+    if not user:
+        raise HTTPException(404)
+
+    user.confirmed = True
+    return Response(content='OK')
 
 
 @route('/client/update_user', methods=['POST'], request_type=user_pb2.User)
@@ -888,13 +922,14 @@ async def user_tickets_history(request: Request):
     ))
 
 
-@route('/confirm_registration', methods=['GET'])
-async def confirm_registration(request: Request):
-    if 'confirmation_id' not in request.query_params:
-        raise HTTPException(400)
-    confirmation_id = request.query_params['confirmation_id']
-
-    # TODO: mark registration success
-
-
-app = prepare_app(debug=True, middleware=middleware, on_startup=[prepare_db, StatisticWorker().start, NotificationsWorker().start, redis_prepare])
+app = prepare_app(
+    debug=True,
+    middleware=middleware,
+    on_startup=[
+        prepare_db,
+        StatisticWorker().start,
+        NotificationsWorker().start,
+        redis_prepare,
+        mail_manager.start
+    ]
+)

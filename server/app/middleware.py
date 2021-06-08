@@ -57,6 +57,7 @@ async def redis_prepare():
             cache = Cache()
 
     caches._caches['redis'] = cache
+    # noinspection PyGlobalUndefined
     global _get_user
     _get_user = cached(alias='redis', ttl=60, key_builder=lambda f, request, email: f'user_{email}', timeout=0.5)(_get_user)
 
@@ -78,6 +79,9 @@ class BasicAuthBackend(AuthenticationBackend):
 
         user = ParseDict(user, user_pb2.User())
         credentials = {'authenticated', }
+
+        if user.confirmed:
+            credentials.add('email_confirmed')
 
         target = getattr(request.scope['_parsed'], get_check_attr(request.url.path), None)
 
