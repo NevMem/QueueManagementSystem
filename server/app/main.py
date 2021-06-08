@@ -67,6 +67,7 @@ async def register(request: Request) -> ProtobufResponse:
     )
 
     request.connection.add(new_user)
+    # TODO: add confirmation email sending
     return ProtobufResponse(empty_pb2.Empty())
 
 
@@ -885,6 +886,15 @@ async def user_tickets_history(request: Request):
     return ProtobufResponse(ticket_pb2.TicketList(
         tickets=[ticket.to_protobuf(with_user=True) for ticket in tickets]
     ))
+
+
+@route('/confirm_registration', methods=['GET'])
+async def confirm_registration(request: Request):
+    if 'confirmation_id' not in request.query_params:
+        raise HTTPException(400)
+    confirmation_id = request.query_params['confirmation_id']
+
+    # TODO: mark registration success
 
 
 app = prepare_app(debug=True, middleware=middleware, on_startup=[prepare_db, StatisticWorker().start, NotificationsWorker().start, redis_prepare])
