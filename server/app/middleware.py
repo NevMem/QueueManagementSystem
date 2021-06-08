@@ -9,7 +9,7 @@ from aiocache import caches, cached, Cache
 from server.app.aiocache.aiocache.backends.redis import RedisCache
 
 from google.protobuf.json_format import MessageToDict, ParseDict
-from itsdangerous.exc import BadTimeSignature, SignatureExpired
+from itsdangerous.exc import BadData
 from sqlalchemy.orm import selectinload
 from sqlalchemy.sql import select
 
@@ -145,7 +145,7 @@ class SessionMiddleware:
             try:
                 data = self.signer.unsign(data, max_age=self.max_age)
                 scope['session'] = json.loads(base64.b64decode(data))
-            except (BadTimeSignature, SignatureExpired):
+            except BadData:
                 scope['session'] = {}
         else:
             scope['session'] = {}
