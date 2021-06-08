@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { Redirect } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, Fragment } from 'react'
 import authAdapter from '../../adapters/AuthAdapter'
 import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
@@ -10,6 +9,7 @@ import localizedString from '../../localization/localizedString'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import useInput from '../../utils/useInput'
+import Alert from '@material-ui/lab/Alert'
 
 const useStyles = makeStyles({
     authCard: {
@@ -24,6 +24,14 @@ const useStyles = makeStyles({
     }
 })
 
+const ShouldConfirmThroughEmail = () => {
+    return (
+        <Alert severity='success'>
+            {localizedString('confirm_your_account')}
+        </Alert>
+    )
+}
+
 export default function RegisterSection({ changeMode }) {
     const classes = useStyles()
 
@@ -32,7 +40,7 @@ export default function RegisterSection({ changeMode }) {
     const { value: name, bind: bindName, reset: resetName } = useInput('')
     const { value: surname, bind: bindSurname, reset: resetSurname } = useInput('')
     const [ error, setError ] = useState(undefined)
-    const [ redirect, initRedirection ] = useState(undefined)
+    const [ success, setSuccess ] = useState(false)
 
     const handleSubmit = () => {
         authAdapter.register(login, password, name, surname)
@@ -41,7 +49,7 @@ export default function RegisterSection({ changeMode }) {
                 resetPassword()
                 resetName()
                 resetSurname()
-                initRedirection('/')
+                setSuccess(true)
             })
             .catch(err => {
                 if (err.message) {
@@ -56,49 +64,53 @@ export default function RegisterSection({ changeMode }) {
         <div style={{height: '100vh', display: 'flex', justifyContent: 'center'}} className="login_section">
             <Card variant="outlined" className={classes.authCard}>
                 <CardContent>
-                    <Typography variant="h4">{localizedString('register_form_title')}</Typography>
-                    { error && <Typography variant="h6">{error}</Typography> }
-                    { redirect && <Redirect to={redirect} /> }
-                    <TextField
-                        style={{width: '100%', marginTop: '48px'}}
-                        variant="outlined"
-                        label={localizedString('login_label')}
-                        {...bindLogin} />
-                    <TextField
-                        style={{width: '100%', marginTop: '16px'}}
-                        variant="outlined"
-                        type='password'
-                        label={localizedString('password_label')}
-                        {...bindPassword} />
-                    <TextField
-                        style={{width: '100%', marginTop: '16px'}}
-                        variant="outlined"
-                        label={localizedString('name_label')}
-                        {...bindName} />
-                    <TextField
-                        style={{width: '100%', marginTop: '16px'}}
-                        variant="outlined"
-                        label={localizedString('surname_label')}
-                        {...bindSurname} />
-                    <div style={{display: 'flex', flexDirection: 'row', marginTop: '48px', justifyContent: 'left'}}>
-                        <Button
-                            className={classes.buttons}
-                            size="large"
-                            variant="outlined"
-                            color="primary"
-                            onClick={changeMode}>
-                            {localizedString('login')}
-                        </Button>
-                        <Button
-                            className={classes.buttons}
-                            size="large"
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleSubmit}>
-                            {localizedString('register')}
-                        </Button>
-                        <LocalizationGroup style={{height: '30px', padding: '7px', cursor: 'pointer'}} />
-                    </div>
+                    { success && <ShouldConfirmThroughEmail /> }
+                    {!success &&
+                        <Fragment>
+                            <Typography variant="h4">{localizedString('register_form_title')}</Typography>
+                            { error && <Typography variant="h6">{error}</Typography> }
+                            <TextField
+                                style={{width: '100%', marginTop: '48px'}}
+                                variant="outlined"
+                                label={localizedString('login_label')}
+                                {...bindLogin} />
+                            <TextField
+                                style={{width: '100%', marginTop: '16px'}}
+                                variant="outlined"
+                                type='password'
+                                label={localizedString('password_label')}
+                                {...bindPassword} />
+                            <TextField
+                                style={{width: '100%', marginTop: '16px'}}
+                                variant="outlined"
+                                label={localizedString('name_label')}
+                                {...bindName} />
+                            <TextField
+                                style={{width: '100%', marginTop: '16px'}}
+                                variant="outlined"
+                                label={localizedString('surname_label')}
+                                {...bindSurname} />
+                            <div style={{display: 'flex', flexDirection: 'row', marginTop: '48px', justifyContent: 'left'}}>
+                                <Button
+                                    className={classes.buttons}
+                                    size="large"
+                                    variant="outlined"
+                                    color="primary"
+                                    onClick={changeMode}>
+                                    {localizedString('login')}
+                                </Button>
+                                <Button
+                                    className={classes.buttons}
+                                    size="large"
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={handleSubmit}>
+                                    {localizedString('register')}
+                                </Button>
+                                <LocalizationGroup style={{height: '30px', padding: '7px', cursor: 'pointer'}} />
+                            </div>
+                        </Fragment>
+                    }
                 </CardContent>
             </Card>
         </div>

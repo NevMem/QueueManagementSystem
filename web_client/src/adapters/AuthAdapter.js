@@ -70,9 +70,6 @@ class AuthAdapter {
         return new Promise((res, rej) => {
             processRegistration(login, password, name, surname)
                 .then(() => {
-                    return this.login(login, password)
-                })
-                .then(() => {
                     res()
                 })
                 .catch(err => {
