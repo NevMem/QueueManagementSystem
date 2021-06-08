@@ -43,4 +43,5 @@ message User {
   string permission_type = 7;
 
   map<string, string> data = 6;
+  bool confirmed = 8;
 }

@@ -170,6 +170,9 @@ class User(BaseModel):
 
     data = sqlalchemy.Column(types.JSON, default={})
 
+    confirmation_id = sqlalchemy.Column(UUID(), index=True, default=uuid.uuid4)
+    confirmed = sqlalchemy.Column(types.BOOLEAN, server_default='f')
+
     def to_protobuf(self, with_permissions=True, permission_type='') -> user_pb2.User:
         return user_pb2.User(
             name=self.name,
@@ -182,4 +185,5 @@ class User(BaseModel):
                 for permission in self.permissions
             ] if with_permissions else [],
             permission_type=permission_type,
+            confirmed=self.confirmed,
         )
