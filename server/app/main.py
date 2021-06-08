@@ -16,7 +16,6 @@ from aiocache import caches
 from starlette.authentication import requires
 from starlette.background import BackgroundTask
 from starlette.exceptions import HTTPException
-from starlette.responses import RedirectResponse
 
 from proto import user_pb2, permissions_pb2, organization_pb2, service_pb2, ticket_pb2, management_pb2
 from server.app import model
@@ -74,7 +73,7 @@ async def register(request: Request) -> ProtobufResponse:
 
     request.connection.add(new_user)
 
-    if '_no_email' in request.headers:
+    if 'X-No-Confirmation' in request.headers:
         new_user.confirmed = True
         return ProtobufResponse(empty_pb2.Empty())
 
@@ -103,7 +102,7 @@ async def confirm_registration(request: Request):
         raise HTTPException(404)
 
     user.confirmed = True
-    return RedirectResponse(url='/')
+    return Response(content='OK')
 
 
 @route('/client/update_user', methods=['POST'], request_type=user_pb2.User)
@@ -923,4 +922,14 @@ async def user_tickets_history(request: Request):
     ))
 
 
-app = prepare_app(debug=True, middleware=middleware, on_startup=[prepare_db, StatisticWorker().start, NotificationsWorker().start, redis_prepare, mail_manager.start])
+app = prepare_app(
+    debug=True,
+    middleware=middleware,
+    on_startup=[
+        prepare_db,
+        StatisticWorker().start,
+        NotificationsWorker().start,
+        redis_prepare,
+        mail_manager.start
+    ]
+)
