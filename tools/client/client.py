@@ -19,7 +19,9 @@ class Client:
     def register(self, login, password, name, surname):
         res = self.layer.post(
             self.base_url + 'client/register',
-            json={'name': name, 'surname': surname, 'identity': { 'email': login, 'password': password }})
+            json={'name': name, 'surname': surname, 'identity': {'email': login, 'password': password}},
+            headers={'X-No-Confirmation': 'yes'}
+        )
         return res.status_code, res.text
 
     def get_user(self, token):
