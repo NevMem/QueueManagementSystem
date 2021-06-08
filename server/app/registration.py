@@ -10,7 +10,7 @@ class MailManager:
     def __init__(self):
         self.client = None
 
-    def start(self):
+    async def start(self):
         if Config.MAIL_PASSWORD is None:
             return
 
@@ -23,7 +23,7 @@ class MailManager:
         )
 
         try:
-            asyncio.get_event_loop().create_task(self.client.connect(timeout=15)).result()
+            await self.client.connect(timeout=15)
         except asyncio.TimeoutError:
             self.client = None
 
