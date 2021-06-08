@@ -13,7 +13,7 @@ class MailManager:
             if Config.MAIL_PASSWORD is None:
                 return
             cls.client = aiosmtplib.SMTP(
-                hostname=Config.REDIS_HOST,
+                hostname=Config.MAIL_HOST,
                 port=Config.MAIL_PORT,
                 username=Config.MAIL_USERNAME,
                 password=Config.MAIL_PASSWORD,
