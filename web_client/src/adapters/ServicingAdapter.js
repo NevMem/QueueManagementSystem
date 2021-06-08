@@ -35,6 +35,9 @@ class ServicingAdapter {
     }
 
     scheduleUpdate() {
+        if (authAdapter.token === undefined || authAdapter.token === null) {
+            return
+        }
         const ticketPromise = currentTicket(authAdapter.token)
             .then(data => data.data)
         var organizationId = undefined
