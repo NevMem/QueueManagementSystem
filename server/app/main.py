@@ -76,13 +76,12 @@ async def register(request: Request) -> ProtobufResponse:
     if 'X-No-Confirmation' in request.headers:
         new_user.confirmed = True
         return ProtobufResponse(empty_pb2.Empty())
-
-    asyncio.get_running_loop().call_soon(
-        MailManager.send_confirmation_email,
-        new_user.email,
-        str(new_user.confirmation_id)
+    asyncio.create_task(
+        MailManager.send_confirmation_email(
+            destination=new_user.email,
+            confirmation_id=str(new_user.confirmation_id)
+        )
     )
-
     return ProtobufResponse(empty_pb2.Empty())
 
 
