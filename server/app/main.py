@@ -5,6 +5,7 @@ from sqlalchemy.orm import selectinload
 from sqlalchemy import func
 import contextlib
 
+import asyncio
 import io
 import json
 import qrcode
@@ -33,7 +34,6 @@ from server.app.utils.web import route, prepare_app, Request, ProtobufResponse, 
 patch_enums()
 
 event_manager = EventManager()
-mail_manager = MailManager()
 
 
 @route('/check_auth', methods=['POST', 'GET'], request_type=empty_pb2.Empty)
@@ -77,8 +77,13 @@ async def register(request: Request) -> ProtobufResponse:
         new_user.confirmed = True
         return ProtobufResponse(empty_pb2.Empty())
 
-    task = BackgroundTask(mail_manager.send_confirmation_email, destination=new_user.email, confirmation_id=str(new_user.confirmation_id))
-    return ProtobufResponse(empty_pb2.Empty(), background=task)
+    asyncio.get_running_loop().call_soon(
+        MailManager.send_confirmation_email(
+            destination=new_user.email,
+            confirmation_id=str(new_user.confirmation_id)
+        )
+    )
+    return ProtobufResponse(empty_pb2.Empty())
 
 
 @route('/confirm_registration', methods=['GET'])
@@ -930,6 +935,5 @@ app = prepare_app(
         StatisticWorker().start,
         NotificationsWorker().start,
         redis_prepare,
-        mail_manager.start
     ]
 )
