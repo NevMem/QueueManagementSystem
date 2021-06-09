@@ -78,9 +78,10 @@ async def register(request: Request) -> ProtobufResponse:
         return ProtobufResponse(empty_pb2.Empty())
 
     asyncio.get_running_loop().call_soon(
-        MailManager.send_confirmation_email,
-        destination=new_user.email,
-        confirmation_id=str(new_user.confirmation_id)
+        MailManager.send_confirmation_email(
+            destination=new_user.email,
+            confirmation_id=str(new_user.confirmation_id)
+        )
     )
     return ProtobufResponse(empty_pb2.Empty())
 
