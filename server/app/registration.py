@@ -7,7 +7,7 @@ from email.message import EmailMessage
 class MailManager:
 
     @staticmethod
-    async def send_confirmation_email(self, destination: str, confirmation_id: str):
+    async def send_confirmation_email(destination: str, confirmation_id: str):
         if Config.MAIL_PASSWORD is None:
             return
         message = EmailMessage()
