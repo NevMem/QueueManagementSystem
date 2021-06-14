@@ -13,8 +13,11 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.nevmem.qms.auth.AuthManager
 import com.nevmem.qms.dialogs.DialogsManager
 import com.nevmem.qms.dialogs.FragmentManagerProvider
+import com.nevmem.qms.keyvalue.KeyValueStorage
 import com.nevmem.qms.logger.Logger
 import com.nevmem.qms.network.NetworkManager
+import com.nevmem.qms.onboarding.OnboardingDelegate
+import com.nevmem.qms.onboarding.createOnboardingDelegate
 import com.nevmem.qms.permissions.*
 import com.nevmem.qms.push.PushProcessor
 import com.nevmem.qms.push.createPushManager
@@ -45,6 +48,15 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate, FragmentManagerPr
         inject<PushProcessor>(named("toast-push-processor"))
     ).apply {
         forEach { pushManager.addPushProcessor(it.value) }
+    }
+
+    private val onboardingDelegate: OnboardingDelegate by lazy {
+        createOnboardingDelegate(
+            applicationContext,
+            logger,
+            inject<KeyValueStorage>(named("onboarding-storage")).value,
+            supportFragmentManager
+        )
     }
 
     private val dialogsManager: DialogsManager by inject()
@@ -93,6 +105,7 @@ class MainActivity : AppCompatActivity(), PermissionsDelegate, FragmentManagerPr
         permissionsManager.registerDelegate(this)
         dialogsManager.fragmentManagerProvider = this
         checkPermissionsRequests()
+        onboardingDelegate.startOnboardingIfNeeded()
     }
 
     override fun onPause() {
