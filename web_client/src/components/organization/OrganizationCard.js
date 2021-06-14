@@ -104,15 +104,17 @@ export default function OrganizationCard({organizationData, ...props}) {
                     <Typography style={{color: '#c0c0c0', fontSize: '30px'}} variant='body2'>
                         {name}
                     </Typography>
-                    <IconButton onClick={handleStartEdit}>
-                        <Edit style={{width: '16px', height: '16px'}} />
-                    </IconButton>
+                    <div>
+                        <IconButton onClick={handleStartEdit}>
+                            <Edit style={{width: '16px', height: '16px'}} />
+                        </IconButton>
+                    </div>
                     <EditOrganizationDialog
                         open={editDialogOpen}
                         onClose={handleStopEdit}
                         organization={organizationData} />
                     { !hasTimetable &&
-                        <Grid container>
+                        <div>
                             <Button onClick={openTimetable} style={{color: '#a0a0a0', fontSize: '14px'}} variant='text'>
                                 {localizedString('setup_timetable')}
                             </Button>
@@ -120,10 +122,10 @@ export default function OrganizationCard({organizationData, ...props}) {
                                 organization={organizationData}
                                 open={timetableDialogOpen}
                                 onClose={handleTimetableClose} />
-                        </Grid>
+                        </div>
                     }
                     { hasTimetable &&
-                        <Grid container>
+                        <div>
                             <Button onClick={openTimetable} style={{color: '#a0a0a0', fontSize: '14px'}} variant='text'>
                                 {localizedString('edit_timetable')}
                             </Button>
@@ -131,7 +133,7 @@ export default function OrganizationCard({organizationData, ...props}) {
                                 organization={organizationData}
                                 open={timetableDialogOpen}
                                 onClose={handleTimetableClose} />
-                        </Grid>
+                        </div>
                     }
                 </div>
                 <div style={{display: 'flex', flexDirection: 'row'}}>
@@ -142,10 +144,12 @@ export default function OrganizationCard({organizationData, ...props}) {
                     </Link>
 
                     { self !== undefined && ['OWNER', 'MANAGER'].indexOf(self.permissionType) >= 0 &&
-                        <AddButton
-                            onClick={handleOpen}
-                            isPrimaryButton={false}
-                            text={localizedString('new_service')} />
+                        <div>
+                            <AddButton
+                                onClick={handleOpen}
+                                isPrimaryButton={false}
+                                text={localizedString('new_service')} />
+                        </div>
                     }
                     <AddServiceDialog open={open} onClose={handleClose} organization={organizationData} />
                 </div>
