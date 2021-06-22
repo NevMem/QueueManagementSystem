@@ -55,7 +55,9 @@ const dictionary = {
     'your_organizations': 'Ваши организации',
     'zero_organizations_card_desc': 'Нажмите на кнопку выше чтобы создать!',
     'zero_organizations_card_title': 'У вас пока нет ни одной организации',
-    'window_name': 'Имя окна'
+    'window_name': 'Имя окна',
+    'name_label': 'Имя',
+    'surname_label': 'Фамилия'
 }
 
 export default dictionary
