@@ -43,6 +43,7 @@ import org.koin.dsl.module
 
 private const val AUTH_PREFS_NAME = "auth-prefs"
 private const val FEATURES_PREFS_NAME = "features-prefs"
+private const val ONBOARDING_PREFS_NAME = "onboarding-prefs"
 
 class QMSApplication : Application() {
 
@@ -77,6 +78,9 @@ class QMSApplication : Application() {
         single { createHistoryManager(get(), get(), get()) }
         single { createOrganizationsRepo(get()) }
         single { createDocumentsManager(get()) }
+        single(named("onboarding-storage")) {
+            createKeyValueStorage(getSharedPreferences(ONBOARDING_PREFS_NAME, Context.MODE_PRIVATE))
+        }
     }
 
     private val viewModelsModule = module {
