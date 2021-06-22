@@ -54,7 +54,10 @@ const dictionary = {
     'your_organizations': 'Your organizations',
     'zero_organizations_card_desc': 'Click on the button above to create!',
     'zero_organizations_card_title': 'You don\'t have any organizations yet',
-    'window_name': 'Window name'
+    'window_name': 'Window name',
+    'name_label': 'Name',
+    'surname_label': 'Surname'
+
 }
 
 export default dictionary
